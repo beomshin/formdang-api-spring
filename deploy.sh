@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 APP_NAME=formdang-api
-REPOSITORY=/home/ubuntu/
+REPOSITORY=/home/sp/
 
 echo "> Check the currently running container"
 CONTAINER_ID=$(docker ps -aqf "name=$APP_NAME")
