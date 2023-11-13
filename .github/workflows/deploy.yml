@@ -11,6 +11,7 @@ env:
   RESOURCE_PATH: ./formdang-api/src/main/resources/application.yaml
   CODE_DEPLOY_APPLICATION_NAME: formdang
   CODE_DEPLOY_DEPLOYMENT_GROUP_NAME: formdang-api
+  PROJECT_DIR: formdang-api/
   
 jobs:
   build:
@@ -24,7 +25,8 @@ jobs:
         uses: actions/setup-java@v1
         with:
           java-version: 1.8
-        
+          distribution: 'temurin'
+
 #      - name: Set yaml file
 #        uses: microsoft/variable-substitution@v1
 #        with:
@@ -40,13 +42,10 @@ jobs:
           restore-keys: ${{ runner.os }}-m2
 
       - name: Build with Maven
-        run: mvn -Dmaven.test.skip=true -B package --file formdang-api/pom.xml
-
-      - name: Make Directory for deliver
-        run: mkdir deploy && cp formdang-api/target/*.jar deploy/ && cp appspec.yml deploy/
+        run: mvn -Dmaven.test.skip=true -B package --file ${{ env.PROJECT_DIR }}pom.xml
 
       - name: Make zip file
-        run: zip -r ./$GITHUB_SHA.zip .
+        run: zip -r ./$GITHUB_SHA.zip ./${{ env.PROJECT_DIR }}target/*.jar ./appspec.yml
         shell: bash
 
       - name: Configure AWS credentials
