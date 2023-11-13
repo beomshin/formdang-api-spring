@@ -32,11 +32,18 @@ jobs:
 #        env:
 #          override.value: ${{ secrets.DI_FROM_SECRET }}
 
+      - name: Cache Maven packages
+        uses: actions/cache@v2
+        with:
+          path: ~/.m2
+          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
+          restore-keys: ${{ runner.os }}-m2
+
       - name: Build with Maven
         run: mvn -Dmaven.test.skip=true -B package --file formdang-api/pom.xml
 
-      - name: Make Directory for deliver
-        run: mkdir deploy && cp target/*.jar deploy/ && cp appspec.yml deploy/
+      #        run: mkdir deploy && cp target/*.jar deploy/ && cp appspec.yml deploy/
+#      - name: Make Directory for deliver
 
       - name: Make zip file
         run: zip -r ./$GITHUB_SHA.zip .
