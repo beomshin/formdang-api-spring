@@ -42,8 +42,8 @@ jobs:
       - name: Build with Maven
         run: mvn -Dmaven.test.skip=true -B package --file formdang-api/pom.xml
 
-      #        run: mkdir deploy && cp target/*.jar deploy/ && cp appspec.yml deploy/
-#      - name: Make Directory for deliver
+      - name: Make Directory for deliver
+        run: mkdir deploy && cp formdang-api/target/*.jar deploy/ && cp appspec.yml deploy/
 
       - name: Make zip file
         run: zip -r ./$GITHUB_SHA.zip .
