@@ -4,8 +4,15 @@ os: linux
 files:
   - source: /
     destination: /home/sp
+    overwrite: yes
 permissions:
   - object: /home/sp
     owner: ubuntu
     group: ubuntu
     mode: 755
+
+hooks:
+  AfterInstall:
+    - location: deploy.sh
+      timeout: 500
+      runas : root
