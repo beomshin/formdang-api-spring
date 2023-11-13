@@ -1,18 +1,11 @@
 version: 0.0
 os: linux
+
 files:
   - source: /
     destination: /home/sp
-    overwrite: yes
-
 permissions:
-  - object: /
-    pattern: '**'
+  - object: /home/sp
     owner: ubuntu
     group: ubuntu
-
-hooks:
-  AfterInstall:
-    - location: scripts/gh_deploy.sh
-      timeout: 60
-      runas: ubuntu
+    mode: 755
