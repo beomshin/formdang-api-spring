@@ -8,10 +8,10 @@ on:
 
 env:
   S3_BUCKET_NAME: formdang-deploy-s3
-  RESOURCE_PATH: ./formdang-api/src/main/resources/application.yaml
+  RESOURCE_PATH: ./web-api/src/main/resources/application.yaml
   CODE_DEPLOY_APPLICATION_NAME: formdang
   CODE_DEPLOY_DEPLOYMENT_GROUP_NAME: formdang-api
-  PROJECT_DIR: formdang-api
+  PROJECT_DIR: web-api
   
 jobs:
   build:

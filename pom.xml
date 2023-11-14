@@ -11,7 +11,7 @@
     <relativePath/> <!-- lookup parent from repository -->
   </parent>
 
-  <groupId>cm.kr.formdango</groupId>
+  <groupId>cm.kr.formdang</groupId>
   <artifactId>formdang-sp-was</artifactId>
   <version>0.0.1</version>
 

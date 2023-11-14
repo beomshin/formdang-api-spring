@@ -5,17 +5,17 @@
     <packaging>jar</packaging>
 
     <parent>
-        <groupId>cm.kr.formdango</groupId>
+        <groupId>cm.kr.formdang</groupId>
         <artifactId>formdang-sp-was</artifactId>
         <version>0.0.1</version>
     </parent>
 
     <groupId>com.kr.formdang</groupId>
-    <artifactId>formdang-api</artifactId>
+    <artifactId>web-api</artifactId>
     <version>0.0.1</version>
 
-    <name>formdang-api</name>
-    <description>formdang-api</description>
+    <name>web-api</name>
+    <description>web-api</description>
 
     <properties>
         <java.version>1.8</java.version>

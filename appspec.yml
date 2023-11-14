@@ -3,10 +3,10 @@ os: linux
 
 files:
   - source: /
-    destination: /home/sp
+    destination: /home/sp/web
     overwrite: yes
 permissions:
-  - object: /home/sp
+  - object: /home/sp/web
     owner: ubuntu
     group: ubuntu
     mode: 755
