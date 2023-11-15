@@ -1,0 +1,37 @@
+server:
+  shutdown: graceful
+  servlet:
+    context-path: /
+
+spring:
+  profiles:
+    active: local
+    include:
+      - core
+  application:
+    name: web-api
+
+file:
+  size:
+    image: 3145728 # 3 * 1024 * 1024
+    video: 104857600 # 100 * 1024 * 1024
+    replay: 52428800 # 50 * 1024 * 1024
+
+#LOG
+logging:
+  level:
+    root: info
+    jdbc.sqlonly: debug # SQL??? ??? ???, PreparedStatement? ?? ??? argument ??? ??? SQL?? ????.
+    jdbc.audit: debug # ResultSet? ??? ?? JDBC ?? ??? ??? ???.
+    jdbc.resultset: debug # ResultSet? ??? ?? JDBC ?? ??? ??? ???.
+    jdbc.connection: debug #DB ??, ?? ??? ??? ??? ????
+    http.logging: debug
+    org.springframework.test: warn
+    com.amazonaws.util.EC2MetadataUtils: error
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} [%-5level] [%thread] [%logger{0}:%line] [%X{request_id:-startup}] - %msg%n"
+    file: "%d{yyyy-MM-dd HH:mm:ss} [%-5level] [%thread] [%logger{0}:%line] [%X{request_id:-startup}] - %msg%n"
+  logback:
+    rolling policy:
+      max-history: 365
+      max-file-size: 100MB
