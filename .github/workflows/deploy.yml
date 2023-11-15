@@ -42,7 +42,7 @@ jobs:
           restore-keys: ${{ runner.os }}-m2
 
       - name: Build with Maven
-        run: mvn -Dmaven.test.skip=true -B package --file ${{ env.PROJECT_DIR }}/pom.xml
+        run: mvn -Dmaven.test.skip=true -B package --file ./pom.xml
 
       - name: Make zip file
         run: zip -r ./$GITHUB_SHA.zip ./${{ env.PROJECT_DIR }}/target/*.jar ./appspec.yml ./deploy.sh ./Dockerfile
