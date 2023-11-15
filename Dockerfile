@@ -8,5 +8,7 @@ ARG JAR_FILE=./web-api/target/*.jar
 # JAR 파일 메인 디렉토리에 복사
 COPY ${JAR_FILE} app.jar
 
+ENV USE_PROFILE test
+
 # 시스템 진입점 정의
-ENTRYPOINT ["java", "-Dspring.profiles.active=test","-jar","/app.jar"]
+ENTRYPOINT ["java", "-Dspring.profiles.active=${USE_PROFILE}","-jar","/app.jar"]
