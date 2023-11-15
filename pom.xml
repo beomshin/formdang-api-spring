@@ -19,7 +19,8 @@
   <description>formdang-sp-was</description>
 
   <modules>
-
+    <module>web-api</module>
+    <module>web-core</module>
   </modules>
 
   <properties>

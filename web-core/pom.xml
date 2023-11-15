@@ -11,23 +11,27 @@
     </parent>
 
     <groupId>com.kr.formdang</groupId>
-    <artifactId>web-api</artifactId>
+    <artifactId>web-core</artifactId>
     <version>0.0.1</version>
-
-    <name>web-api</name>
-    <description>web-api</description>
-
-    <properties>
-        <java.version>1.8</java.version>
-    </properties>
+    <name>web-core</name>
+    <description>web-core</description>
 
     <dependencies>
 
         <dependency>
-            <groupId>com.kr.formdang</groupId>
-            <artifactId>web-core</artifactId>
-            <version>0.0.1</version>
-            <scope>compile</scope>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-jpa</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.mysql</groupId>
+            <artifactId>mysql-connector-j</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-redis</artifactId>
         </dependency>
 
     </dependencies>
@@ -48,5 +52,6 @@
             </plugin>
         </plugins>
     </build>
+
 
 </project>

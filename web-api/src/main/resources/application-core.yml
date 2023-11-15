@@ -1,0 +1,29 @@
+spring:
+  datasource:
+    driver-class-name:
+  jpa:
+    generate-ddl: false
+    hibernate:
+      ddl-auto: none
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+        implicit-strategy: org.hibernate.boot.model.naming.ImplicitNamingStrategyLegacyJpaImpl
+    open-in-view: false
+    show-sql: true
+  data:
+    redis:
+      repositories:
+        enabled: false
+
+
+# LOCAL
+---
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://form-dang-database.cfsxwgisoif6.ap-northeast-2.rds.amazonaws.com/form_dang?useSSL=false&characterEncoding=UTF-8&serverTimezone=Asia/Seoul&allowPublicKeyRetrieval=true
+    username: test_formdang
+    password: formdang12!#
+  config:
+    activate:
+      on-profile: local
