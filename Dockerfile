@@ -9,6 +9,7 @@ ARG JAR_FILE=./web-api/target/*.jar
 COPY ${JAR_FILE} app.jar
 
 ENV USE_PROFILE test
+ENV LOG_PATH /home/sp/web/logs
 
 # 시스템 진입점 정의
-ENTRYPOINT ["java", "-Dspring.profiles.active=${USE_PROFILE}","-jar","/app.jar"]
+ENTRYPOINT ["java", "-Dspring.profiles.active=${USE_PROFILE}","-jar","/app.jar", "--logging.path=$LOG_PATH"]
