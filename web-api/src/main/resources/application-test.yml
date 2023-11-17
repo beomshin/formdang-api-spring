@@ -3,7 +3,7 @@ logging:
   file:
     name: ./logs/web-api.log
   level:
-    com.kr.lg: debug
+    com.kr.formdang: debug
     jdbc.sqltiming: debug #SQL 문과 이 SQL 문을 수행하는 시간(ms)을 같이 보여준다.
     jdbc.result-settable: debug #SQL 의 결과로 조회된 데이터를 table 형태로 로그를 보여준다.
     http.logging: debug

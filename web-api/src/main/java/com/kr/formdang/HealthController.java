@@ -12,6 +12,7 @@ public class HealthController {
 
     @GetMapping("/api/health")
     public String health() {
+        log.debug("[헬스체크] =============>");
         return "SUCCESS";
     }
 }
