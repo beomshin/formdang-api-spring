@@ -7,6 +7,7 @@ cd /home/sp/deploy/web
 
 # app.jar 파일이 있는지 확인
 if [ -e app.jar ]; then
+
     # app.jar 파일이 있다면 해쉬값 계산
     hash_value=$(md5sum app.jar | awk '{ print $1 }')
 
@@ -19,27 +20,19 @@ if [ -e app.jar ]; then
     # 백업 실행
     cp app.jar "$backup_file"
 
-    echo "백업이 완료되었습니다. 백업 파일: $backup_file"
-
     # backup 디렉토리에서 최신순으로 정렬 후 5개 파일만 유지
     ls -t backup/*.jar | tail -n +6 | xargs rm -f
-
-else
-    echo "app.jar 파일이 현재 디렉토리에 존재하지 않습니다."
-fi
+else fi
 
 cp /home/sp/source/web/web-api/target/*.jar app.jar
 
-echo "app.jar 생성 완료"
 
 # formdang-sp-was 서비스가 실행 중인 경우
 if [ "$service_status" == "active" ]; then
     # formdang-sp-was 서비스를 중지
     systemctl stop formdang-sp-was
-    echo "formdang-sp-was 서비스를 중지했습니다."
-else
-    echo "formdang-sp-was 서비스는 이미 중지되어 있습니다."
-fi
+else fi
+
 
 # formdang-sp-was 서비스를 시작
 systemctl start formdang-sp-was
