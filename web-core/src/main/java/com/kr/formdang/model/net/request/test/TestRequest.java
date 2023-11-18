@@ -11,7 +11,8 @@ import lombok.*;
 @NoArgsConstructor
 public class TestRequest extends DefaultRequest {
 
-    private String name;
-    private String age;
+    private String id;
+    private String pw;
+    private String type;
 
 }

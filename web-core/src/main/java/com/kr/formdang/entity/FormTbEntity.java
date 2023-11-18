@@ -1,7 +1,9 @@
 package com.kr.formdang.entity;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.ToString;
+import lombok.experimental.SuperBuilder;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
@@ -10,7 +12,9 @@ import java.util.Objects;
 @Entity
 @Table(name = "form_tb", schema = "form_dang", catalog = "")
 @Getter
-@ToString
+@ToString(callSuper = true)
+@SuperBuilder
+@NoArgsConstructor
 public class FormTbEntity extends DateEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id

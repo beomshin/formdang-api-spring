@@ -1,11 +1,11 @@
 package com.kr.formdang.service;
 
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Service;
+import com.kr.formdang.model.net.request.test.TestRequest;
+import org.springframework.transaction.annotation.Transactional;
 
-@Service
-@Slf4j
-@RequiredArgsConstructor
-public class TestService {
+@Transactional(readOnly = true)
+public interface TestService {
+
+    @Transactional
+    void callTest(TestRequest request);
 }

@@ -1,4 +1,4 @@
-package com.kr.formdang.controller;
+package com.kr.formdang.aop;
 
 import com.kr.formdang.exception.CustomException;
 import com.kr.formdang.model.common.GlobalCode;

@@ -1,7 +1,11 @@
 package com.kr.formdang.entity;
 
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.ToString;
+import lombok.experimental.SuperBuilder;
+import org.hibernate.annotations.DynamicInsert;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
@@ -10,7 +14,10 @@ import java.util.Objects;
 @Entity
 @Table(name = "admin_tb", schema = "form_dang", catalog = "")
 @Getter
-@ToString
+@ToString(callSuper = true)
+@SuperBuilder
+@NoArgsConstructor
+@DynamicInsert
 public class AdminTbEntity extends DateEntity{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id

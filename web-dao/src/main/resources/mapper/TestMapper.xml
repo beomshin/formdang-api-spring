@@ -5,4 +5,8 @@
 
 <mapper namespace="com.kr.formdang.mapper.TestMapper">
 
+    <select id="findAdmin" resultType="com.kr.formdang.entity.AdminTbEntity" parameterType="long">
+        SELECT * FROM admin_tb WHERE id = #{id}
+    </select>
+
 </mapper>
