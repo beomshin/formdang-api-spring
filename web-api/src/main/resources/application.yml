@@ -14,6 +14,11 @@ spring:
     name: web-api
   jackson:
     time-zone: Asia/Seoul
+  mvc:
+    throw-exception-if-no-handler-found: true
+  web:
+    resources:
+      add-mappings: false
 
 file:
   size:
