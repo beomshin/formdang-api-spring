@@ -21,6 +21,7 @@
   <modules>
     <module>web-api</module>
     <module>web-core</module>
+    <module>web-dao</module>
     <module>web-middleware</module>
   </modules>
 
