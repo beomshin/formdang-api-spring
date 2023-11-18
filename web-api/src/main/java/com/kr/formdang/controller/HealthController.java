@@ -1,4 +1,4 @@
-package com.kr.formdang;
+package com.kr.formdang.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Slf4j
 public class HealthController {
 
-    @GetMapping("/api/health")
+    @GetMapping("/health")
     public String health() {
         log.debug("[헬스체크] =============>");
         return "SUCCESS";

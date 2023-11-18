@@ -1,0 +1,3 @@
+mybatis:
+  type-aliases-package: com.kr.formdang.mapper
+  mapper-locations: classpath:mapper/*.xml

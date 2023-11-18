@@ -1,13 +1,15 @@
 server:
   shutdown: graceful
   servlet:
-    context-path: /
+    context-path: /api
 
 spring:
   profiles:
     active: local
     include:
       - core
+      - dao
+      - middleware
   application:
     name: web-api
   jackson:
