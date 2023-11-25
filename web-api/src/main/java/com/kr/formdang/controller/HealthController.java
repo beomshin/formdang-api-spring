@@ -24,6 +24,12 @@ public class HealthController {
         return ResponseEntity.ok().body(new TestResponse());
     }
 
+    @GetMapping("/public/health")
+    public ResponseEntity health2() {
+        log.debug("[헬스체크2]");
+        return ResponseEntity.ok().body(new TestResponse());
+    }
+
     @PostMapping("/call/test")
     public ResponseEntity callTest(@RequestBody TestRequest request) {
         log.debug("[테스트 요청]");
