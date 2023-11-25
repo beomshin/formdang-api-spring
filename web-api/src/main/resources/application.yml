@@ -1,4 +1,5 @@
 server:
+  port: 12001
   shutdown: graceful
   servlet:
     context-path: /api/sp
