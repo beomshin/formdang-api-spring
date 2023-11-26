@@ -30,6 +30,12 @@ public class AdminTbEntity extends DateEntity{
     @Column(name = "pw")
     private String pw;
     @Basic
+    @Column(name = "sub_id")
+    private byte subId;
+    @Basic
+    @Column(name = "type")
+    private int type;
+    @Basic
     @Column(name = "global_web_hook_flag")
     private byte globalWebHookFlag;
     @Basic
