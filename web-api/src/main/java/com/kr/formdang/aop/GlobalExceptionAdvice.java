@@ -38,6 +38,11 @@ public class GlobalExceptionAdvice {
         return ResponseEntity.ok().body(new DefaultResponse(GlobalCode.HTTP_MESSAGE_NOT_READABLE_ERROR));
     }
 
+    @ExceptionHandler(value = CustomException.class)
+    public ResponseEntity<DefaultResponse> handle(CustomException e) {
+        log.error("[CustomException]");
+        return ResponseEntity.ok().body(new DefaultResponse(e.getCode()));
+    }
 
     @ExceptionHandler
     public ResponseEntity<DefaultResponse> handle(RuntimeException e) {
@@ -51,10 +56,5 @@ public class GlobalExceptionAdvice {
         return ResponseEntity.ok().body(new DefaultResponse(GlobalCode.NOT_FOUND_PAGE));
     }
 
-    @ExceptionHandler(value = CustomException.class)
-    public ResponseEntity<DefaultResponse> handle(CustomException e) {
-        log.error("[CustomException]", e);
-        return ResponseEntity.ok().body(new DefaultResponse(e.getCode()));
-    }
 
 }
