@@ -1,9 +1,9 @@
-package com.kr.formdang.controller.sns;
+package com.kr.formdang.controller;
 
-import com.kr.formdang.external.google.GoogleLoginDto;
-import com.kr.formdang.external.google.GoogleLoginRequestDto;
-import com.kr.formdang.external.google.GoogleProp;
-import com.kr.formdang.service.GoogleService;
+import com.kr.formdang.external.kakao.KakaoLoginDto;
+import com.kr.formdang.external.kakao.KakaoLoginRequestDto;
+import com.kr.formdang.external.kakao.KakaoProp;
+import com.kr.formdang.service.KakaoService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -16,25 +16,26 @@ import org.springframework.web.servlet.view.RedirectView;
 @RestController
 @RequiredArgsConstructor
 @Slf4j
-public class GoogleController {
+public class KakaoController {
 
-    private final GoogleProp googleProp;
-    private final GoogleService googleService;
+    private final KakaoProp kakaoProp;
+    private final KakaoService kakaoService;
 
 
-    @GetMapping(value = "/public/google/login")
+    @GetMapping(value = "/public/kakao/login")
     public RedirectView moveGoogleInitUrl() {
         RedirectView redirectView = new RedirectView();
         redirectView.setStatusCode(HttpStatus.SEE_OTHER);
-        redirectView.setUrl(googleProp.googleInitUrl());
+        redirectView.setUrl(kakaoProp.kakaoInitUrl());
         return redirectView;
     }
 
-    @GetMapping(value = "/public/google/login/callback")
-    public RedirectView redirectGoogleLogin(@RequestParam(value = "code") String code) throws Exception{
+    @GetMapping(value = "/public/kakao/login/callback")
+    public RedirectView redirectKakaoLogin(@RequestParam(value = "code") String code) throws Exception{
         RedirectView redirectView = new RedirectView();
         try {
-            GoogleLoginDto googleLoginDto = googleService.googleOAuth(new GoogleLoginRequestDto(googleProp, code));
+            KakaoLoginDto kakaoLoginDto = kakaoService.kakaoOAuth(new KakaoLoginRequestDto(kakaoProp, code));
+            log.debug("{}", kakaoLoginDto);
             String loginUrl = "https://www.naver.com";
             redirectView.setUrl(loginUrl);
             return redirectView;
