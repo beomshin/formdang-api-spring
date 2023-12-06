@@ -30,8 +30,11 @@ public class AdminTbEntity extends DateEntity{
     @Column(name = "pw")
     private String pw;
     @Basic
+    @Column(name = "name")
+    private String name;
+    @Basic
     @Column(name = "sub_id")
-    private byte subId;
+    private String subId;
     @Basic
     @Column(name = "type")
     private int type;

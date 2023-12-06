@@ -19,7 +19,12 @@ public class AdminServiceImpl implements AdminService {
 
     private final AdminTbRepository adminTbRepository;
     @Override
-    public void saveAdmin(AdminTbEntity adminTbEntity) throws CustomException {
+    public void saveSnsAdmin(AdminTbEntity adminTbEntity) throws CustomException {
+        if (adminTbRepository.countBySubId(adminTbEntity.getSubId()) > 0) {
+            log.debug("[가입 유저] =========> ");
+            return;
+        }
+
         try {
             if (adminTbEntity == null) throw new CustomException(GlobalCode.FAIL_SAVE_ADMIN);
             adminTbRepository.save(adminTbEntity);

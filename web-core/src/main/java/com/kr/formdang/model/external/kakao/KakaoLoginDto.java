@@ -1,7 +1,7 @@
-package com.kr.formdang.external.kakao;
+package com.kr.formdang.model.external.kakao;
 
-import com.kr.formdang.external.kakao.dto.KakaoAcount;
-import com.kr.formdang.external.kakao.dto.KakaoProperties;
+import com.kr.formdang.model.external.kakao.dto.KakaoAcount;
+import com.kr.formdang.model.external.kakao.dto.KakaoProperties;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;

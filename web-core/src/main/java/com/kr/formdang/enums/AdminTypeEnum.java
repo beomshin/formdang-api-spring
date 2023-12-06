@@ -8,8 +8,8 @@ import lombok.Getter;
 public enum AdminTypeEnum {
 
     NORMAL_TYPE(0),
-
     KAKAO_TYPE(1),
+    GOOGLE_TYPE(2),
 
     ;
 

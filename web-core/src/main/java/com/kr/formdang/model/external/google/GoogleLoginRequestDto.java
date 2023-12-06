@@ -1,4 +1,4 @@
-package com.kr.formdang.external.google;
+package com.kr.formdang.model.external.google;
 
 import lombok.Data;
 

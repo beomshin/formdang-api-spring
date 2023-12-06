@@ -6,6 +6,6 @@ import com.kr.formdang.exception.CustomException;
 
 public interface AdminService {
 
-    void saveAdmin(AdminTbEntity adminTbEntity) throws CustomException;
+    void saveSnsAdmin(AdminTbEntity adminTbEntity) throws CustomException;
 
 }

@@ -1,4 +1,4 @@
-package com.kr.formdang.external.kakao;
+package com.kr.formdang.model.external.kakao;
 
 import lombok.Data;
 
