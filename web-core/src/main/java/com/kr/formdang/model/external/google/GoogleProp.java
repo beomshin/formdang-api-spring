@@ -1,4 +1,4 @@
-package com.kr.formdang.external.google;
+package com.kr.formdang.model.external.google;
 
 import lombok.Getter;
 import org.springframework.beans.factory.annotation.Value;
@@ -29,6 +29,13 @@ public class GoogleProp {
 
     @Value("${google.auth.scope}")
     private String scopes;
+
+    @Value("${formdang.url.login}")
+    private String formdang_login;
+
+    @Value("${formdang.url.form-list}")
+    private String formdang_form_list;
+
 
     // Google 로그인 URL 생성 로직
     public String googleInitUrl() {

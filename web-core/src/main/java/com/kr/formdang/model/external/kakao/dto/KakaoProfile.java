@@ -1,4 +1,4 @@
-package com.kr.formdang.external.kakao.dto;
+package com.kr.formdang.model.external.kakao.dto;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;

@@ -32,3 +32,8 @@ google:
   client:
     id: 480280719023-pcds17du2k26mpsebqpcm6n6240j3vi2
   secret: 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
+
+formdang:
+  url:
+    login: https://d2mmqtpsewqd6b.cloudfront.net/admin/login.html
+    form-list: https://d2mmqtpsewqd6b.cloudfront.net/admin/index.html?
