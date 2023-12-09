@@ -35,6 +35,6 @@ google:
 
 formdang:
   url:
-    login: https://d2mmqtpsewqd6b.cloudfront.net/admin/login.html
-    form-list: https://d2mmqtpsewqd6b.cloudfront.net/admin/index.html
+    fail-login: https://d2mmqtpsewqd6b.cloudfront.net/admin/login.html
+    success-login: https://d2mmqtpsewqd6b.cloudfront.net/admin/index.html
     auth-issue: http://127.0.0.1:22081/auth/sp/issue
