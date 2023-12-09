@@ -1,4 +1,4 @@
-package com.kr.formdang.service;
+package com.kr.formdang.service.api;
 
 import com.kr.formdang.model.external.kakao.KakaoLoginDto;
 import com.kr.formdang.model.external.kakao.KakaoLoginRequestDto;

@@ -1,4 +1,4 @@
-package com.kr.formdang.service;
+package com.kr.formdang.service.admin;
 
 import com.kr.formdang.entity.AdminTbEntity;
 import com.kr.formdang.model.layer.AdminDataDto;

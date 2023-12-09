@@ -1,12 +1,13 @@
 package com.kr.formdang.controller;
 
+import com.kr.formdang.entity.AdminTbEntity;
 import com.kr.formdang.model.external.google.GoogleLoginDto;
 import com.kr.formdang.model.external.google.GoogleLoginRequestDto;
 import com.kr.formdang.model.external.google.GoogleProp;
 import com.kr.formdang.model.layer.AdminDataDto;
-import com.kr.formdang.service.AdminDataService;
-import com.kr.formdang.service.AdminService;
-import com.kr.formdang.service.GoogleService;
+import com.kr.formdang.service.admin.AdminDataService;
+import com.kr.formdang.service.admin.AdminService;
+import com.kr.formdang.service.api.GoogleService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -34,16 +35,16 @@ public class GoogleController {
     }
 
     @GetMapping(value = "/public/google/login/callback")
-    public RedirectView redirectGoogleLogin(@RequestParam(value = "code") String code) throws Exception{
+    public RedirectView redirectGoogleLogin(@RequestParam(value = "code") String code) {
         RedirectView redirectView = new RedirectView();
         try {
             GoogleLoginDto googleLoginDto = googleService.googleOAuth(new GoogleLoginRequestDto(googleProp, code));
-            adminService.saveSnsAdmin(adminDataServiceImpl.getAdminData(new AdminDataDto(googleLoginDto)));
-            redirectView.setUrl(googleProp.getFormdang_form_list());
+            AdminTbEntity adminTb = adminService.saveSnsAdmin(adminDataServiceImpl.getAdminData(new AdminDataDto(googleLoginDto)));
+            redirectView.setUrl(adminService.successLogin(adminTb));
             return redirectView;
         } catch (Exception e) {
             log.error("{}", e);
-            redirectView.setUrl(googleProp.getFormdang_login());
+            redirectView.setUrl(adminService.failLogin(e));
             return redirectView;
         }
     }

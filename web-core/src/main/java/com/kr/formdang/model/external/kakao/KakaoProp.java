@@ -27,11 +27,6 @@ public class KakaoProp {
     @Value("${kakao.secret}")
     private String kakaoSecret;
 
-    @Value("${formdang.url.login}")
-    private String formdang_login;
-
-    @Value("${formdang.url.form-list}")
-    private String formdang_form_list;
 
     // Kakao 로그인 URL 생성 로직
     public String kakaoInitUrl() {

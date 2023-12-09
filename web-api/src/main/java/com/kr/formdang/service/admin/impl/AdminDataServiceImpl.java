@@ -1,10 +1,9 @@
-package com.kr.formdang.service.impl;
+package com.kr.formdang.service.admin.impl;
 
 import com.kr.formdang.crypto.HashNMacUtil;
 import com.kr.formdang.entity.AdminTbEntity;
-import com.kr.formdang.enums.AdminTypeEnum;
 import com.kr.formdang.model.layer.AdminDataDto;
-import com.kr.formdang.service.AdminDataService;
+import com.kr.formdang.service.admin.AdminDataService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

@@ -1,4 +1,4 @@
-package com.kr.formdang.service;
+package com.kr.formdang.service.api;
 
 import com.kr.formdang.model.external.google.GoogleLoginDto;
 import com.kr.formdang.model.external.google.GoogleLoginRequestDto;

@@ -1,4 +1,4 @@
-package com.kr.formdang.service.impl;
+package com.kr.formdang.service.api.impl;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -7,7 +7,7 @@ import com.kr.formdang.model.external.google.GoogleLoginDto;
 import com.kr.formdang.model.external.google.GoogleLoginRequestDto;
 import com.kr.formdang.model.external.google.GoogleLoginResponseDto;
 import com.kr.formdang.model.external.google.GoogleProp;
-import com.kr.formdang.service.GoogleService;
+import com.kr.formdang.service.api.GoogleService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpEntity;

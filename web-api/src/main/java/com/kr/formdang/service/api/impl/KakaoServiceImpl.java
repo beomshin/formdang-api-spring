@@ -1,4 +1,4 @@
-package com.kr.formdang.service.impl;
+package com.kr.formdang.service.api.impl;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -9,7 +9,7 @@ import com.kr.formdang.model.external.kakao.KakaoLoginDto;
 import com.kr.formdang.model.external.kakao.KakaoLoginRequestDto;
 import com.kr.formdang.model.external.kakao.KakaoLoginResponseDto;
 import com.kr.formdang.model.external.kakao.KakaoProp;
-import com.kr.formdang.service.KakaoService;
+import com.kr.formdang.service.api.KakaoService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpEntity;
