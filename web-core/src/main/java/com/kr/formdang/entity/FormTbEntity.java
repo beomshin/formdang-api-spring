@@ -25,10 +25,13 @@ public class FormTbEntity extends DateEntity {
     private Long aid;
     @Basic
     @Column(name = "form_type")
-    private byte formType;
+    private int formType;
     @Basic
     @Column(name = "title")
     private String title;
+    @Basic
+    @Column(name = "form_detail")
+    private String formDetail;
     @Basic
     @Column(name = "begin_dt")
     private Timestamp beginDt;
@@ -51,10 +54,13 @@ public class FormTbEntity extends DateEntity {
     @Column(name = "report_count")
     private int reportCount;
     @Basic
+    @Column(name = "status")
+    private int status;
+    @Basic
     @Column(name = "end_flag")
-    private byte endFlag;
+    private int endFlag;
     @Basic
     @Column(name = "del_flag")
-    private byte delFlag;
+    private int delFlag;
 
 }

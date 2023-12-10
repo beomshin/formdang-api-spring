@@ -3,7 +3,6 @@ package com.kr.formdang.model.layer;
 import com.kr.formdang.enums.AdminTypeEnum;
 import com.kr.formdang.model.external.google.GoogleLoginDto;
 import com.kr.formdang.model.external.kakao.KakaoLoginDto;
-import com.kr.formdang.model.net.request.AdminSignRequest;
 import lombok.*;
 import org.apache.commons.lang3.StringUtils;
 

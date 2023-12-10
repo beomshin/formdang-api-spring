@@ -28,13 +28,13 @@ public class QuestionTbEntity extends DateEntity{
     private int order;
     @Basic
     @Column(name = "question_type")
-    private byte questionType;
+    private int questionType;
     @Basic
     @Column(name = "title")
     private String title;
     @Basic
-    @Column(name = "question_sub_title")
-    private String questionSubTitle;
+    @Column(name = "question_placeholder")
+    private String questionPlaceholder;
     @Basic
     @Column(name = "question_detail")
     private String questionDetail;
@@ -42,7 +42,10 @@ public class QuestionTbEntity extends DateEntity{
     @Column(name = "quiz_answer")
     private String quizAnswer;
     @Basic
-    @Column(name = "image")
-    private String image;
+    @Column(name = "count")
+    private int count;
+    @Basic
+    @Column(name = "image_url")
+    private String imageUrl;
 
 }
