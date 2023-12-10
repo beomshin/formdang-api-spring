@@ -44,9 +44,9 @@ public class FormSubmitRequest extends DefaultRequest {
 
     private Integer maxRespondent; // 인원 제한수 ( 0: 제한 없음, 1~ 제한인원)
 
-    private Integer logoUrl; // 로그 url
+    private String logoUrl; // 로그 url
 
-    private Integer themaUrl; // 테마 url
+    private String themaUrl; // 테마 url
 
     @Valid @NotNull(message = "질문 리스트가 누락되었습니다.")
     private List<FormSubmitQuestionRequest> question;
@@ -55,7 +55,7 @@ public class FormSubmitRequest extends DefaultRequest {
     @Setter
     @NoArgsConstructor
     @AllArgsConstructor
-    static class FormSubmitQuestionRequest {
+    public static class FormSubmitQuestionRequest {
 
         @NotNull(message = "질문 타입이 누락되었습니다.")
         private Integer type; // 질문 타입 ( 0: 주관식, 1: 객관식 )

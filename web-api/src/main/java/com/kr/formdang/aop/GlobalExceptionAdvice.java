@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.BindException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.MissingRequestHeaderException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -48,6 +49,12 @@ public class GlobalExceptionAdvice {
     public ResponseEntity<DefaultResponse> handle(HttpMessageNotReadableException e) {
         log.error("[HttpMessageNotReadableException]");
         return ResponseEntity.ok().body(new DefaultResponse(GlobalCode.HTTP_MESSAGE_NOT_READABLE_ERROR));
+    }
+
+    @ExceptionHandler
+    public ResponseEntity<DefaultResponse> handle(MissingRequestHeaderException e) {
+        log.error("[MissingRequestHeaderException]");
+        return ResponseEntity.ok().body(new DefaultResponse(GlobalCode.NOT_EXIST_HEADER));
     }
 
     @ExceptionHandler(value = CustomException.class)
