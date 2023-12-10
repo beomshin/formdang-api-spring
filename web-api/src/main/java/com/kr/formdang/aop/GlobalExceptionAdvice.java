@@ -10,10 +10,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.BindException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.MissingRequestHeaderException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.NoHandlerFoundException;
+
+import javax.validation.UnexpectedTypeException;
 
 @RestControllerAdvice
 @RequiredArgsConstructor
@@ -22,20 +25,36 @@ public class GlobalExceptionAdvice {
 
     @ExceptionHandler
     public ResponseEntity<DefaultResponse> handle(MethodArgumentNotValidException e) {
-        log.error("[MethodArgumentNotValidException]", e);
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new DefaultResponse(GlobalCode.PARAMETER_ERROR));
+        log.error("[MethodArgumentNotValidException]");
+        DefaultResponse response = new DefaultResponse(GlobalCode.PARAMETER_ERROR);
+        response.setErrorMsg(e.getBindingResult()
+                .getAllErrors()
+                .get(0)
+                .getDefaultMessage());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
     }
 
     @ExceptionHandler
     public ResponseEntity<DefaultResponse> handle(BindException e) {
-        log.error("[BindException]", e);
-        return ResponseEntity.ok().body(new DefaultResponse(GlobalCode.BIND_ERROR));
+        log.error("[BindException]");
+        DefaultResponse response = new DefaultResponse(GlobalCode.BIND_ERROR);
+        response.setErrorMsg(e.getBindingResult()
+                .getAllErrors()
+                .get(0)
+                .getDefaultMessage());
+        return ResponseEntity.ok().body(response);
     }
 
     @ExceptionHandler
     public ResponseEntity<DefaultResponse> handle(HttpMessageNotReadableException e) {
-        log.error("[HttpMessageNotReadableException]", e);
+        log.error("[HttpMessageNotReadableException]");
         return ResponseEntity.ok().body(new DefaultResponse(GlobalCode.HTTP_MESSAGE_NOT_READABLE_ERROR));
+    }
+
+    @ExceptionHandler
+    public ResponseEntity<DefaultResponse> handle(MissingRequestHeaderException e) {
+        log.error("[MissingRequestHeaderException]");
+        return ResponseEntity.ok().body(new DefaultResponse(GlobalCode.NOT_EXIST_HEADER));
     }
 
     @ExceptionHandler(value = CustomException.class)

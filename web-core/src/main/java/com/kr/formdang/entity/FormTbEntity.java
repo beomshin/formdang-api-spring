@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
+import org.hibernate.annotations.DynamicInsert;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
@@ -15,20 +16,24 @@ import java.util.Objects;
 @ToString(callSuper = true)
 @SuperBuilder
 @NoArgsConstructor
+@DynamicInsert
 public class FormTbEntity extends DateEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     @Column(name = "fid")
-    private long fid;
+    private Long fid;
     @Basic
     @Column(name = "aid")
     private Long aid;
     @Basic
     @Column(name = "form_type")
-    private byte formType;
+    private int formType;
     @Basic
     @Column(name = "title")
     private String title;
+    @Basic
+    @Column(name = "form_detail")
+    private String formDetail;
     @Basic
     @Column(name = "begin_dt")
     private Timestamp beginDt;
@@ -51,10 +56,13 @@ public class FormTbEntity extends DateEntity {
     @Column(name = "report_count")
     private int reportCount;
     @Basic
+    @Column(name = "status")
+    private int status;
+    @Basic
     @Column(name = "end_flag")
-    private byte endFlag;
+    private int endFlag;
     @Basic
     @Column(name = "del_flag")
-    private byte delFlag;
+    private int delFlag;
 
 }

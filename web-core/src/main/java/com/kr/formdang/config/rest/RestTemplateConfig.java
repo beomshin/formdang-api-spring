@@ -1,4 +1,4 @@
-package com.kr.formdang.utils;
+package com.kr.formdang.config.rest;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -7,18 +7,17 @@ import org.apache.http.impl.client.HttpClientBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
-import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
 
 @Configuration
 @Slf4j
 @RequiredArgsConstructor
-public class ApiTemplate {
+public class RestTemplateConfig {
 
     private final static String commonRestTemplate = "commonRestTemplate";
 
-    @Bean(name = ApiTemplate.commonRestTemplate)
+    @Bean(name = RestTemplateConfig.commonRestTemplate)
     public RestTemplate restTemplate() {
 
         // 1. 타임아웃 설정시 HttpComponentsClientHttpRequestFactory 객체를 생성합니다.

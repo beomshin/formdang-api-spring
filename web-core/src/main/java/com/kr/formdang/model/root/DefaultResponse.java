@@ -3,6 +3,7 @@ package com.kr.formdang.model.root;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.kr.formdang.model.common.GlobalCode;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.util.Date;
 
@@ -14,6 +15,8 @@ public class DefaultResponse implements RootResponse {
     public String resultCode = GlobalCode.SUCCESS.getCode();
     public String resultMsg = GlobalCode.SUCCESS.getMsg();
     public Boolean success = true;
+    @Setter
+    public String errorMsg;
 
     public DefaultResponse(GlobalCode code) {
         this.resultCode = code.getCode();

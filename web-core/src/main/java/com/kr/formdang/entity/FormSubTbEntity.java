@@ -2,8 +2,10 @@ package com.kr.formdang.entity;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
+import org.hibernate.annotations.DynamicInsert;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
@@ -15,6 +17,7 @@ import java.util.Objects;
 @ToString(callSuper = true)
 @SuperBuilder
 @NoArgsConstructor
+@DynamicInsert
 public class FormSubTbEntity extends DateEntity{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
@@ -22,6 +25,7 @@ public class FormSubTbEntity extends DateEntity{
     private long fsid;
     @Basic
     @Column(name = "fid")
+    @Setter
     private long fid;
     @Basic
     @Column(name = "form_url")
