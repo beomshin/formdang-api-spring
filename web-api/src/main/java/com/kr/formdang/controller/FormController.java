@@ -6,20 +6,23 @@ import com.kr.formdang.exception.CustomException;
 import com.kr.formdang.jwt.JwtService;
 import com.kr.formdang.model.common.GlobalCode;
 import com.kr.formdang.model.layer.FormDataDto;
+import com.kr.formdang.model.layer.FormFindDto;
 import com.kr.formdang.model.layer.QuestionDataDto;
 import com.kr.formdang.model.net.request.FormSubmitRequest;
+import com.kr.formdang.model.net.response.FindFormResponse;
 import com.kr.formdang.model.root.DefaultResponse;
 import com.kr.formdang.service.form.FormDataService;
 import com.kr.formdang.service.form.FormService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotBlank;
+import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
@@ -50,6 +53,13 @@ public class FormController {
             log.error("{}", e);
             return ResponseEntity.ok().body(new DefaultResponse(GlobalCode.SYSTEM_ERROR));
         }
+    }
+
+    @GetMapping(value = "/form/find")
+    public ResponseEntity findForm(@RequestParam @NotBlank @Min(value = 0, message = "페이지 개수는 0이상입니다.") Integer page
+            , @RequestParam @NotBlank @Min(0) Integer type) {
+        Page pages = formService.findForm(new FormFindDto(page, type));
+        return ResponseEntity.ok().body(new FindFormResponse(pages));
     }
 
 }

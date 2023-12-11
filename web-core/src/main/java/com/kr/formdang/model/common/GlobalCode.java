@@ -12,6 +12,7 @@ public enum GlobalCode {
     FAIL_SAVE_ADMIN("30001", "관리자 계정 저장 실패"),
     NOT_UNIQUE_ADMIN("30002", "관리자 아이디 중복 계정 저장 실패"),
     FAIL_SUBMIT_FORM("30003", "폼 생성 실패"),
+    NOT_EXIST_PARAM("9993", "파라미터 누락 오류"),
     NOT_EXIST_HEADER("9993", "헤더 누락 오류"),
     NOT_EXIST_TOKEN("9994", "토큰 누락 오류"),
     BIND_ERROR("9995", "파라미터 검증 오류"),

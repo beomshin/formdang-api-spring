@@ -25,12 +25,12 @@ import java.sql.Timestamp;
 public class DateEntity {
 
     @CreatedDate
-    @Column(name = "regDt")
+    @Column(name = "reg_dt")
     @JsonFormat(shape= JsonFormat.Shape.STRING, pattern="yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
     private Timestamp regDt;
 
     @LastModifiedDate
-    @Column(name = "modDt")
+    @Column(name = "mod_dt")
     @JsonFormat(shape= JsonFormat.Shape.STRING, pattern="yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
     private Timestamp modDt;
 

@@ -11,9 +11,11 @@ import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.BindException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingRequestHeaderException;
+import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.servlet.NoHandlerFoundException;
 
 import javax.validation.UnexpectedTypeException;
@@ -55,6 +57,18 @@ public class GlobalExceptionAdvice {
     public ResponseEntity<DefaultResponse> handle(MissingRequestHeaderException e) {
         log.error("[MissingRequestHeaderException]");
         return ResponseEntity.ok().body(new DefaultResponse(GlobalCode.NOT_EXIST_HEADER));
+    }
+
+    @ExceptionHandler
+    public ResponseEntity<DefaultResponse> handle(MissingServletRequestParameterException e) {
+        log.error("[MissingServletRequestParameterException]");
+        return ResponseEntity.ok().body(new DefaultResponse(GlobalCode.NOT_EXIST_PARAM));
+    }
+
+    @ExceptionHandler
+    public ResponseEntity<DefaultResponse> handle(MethodArgumentTypeMismatchException e) {
+        log.error("[MethodArgumentTypeMismatchException]");
+        return ResponseEntity.ok().body(new DefaultResponse(GlobalCode.BIND_ERROR));
     }
 
     @ExceptionHandler(value = CustomException.class)

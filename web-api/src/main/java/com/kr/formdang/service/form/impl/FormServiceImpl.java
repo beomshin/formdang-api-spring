@@ -3,8 +3,10 @@ package com.kr.formdang.service.form.impl;
 import com.kr.formdang.entity.FormSubTbEntity;
 import com.kr.formdang.entity.FormTbEntity;
 import com.kr.formdang.entity.QuestionTbEntity;
+import com.kr.formdang.enums.PageEnum;
 import com.kr.formdang.model.common.GlobalCode;
 import com.kr.formdang.model.layer.FormDataDto;
+import com.kr.formdang.model.layer.FormFindDto;
 import com.kr.formdang.model.layer.QuestionDataDto;
 import com.kr.formdang.repository.FormSubTbRepository;
 import com.kr.formdang.repository.FormTbRepository;
@@ -12,6 +14,8 @@ import com.kr.formdang.repository.QuestionTbRepository;
 import com.kr.formdang.service.form.FormService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -41,5 +45,10 @@ public class FormServiceImpl implements FormService {
             log.error("{}", e);
             return null;
         }
+    }
+
+    @Override
+    public Page findForm(FormFindDto formFindDto) {
+        return formTbRepository.findByFormType(formFindDto.getType(), PageRequest.of(formFindDto.getPage(), PageEnum.PAGE_10.getNum()));
     }
 }
