@@ -49,6 +49,6 @@ public class FormServiceImpl implements FormService {
 
     @Override
     public Page findForm(FormFindDto formFindDto) {
-        return formTbRepository.findByFormType(formFindDto.getType(), PageRequest.of(formFindDto.getPage(), PageEnum.PAGE_10.getNum()));
+        return formTbRepository.findByFormTypeAndAid(formFindDto.getType(), formFindDto.getAid(), PageRequest.of(formFindDto.getPage(), PageEnum.PAGE_10.getNum()));
     }
 }

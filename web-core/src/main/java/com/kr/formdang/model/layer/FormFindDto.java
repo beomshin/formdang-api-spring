@@ -10,9 +10,11 @@ public class FormFindDto {
 
     private Integer page;
     private Integer type;
+    private Long aid;
 
-    public FormFindDto(Integer page, Integer type) {
+    public FormFindDto(Integer page, Integer type, Long aid) {
         this.page = page;
         this.type = type;
+        this.aid = aid;
     }
 }
