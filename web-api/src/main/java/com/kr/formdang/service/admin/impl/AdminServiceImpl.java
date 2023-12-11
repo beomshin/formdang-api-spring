@@ -1,9 +1,11 @@
 package com.kr.formdang.service.admin.impl;
 
+import com.kr.formdang.entity.AdminSubTbEntity;
 import com.kr.formdang.entity.AdminTbEntity;
 import com.kr.formdang.exception.CustomException;
 import com.kr.formdang.model.common.GlobalCode;
 import com.kr.formdang.model.external.auth.JwtTokenResponse;
+import com.kr.formdang.repository.AdminSubTbRepository;
 import com.kr.formdang.repository.AdminTbRepository;
 import com.kr.formdang.service.admin.AdminService;
 import com.kr.formdang.service.api.TokenService;
@@ -12,6 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -24,6 +27,7 @@ import java.util.stream.Collectors;
 public class AdminServiceImpl implements AdminService {
 
     private final AdminTbRepository adminTbRepository;
+    private final AdminSubTbRepository adminSubTbRepository;
     private final TokenService tokenService;
 
     @Value("${formdang.url.fail-login}")
@@ -34,6 +38,7 @@ public class AdminServiceImpl implements AdminService {
 
 
     @Override
+    @Transactional
     public AdminTbEntity saveSnsAdmin(AdminTbEntity adminTbEntity) throws CustomException {
         Optional<AdminTbEntity> adminTb = adminTbRepository.findBySubId(adminTbEntity.getSubId());
         if (adminTb.isPresent()) {
@@ -43,7 +48,9 @@ public class AdminServiceImpl implements AdminService {
 
         try {
             if (adminTbEntity == null) throw new CustomException(GlobalCode.FAIL_SAVE_ADMIN);
-            return adminTbRepository.save(adminTbEntity);
+            AdminTbEntity admin = adminTbRepository.save(adminTbEntity);
+            adminSubTbRepository.save(AdminSubTbEntity.builder().aid(admin.getAid()).build());
+            return admin;
         } catch (CustomException e) {
             log.error("[어드민 계정 정보 누락 오류] =========> ");
             throw e;

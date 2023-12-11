@@ -1,13 +1,16 @@
 package com.kr.formdang.service.form.impl;
 
+import com.kr.formdang.entity.AdminSubTbEntity;
 import com.kr.formdang.entity.FormSubTbEntity;
 import com.kr.formdang.entity.FormTbEntity;
 import com.kr.formdang.entity.QuestionTbEntity;
 import com.kr.formdang.enums.PageEnum;
+import com.kr.formdang.mapper.FormMapper;
 import com.kr.formdang.model.common.GlobalCode;
 import com.kr.formdang.model.layer.FormDataDto;
 import com.kr.formdang.model.layer.FormFindDto;
 import com.kr.formdang.model.layer.QuestionDataDto;
+import com.kr.formdang.repository.AdminSubTbRepository;
 import com.kr.formdang.repository.FormSubTbRepository;
 import com.kr.formdang.repository.FormTbRepository;
 import com.kr.formdang.repository.QuestionTbRepository;
@@ -29,6 +32,7 @@ public class FormServiceImpl implements FormService {
     private final FormTbRepository formTbRepository;
     private final QuestionTbRepository questionTbRepository;
     private final FormSubTbRepository formSubTbRepository;
+    private final AdminSubTbRepository adminSubTbRepository;
 
     @Override
     @Transactional
@@ -40,6 +44,7 @@ public class FormServiceImpl implements FormService {
             FormSubTbEntity formSubTb = new FormSubTbEntity();
             formSubTb.setFid(formTb.getFid());
             formSubTbRepository.save(formSubTb);
+            adminSubTbRepository.countUpInspectionRespondentCnt(formTbEntity.getAid());
             return formTb;
         } catch (Exception e) {
             log.error("{}", e);
@@ -50,5 +55,10 @@ public class FormServiceImpl implements FormService {
     @Override
     public Page findForm(FormFindDto formFindDto) {
         return formTbRepository.findByFormTypeAndAid(formFindDto.getType(), formFindDto.getAid(), PageRequest.of(formFindDto.getPage(), PageEnum.PAGE_10.getNum()));
+    }
+
+    @Override
+    public AdminSubTbEntity analyzeForm(Long aid) {
+        return adminSubTbRepository.findByAid(aid);
     }
 }

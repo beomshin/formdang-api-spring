@@ -1,5 +1,6 @@
 package com.kr.formdang.controller;
 
+import com.kr.formdang.entity.AdminSubTbEntity;
 import com.kr.formdang.entity.FormTbEntity;
 import com.kr.formdang.entity.QuestionTbEntity;
 import com.kr.formdang.exception.CustomException;
@@ -9,6 +10,7 @@ import com.kr.formdang.model.layer.FormDataDto;
 import com.kr.formdang.model.layer.FormFindDto;
 import com.kr.formdang.model.layer.QuestionDataDto;
 import com.kr.formdang.model.net.request.FormSubmitRequest;
+import com.kr.formdang.model.net.response.AnalyzeFormResponse;
 import com.kr.formdang.model.net.response.FindFormResponse;
 import com.kr.formdang.model.root.DefaultResponse;
 import com.kr.formdang.service.form.FormDataService;
@@ -62,6 +64,19 @@ public class FormController {
         try {
             Page pages = formService.findForm(new FormFindDto(page, type, jwtService.getId(token)));
             return ResponseEntity.ok().body(new FindFormResponse(pages));
+        } catch (CustomException e) {
+            return ResponseEntity.ok().body(new DefaultResponse(e.getCode()));
+        } catch (Exception e) {
+            log.error("{}", e);
+            return ResponseEntity.ok().body(new DefaultResponse(GlobalCode.SYSTEM_ERROR));
+        }
+    }
+
+    @GetMapping(value = "/form/analyze")
+    public ResponseEntity analyzeForm(@RequestHeader("Authorization") String token) {
+        try {
+            AdminSubTbEntity adminSubTb = formService.analyzeForm(jwtService.getId(token));
+            return ResponseEntity.ok().body(new AnalyzeFormResponse(adminSubTb));
         } catch (CustomException e) {
             return ResponseEntity.ok().body(new DefaultResponse(e.getCode()));
         } catch (Exception e) {
