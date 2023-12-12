@@ -36,6 +36,8 @@ public class AdminServiceImpl implements AdminService {
     @Value("${formdang.url.success-login}")
     private String formdang_success_login;
 
+    @Value("${token.access-key}")
+    private String accessKey;
 
     @Override
     @Transactional
@@ -65,7 +67,7 @@ public class AdminServiceImpl implements AdminService {
 
     @Override
     public String successLogin(AdminTbEntity adminTb)  {
-        JwtTokenResponse jwtTokenResponse = tokenService.getLoginToken("1", "r5ZW27aCNHCnabMd2sQ534mnuIrHAcnshjGXBadqQnpiKKfv2sdAsa7fx4hVSJU5");
+        JwtTokenResponse jwtTokenResponse = tokenService.getLoginToken(String.valueOf(adminTb.getAid()), accessKey);
         Map<String, Object> params = new HashMap<>();
         params.put("accessToken", jwtTokenResponse.getAccessToken());
         params.put("refreshToken", jwtTokenResponse.getRefreshToken());

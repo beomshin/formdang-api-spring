@@ -27,6 +27,10 @@ file:
     video: 104857600 # 100 * 1024 * 1024
     replay: 52428800 # 50 * 1024 * 1024
 
+token:
+  access-key: r5ZW27aCNHCnabMd2sQ534mnuIrHAcnshjGXBadqQnpiKKfv2sdAsa7fx4hVSJU5
+
+
 #LOG
 logging:
   level:

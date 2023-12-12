@@ -25,6 +25,7 @@ google:
   auth:
     url: https://oauth2.googleapis.com
     scope: profile,email,openid
+
   login:
     url: https://accounts.google.com
   redirect:
