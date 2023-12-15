@@ -7,5 +7,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface FormTbRepository extends JpaRepository<FormTbEntity, Long> {
 
+    Page<FormTbEntity> findByAid(Long aid, Pageable pageable);
     Page<FormTbEntity> findByFormTypeAndAid(Integer formType, Long aid, Pageable pageable);
 }

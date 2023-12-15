@@ -17,4 +17,9 @@ public class FormFindDto {
         this.type = type;
         this.aid = aid;
     }
+
+    public boolean isAllType() {
+        final String ALL = "99";
+        return this.type.equals(ALL);
+    }
 }
