@@ -19,7 +19,7 @@ public class FormFindDto {
     }
 
     public boolean isAllType() {
-        final String ALL = "99";
+        final Integer ALL = 99;
         return this.type.equals(ALL);
     }
 }
