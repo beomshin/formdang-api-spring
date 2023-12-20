@@ -21,11 +21,11 @@ public class TokenServiceImpl implements TokenService {
     private String formdang_auth_issue;
 
     @Override
-    public JwtTokenResponse getLoginToken(String id, String key) {
+    public JwtTokenResponse getLoginToken(String id, String name, String key) {
         try {
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_JSON);
-            HttpEntity<JwtTokenRequest> httpRequestEntity = new HttpEntity<>(new JwtTokenRequest(id, key), headers);
+            HttpEntity<JwtTokenRequest> httpRequestEntity = new HttpEntity<>(new JwtTokenRequest(id, key, name), headers);
             log.debug("[인증토큰 요청] ===> [{}]", httpRequestEntity.getBody());
             ResponseEntity<JwtTokenResponse> response = commonRestTemplate.postForEntity(formdang_auth_issue, httpRequestEntity, JwtTokenResponse.class);
             log.debug("[인증토큰 응답] ===> STATUS: [{}], BODY: [{}]", response.getStatusCode(), response.getBody() );

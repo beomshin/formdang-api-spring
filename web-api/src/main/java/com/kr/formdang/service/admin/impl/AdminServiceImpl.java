@@ -67,7 +67,7 @@ public class AdminServiceImpl implements AdminService {
 
     @Override
     public String successLogin(AdminTbEntity adminTb)  {
-        JwtTokenResponse jwtTokenResponse = tokenService.getLoginToken(String.valueOf(adminTb.getAid()), accessKey);
+        JwtTokenResponse jwtTokenResponse = tokenService.getLoginToken(String.valueOf(adminTb.getAid()), adminTb.getName(), accessKey);
         Map<String, Object> params = new HashMap<>();
         params.put("accessToken", jwtTokenResponse.getAccessToken());
         params.put("refreshToken", jwtTokenResponse.getRefreshToken());

@@ -11,5 +11,6 @@ public class JwtTokenRequest {
 
     private String id;
     private String auth_key;
+    private String name;
 
 }
