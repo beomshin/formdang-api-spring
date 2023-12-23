@@ -49,7 +49,7 @@ public class GlobalExceptionAdvice {
 
     @ExceptionHandler
     public ResponseEntity<DefaultResponse> handle(HttpMessageNotReadableException e) {
-        log.error("[HttpMessageNotReadableException]");
+        log.error("[HttpMessageNotReadableException]", e);
         return ResponseEntity.ok().body(new DefaultResponse(GlobalCode.HTTP_MESSAGE_NOT_READABLE_ERROR));
     }
 
