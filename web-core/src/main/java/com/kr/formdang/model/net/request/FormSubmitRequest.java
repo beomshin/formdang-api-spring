@@ -70,11 +70,11 @@ public class FormSubmitRequest extends DefaultRequest {
 
         private String imageUrl; // 이미지 url
 
-        private String detail; // 질문 상세 내용 (주관식 x, 객관식 JSON 형태 질문)
+        private String[] detail; // 질문 상세 내용
 
         private Integer count; // 질문 개수
 
-        private String answer; // 질문 정답
+        private String[] answer; // 질문 정답
 
     }
 

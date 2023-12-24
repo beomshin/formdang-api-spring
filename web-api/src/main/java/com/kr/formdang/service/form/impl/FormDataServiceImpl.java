@@ -9,6 +9,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
+import java.util.stream.Collectors;
+
 @Service
 @Slf4j
 @RequiredArgsConstructor
@@ -36,9 +39,9 @@ public class FormDataServiceImpl implements FormDataService {
                 .questionType(questionDataDto.getType())
                 .title(questionDataDto.getTitle())
                 .questionPlaceholder(questionDataDto.getPlaceholder())
-                .questionDetail(questionDataDto.getDetail())
+                .questionDetail(Arrays.stream(questionDataDto.getDetail()).collect(Collectors.joining("|")))
                 .count(questionDataDto.getCount())
-                .quizAnswer(questionDataDto.getAnswer())
+                .quizAnswer(Arrays.stream(questionDataDto.getAnswer()).collect(Collectors.joining("|")))
                 .imageUrl(questionDataDto.getImageUrl())
                 .build();
     }
