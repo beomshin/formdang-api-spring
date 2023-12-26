@@ -39,9 +39,15 @@ public class FormDataServiceImpl implements FormDataService {
                 .questionType(questionDataDto.getType())
                 .title(questionDataDto.getTitle())
                 .questionPlaceholder(questionDataDto.getPlaceholder())
-                .questionDetail(Arrays.stream(questionDataDto.getDetail()).collect(Collectors.joining("|")))
+                .questionDetail(
+                        questionDataDto.getDetail() != null ?
+                        Arrays.stream(questionDataDto.getDetail()).collect(Collectors.joining("|")) : null
+                )
                 .count(questionDataDto.getCount())
-                .quizAnswer(Arrays.stream(questionDataDto.getAnswer()).collect(Collectors.joining("|")))
+                .quizAnswer(
+                        questionDataDto.getAnswer() != null ?
+                        Arrays.stream(questionDataDto.getAnswer()).collect(Collectors.joining("|")) : null
+                )
                 .imageUrl(questionDataDto.getImageUrl())
                 .build();
     }
