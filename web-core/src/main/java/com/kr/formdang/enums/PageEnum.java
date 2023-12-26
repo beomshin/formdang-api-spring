@@ -7,7 +7,8 @@ import lombok.Getter;
 @AllArgsConstructor
 public enum PageEnum {
 
-    PAGE_10(10),
+    PAGE_4(4),
+    PAGE_12(12),
 
     ;
 
