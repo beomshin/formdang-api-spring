@@ -20,7 +20,7 @@ public class FileController {
 
     private final FileService<GlobalFile> fileService;
 
-    @PostMapping("/file/upload")
+    @PostMapping("/public/file/upload")
     public ResponseEntity uploadFile(
             @ModelAttribute @Valid FileRequest fileRequest
             ) {

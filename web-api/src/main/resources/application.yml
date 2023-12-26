@@ -3,6 +3,9 @@ server:
   shutdown: graceful
   servlet:
     context-path: /api/sp
+    multipart:
+      max-file-size: 500MB
+      max-request-size: 500MB
 
 spring:
   profiles:
