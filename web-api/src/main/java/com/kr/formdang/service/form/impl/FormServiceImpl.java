@@ -55,9 +55,9 @@ public class FormServiceImpl implements FormService {
     @Override
     public Page findForm(FormFindDto formFindDto) {
         if (formFindDto.isAllType()) {
-            return formTbRepository.findByAid(formFindDto.getAid(), PageRequest.of(formFindDto.getPage(), PageEnum.PAGE_12.getNum()));
+            return formTbRepository.findByAidOrderByRegDtDesc(formFindDto.getAid(), PageRequest.of(formFindDto.getPage(), PageEnum.PAGE_12.getNum()));
         }else {
-            return formTbRepository.findByFormTypeAndAid(formFindDto.getType(), formFindDto.getAid(), PageRequest.of(formFindDto.getPage(), PageEnum.PAGE_12.getNum()));
+            return formTbRepository.findByFormTypeAndAidOrderByRegDtDesc(formFindDto.getType(), formFindDto.getAid(), PageRequest.of(formFindDto.getPage(), PageEnum.PAGE_12.getNum()));
         }
     }
 
