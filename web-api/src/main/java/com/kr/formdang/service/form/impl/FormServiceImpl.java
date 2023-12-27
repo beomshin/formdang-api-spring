@@ -44,7 +44,11 @@ public class FormServiceImpl implements FormService {
             FormSubTbEntity formSubTb = new FormSubTbEntity();
             formSubTb.setFid(formTb.getFid());
             formSubTbRepository.save(formSubTb);
-            adminSubTbRepository.countUpInspectionRespondentCnt(formTbEntity.getAid());
+            if (formTbEntity.getFormType() == 0) {
+                adminSubTbRepository.countUpInspectionCnt(formTbEntity.getAid());
+            } else if (formTbEntity.getFormType() == 1) {
+                adminSubTbRepository.countUpQuizCnt(formTbEntity.getAid());
+            }
             return formTb;
         } catch (Exception e) {
             log.error("{}", e);
