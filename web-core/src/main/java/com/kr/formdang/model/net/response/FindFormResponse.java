@@ -33,6 +33,7 @@ public class FindFormResponse extends DefaultResponse {
     @Setter
     @NoArgsConstructor
     static class Forms {
+        private long fid;
         private Integer type;
         private String title;
         private String logoUrl;
@@ -41,6 +42,7 @@ public class FindFormResponse extends DefaultResponse {
         private Timestamp regDt;
 
         public Forms(FormTbEntity formTbEntity) {
+            this.fid = formTbEntity.getFid();
             this.type = formTbEntity.getFormType();
             this.title = formTbEntity.getTitle();
             this.logoUrl = formTbEntity.getLogoUrl();
