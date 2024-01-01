@@ -29,7 +29,7 @@ public class FormDataDto {
     private String logoUrl; // 로그 url
     private String themaUrl; // 테마 url
 
-    public FormDataDto(FormSubmitRequest request, String pattern) throws ParseException {
+    public FormDataDto(FormSubmitRequest request, Long aid, String pattern) throws ParseException {
         this.type = request.getType();
         this.title = request.getTitle();
         this.detail = request.getDetail();

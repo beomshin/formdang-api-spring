@@ -1,6 +1,7 @@
 package com.kr.formdang.model.net.response;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.kr.formdang.entity.AdminSubTbEntity;
 import com.kr.formdang.entity.FormTbEntity;
 import com.kr.formdang.model.root.DefaultResponse;
 import lombok.*;
@@ -21,12 +22,14 @@ public class FindFormResponse extends DefaultResponse {
     private Long totalElements;
     private Integer totalPage;
     private Integer curPage;
+    private Analyze analyze;
 
-    public FindFormResponse(Page<FormTbEntity> pages) {
+    public FindFormResponse(Page<FormTbEntity> pages, AdminSubTbEntity adminSubTb) {
         this.list = pages.getContent().stream().map(Forms::new).collect(Collectors.toList());
         this.totalElements = pages.getTotalElements();
         this.totalPage = pages.getTotalPages();
         this.curPage = pages.getNumber();
+        this.analyze = new Analyze(adminSubTb);
     }
 
     @Getter
@@ -48,5 +51,23 @@ public class FindFormResponse extends DefaultResponse {
             this.logoUrl = formTbEntity.getLogoUrl();
             this.regDt = formTbEntity.getRegDt();
         }
+    }
+
+    @Getter
+    @Setter
+    @NoArgsConstructor
+    static class Analyze {
+        private Integer inspectionCnt;
+        private Integer quizCnt;
+        private Integer inspectionRespondentCnt;
+        private Integer quizRespondentCnt;
+
+        public Analyze(AdminSubTbEntity adminSubTbEntity) {
+            this.inspectionCnt = adminSubTbEntity.getInspectionCnt();
+            this.quizCnt = adminSubTbEntity.getQuizCnt();
+            this.inspectionRespondentCnt = adminSubTbEntity.getInspectionRespondentCnt();
+            this.quizRespondentCnt = adminSubTbEntity.getQuizRespondent_cnt();
+        }
+
     }
 }

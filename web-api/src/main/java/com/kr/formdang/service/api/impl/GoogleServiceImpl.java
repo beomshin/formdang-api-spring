@@ -24,34 +24,30 @@ import org.springframework.web.util.UriComponentsBuilder;
 public class GoogleServiceImpl implements GoogleService {
 
     private final GoogleProp googleProp;
-
+    private final RestTemplate snsApiRestTemplate;
+    private final ObjectMapper apiObjectMapper;
 
     @Override
-    public GoogleLoginDto googleOAuth(GoogleLoginRequestDto requestDto) throws Exception {
-        RestTemplate restTemplate = new RestTemplate();
-
-        // Http Header 설정
+    public GoogleLoginDto googleOAuth(GoogleLoginRequestDto googleLoginRequestDto) throws Exception {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
-        HttpEntity<GoogleLoginRequestDto> httpRequestEntity = new HttpEntity<>(requestDto, headers);
-        ResponseEntity<String> apiResponseJson = restTemplate.postForEntity(googleProp.getGoogleAuthUrl() + "/token", httpRequestEntity, String.class);
+        HttpEntity<GoogleLoginRequestDto> httpRequestEntity = new HttpEntity<>(googleLoginRequestDto, headers);
 
-        // ObjectMapper를 통해 String to Object로 변환
-        ObjectMapper objectMapper = new ObjectMapper();
-        objectMapper.setPropertyNamingStrategy(PropertyNamingStrategy.SNAKE_CASE);
-        objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL); // NULL이 아닌 값만 응답받기(NULL인 경우는 생략)
-        GoogleLoginResponseDto googleLoginResponse = objectMapper.readValue(apiResponseJson.getBody(), new TypeReference<GoogleLoginResponseDto>() {});
 
-        // 사용자의 정보는 JWT Token으로 저장되어 있고, Id_Token에 값을 저장한다.
-        String jwtToken = googleLoginResponse.getIdToken();
+        log.info("[구글 토큰 요청 ===> : [{}]", httpRequestEntity);
+        ResponseEntity<String> apiResponseJson = snsApiRestTemplate.postForEntity(googleProp.getGoogleAuthUrl() + "/token", httpRequestEntity, String.class); // 구글 토큰 API 요청
+        log.info("[구글 토큰 응답 ===> : [{}]", apiResponseJson);
 
-        // JWT Token을 전달해 JWT 저장된 사용자 정보 확인
-        String requestUrl = UriComponentsBuilder.fromHttpUrl(googleProp.getGoogleAuthUrl() + "/tokeninfo").queryParam("id_token", jwtToken).toUriString();
+        GoogleLoginResponseDto googleLoginResponse = apiObjectMapper.readValue(apiResponseJson.getBody(), new TypeReference<GoogleLoginResponseDto>() {});
 
-        String resultJson = restTemplate.getForObject(requestUrl, String.class);
+        String requestUrl = UriComponentsBuilder.fromHttpUrl(googleProp.getGoogleAuthUrl() + "/tokeninfo").queryParam("id_token", googleLoginResponse.getIdToken()).toUriString(); // 구글 사용자 정보 요청
+
+        log.info("[구글 사용자 정보 요청 ===> : [{}]", requestUrl);
+        String resultJson = snsApiRestTemplate.getForObject(requestUrl, String.class);
+        log.info("[구글 사용자 정보 응답 ===> : [{}]", resultJson);
 
         if(resultJson != null) {
-            GoogleLoginDto userInfoDto = objectMapper.readValue(resultJson, new TypeReference<GoogleLoginDto>() {});
+            GoogleLoginDto userInfoDto = apiObjectMapper.readValue(resultJson, new TypeReference<GoogleLoginDto>() {});
             return userInfoDto;
         }
         else {

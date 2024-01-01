@@ -2,11 +2,10 @@ package com.kr.formdang.jwt;
 
 import com.kr.formdang.exception.CustomException;
 
-import javax.servlet.http.HttpServletRequest;
-import java.util.Date;
-import java.util.List;
-
+/**
+ * 토큰 서비스
+ */
 public interface JwtService {
-    Long getId(String token) throws CustomException;
-    String parseJwt(String headerAuth) throws CustomException;
+    Long getId(String token) throws CustomException; // 토큰 아이디값 조회
+    String parseJwt(String headerAuth) throws CustomException; // 토큰 값 조회
 }

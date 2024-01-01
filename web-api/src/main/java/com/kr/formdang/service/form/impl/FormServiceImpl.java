@@ -35,21 +35,36 @@ public class FormServiceImpl implements FormService {
     private final FormSubTbRepository formSubTbRepository;
     private final AdminSubTbRepository adminSubTbRepository;
 
+    /**
+     * 폼 저장
+     *
+     * - 폼 저장
+     * - 질문 리스트 저장
+     * - 유저 생성 개수 업데이트
+     *
+     * @param formTbEntity
+     * @param questionTbEntities
+     * @return
+     */
     @Override
     @Transactional
     public FormTbEntity submitForm(FormTbEntity formTbEntity, List<QuestionTbEntity> questionTbEntities) {
         try {
-            FormTbEntity formTb = formTbRepository.save(formTbEntity);
+            FormTbEntity formTb = formTbRepository.save(formTbEntity); // 폼 생성
+
             questionTbEntities.stream().forEach(it -> it.setFid(formTb.getFid()));
-            questionTbRepository.saveAll(questionTbEntities);
+            questionTbRepository.saveAll(questionTbEntities); // 질문 리스트 생성
+
             FormSubTbEntity formSubTb = new FormSubTbEntity();
             formSubTb.setFid(formTb.getFid());
-            formSubTbRepository.save(formSubTb);
+            formSubTbRepository.save(formSubTb); // 폼 서브 저장 테이블 생성
+
             if (formTbEntity.getFormType() == 0) {
-                adminSubTbRepository.countUpInspectionCnt(formTbEntity.getAid());
+                adminSubTbRepository.countUpInspectionCnt(formTbEntity.getAid()); // 설문 타입 생성 개수 증가
             } else if (formTbEntity.getFormType() == 1) {
-                adminSubTbRepository.countUpQuizCnt(formTbEntity.getAid());
+                adminSubTbRepository.countUpQuizCnt(formTbEntity.getAid()); // 퀴즈 타입 생성 개수 증가
             }
+
             return formTb;
         } catch (Exception e) {
             log.error("{}", e);
@@ -57,22 +72,36 @@ public class FormServiceImpl implements FormService {
         }
     }
 
+    /**
+     * 폼 리스트 조회
+     * 페이징 12
+     *
+     * 상태 처리 - 전체, 진행, 종료, 임시
+     *
+     * @param formFindDto
+     * @return
+     */
     @Override
     public Page findForm(FormFindDto formFindDto) {
         PageRequest pageRequest = PageRequest.of(formFindDto.getPage(), PageEnum.PAGE_12.getNum());
-        if (formFindDto.isAllStatus()) {
+        if (formFindDto.isAllStatus()) { // 전체 조회
             return formTbRepository.findByAidOrderByRegDtDesc(formFindDto.getAid(), pageRequest);
-        } else if (formFindDto.isProgressStatus()) {
+        } else if (formFindDto.isProgressStatus()) { // 진행중인 폼 리스트 조회
             return formTbRepository.findByAidAndStatusOrderByRegDtDesc(formFindDto.getAid(), FormStatusEnum.NORMAL_STATUS.getCode(), pageRequest);
-        } else if (formFindDto.isEndStatus()) {
+        } else if (formFindDto.isEndStatus()) { // 종료 폼 리스트 조회
             return formTbRepository.findByAidAndEndFlagOrderByRegDtDesc(formFindDto.getAid(), FormStatusEnum.END_STATUS.getCode(), pageRequest);
-        } else if (formFindDto.isTempStatus()) {
+        } else if (formFindDto.isTempStatus()) { // 임시 폼 리스트 조회
             return formTbRepository.findByAidAndStatusOrderByRegDtDesc(formFindDto.getAid(), FormStatusEnum.TEMP_STATUS.getCode(), pageRequest);
-        } else {
+        } else { // 예외시 기본 조회
             return formTbRepository.findByAidOrderByRegDtDesc(formFindDto.getAid(), pageRequest);
         }
     }
 
+    /**
+     * 폼 서브 정보 테이블 조회
+     * @param aid
+     * @return
+     */
     @Override
     public AdminSubTbEntity analyzeForm(Long aid) {
         return adminSubTbRepository.findByAid(aid);

@@ -5,9 +5,10 @@ import com.kr.formdang.entity.QuestionTbEntity;
 import com.kr.formdang.model.layer.FormDataDto;
 import com.kr.formdang.model.layer.QuestionDataDto;
 
+/**
+ * 엔티티 생성 서비스
+ */
 public interface FormDataService {
-
-    FormTbEntity getFormData(FormDataDto formDataDto);
-
-    QuestionTbEntity getQuestionData(QuestionDataDto questionDataDto);
+    FormTbEntity getFormData(FormDataDto formDataDto); // 폼 엔티티 생성
+    QuestionTbEntity getQuestionData(QuestionDataDto questionDataDto); // 질문 엔티티 생성
 }

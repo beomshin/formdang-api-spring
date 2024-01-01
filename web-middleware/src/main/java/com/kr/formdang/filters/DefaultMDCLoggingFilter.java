@@ -1,5 +1,6 @@
 package com.kr.formdang.filters;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.MDC;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
@@ -13,14 +14,20 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.UUID;
 
-@Order(Ordered.HIGHEST_PRECEDENCE)
-@WebFilter(urlPatterns = "/*")
 public class DefaultMDCLoggingFilter extends OncePerRequestFilter {
 
+    /**
+     * MDC REQUEST ID 설정
+     * @param request
+     * @param response
+     * @param filterChain
+     * @throws ServletException
+     * @throws IOException
+     */
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        final UUID uuid = UUID.randomUUID();
-        MDC.put("request_id", uuid.toString());
+        String requestId = ((HttpServletRequest)request).getHeader("X-RequestID");
+        MDC.put("request_id", StringUtils.defaultString(requestId, UUID.randomUUID().toString().replaceAll("-", "")));
         filterChain.doFilter(request, response);
         MDC.clear();
     }

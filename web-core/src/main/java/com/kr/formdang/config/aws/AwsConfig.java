@@ -26,12 +26,11 @@ public class AwsConfig {
     public AwsConfig(ConfigTbRepository configTbRepository) { // AWS 키 세팅
         accessKey = configTbRepository.findByKey(AWS_ACCESS_KEY).getValue();
         secretKey = configTbRepository.findByKey(AWS_SECRET_KEY).getValue();
-        log.info("[로딩키] aws accessKey: {}", accessKey);
-        log.info("[로딩키] aws secretKey: {}", secretKey);
     }
 
     @Bean
     public AmazonS3Client amazonS3Client() {
+        log.info("[Bean][Amazon S4 Client] 설정 ");
         BasicAWSCredentials awsCreds = new BasicAWSCredentials(accessKey, secretKey);
         return (AmazonS3Client) AmazonS3ClientBuilder.standard()
                 .withRegion(region)

@@ -54,8 +54,6 @@ public class DBConfig {
     public DataSource dataSource() {
         log.info("[데이터베이스] ClassName: [{}]", className);
         log.info("[데이터베이스] Url: [{}]", url);
-        log.info("[데이터베이스] Username: [{}]", username);
-        log.info("[데이터베이스] Password: [{}]", password);
         HikariConfig hikariConfig = new HikariConfig();
         hikariConfig.setDriverClassName(className);
         hikariConfig.setJdbcUrl(url);

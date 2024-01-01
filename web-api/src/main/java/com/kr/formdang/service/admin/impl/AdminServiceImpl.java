@@ -44,7 +44,7 @@ public class AdminServiceImpl implements AdminService {
     public AdminTbEntity saveSnsAdmin(AdminTbEntity adminTbEntity) throws CustomException {
         Optional<AdminTbEntity> adminTb = adminTbRepository.findBySubId(adminTbEntity.getSubId());
         if (adminTb.isPresent()) {
-            log.info("[가입 유저] =========> ");
+            log.info("[가입 유저] =========> [{}]", adminTb);
             return adminTb.get();
         }
 
@@ -54,7 +54,7 @@ public class AdminServiceImpl implements AdminService {
             adminSubTbRepository.save(AdminSubTbEntity.builder().aid(admin.getAid()).build());
             return admin;
         } catch (CustomException e) {
-            log.error("[어드민 계정 정보 누락 오류] =========> ");
+            log.error("[어드민 계정 정보 누락 오류] =========> [{}]", e.getCode());
             throw e;
         } catch (DataIntegrityViolationException e) {
             log.error("[어드민 계정 유니크 오류] =========> ");
@@ -67,7 +67,7 @@ public class AdminServiceImpl implements AdminService {
 
     @Override
     public String successLogin(AdminTbEntity adminTb)  {
-        JwtTokenResponse jwtTokenResponse = tokenService.getLoginToken(String.valueOf(adminTb.getAid()), adminTb.getName(), accessKey);
+        JwtTokenResponse jwtTokenResponse = tokenService.getLoginToken(String.valueOf(adminTb.getAid()), adminTb.getName(), accessKey); // 폼당폼당 JWT 토큰 요청
         Map<String, Object> params = new HashMap<>();
         params.put("accessToken", jwtTokenResponse.getAccessToken());
         params.put("refreshToken", jwtTokenResponse.getRefreshToken());
@@ -78,7 +78,7 @@ public class AdminServiceImpl implements AdminService {
 
         return formdang_success_login
                 + "?"
-                + paramStr;
+                + paramStr; // 폼당폼당 관리자 메인 페이지 URL
     }
 
     @Override

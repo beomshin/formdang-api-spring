@@ -26,6 +26,12 @@ public class KakaoController {
     private final AdminService adminService;
     private final AdminDataService adminDataServiceImpl;
 
+    /**
+     * 카카오 로그인 페이지 이동 API
+     *
+     * - 카카오 로그인 페이지 포워딩
+     * @return
+     */
     @GetMapping(value = "/public/kakao/login")
     public RedirectView moveGoogleInitUrl() {
         RedirectView redirectView = new RedirectView();
@@ -34,16 +40,32 @@ public class KakaoController {
         return redirectView;
     }
 
+    /**
+     * 카카오 로그인 콜백 API
+     *
+     * - 폼당폼당 페이지로 포워딩
+     *  - 성공시 : 관리자 메인 페이지
+     *  - 실패시 : 로그인 페이지
+     *
+     * - 카카오 로그인 정보 취득 절차
+     *  - 1. 콜백 코드를 통한 JWT 토큰 발급
+     *  - 2. JWT 토큰을 통한 로그인 정보 취득
+     *
+     * - 로그인 정보를 통한 폼당폼당 로그인 및 가입 처리
+     *
+     * @param code
+     * @return
+     */
     @GetMapping(value = "/public/kakao/login/callback")
     public RedirectView redirectKakaoLogin(@RequestParam(value = "code") String code) {
         RedirectView redirectView = new RedirectView();
         try {
-            KakaoLoginDto kakaoLoginDto = kakaoService.kakaoOAuth(new KakaoLoginRequestDto(kakaoProp, code));
-            AdminTbEntity adminTb = adminService.saveSnsAdmin(adminDataServiceImpl.getAdminData(new AdminDataDto(kakaoLoginDto)));
-            redirectView.setUrl(adminService.successLogin(adminTb));
+            KakaoLoginDto kakaoLoginDto = kakaoService.kakaoOAuth(new KakaoLoginRequestDto(kakaoProp, code)); // 카카오 로그인 정보 취득
+            AdminTbEntity adminTb = adminService.saveSnsAdmin(adminDataServiceImpl.getAdminData(new AdminDataDto(kakaoLoginDto)));  // 폼당폼당 로그인 및 가입
+            redirectView.setUrl(adminService.successLogin(adminTb)); // 폼당폼당 로그인 성공 페이지 세팅
             return redirectView;
         } catch (Exception e) {
-            log.error("{}", e);
+            log.error("[카카오 로그인 콜백 API][/public/kakao/login/callback] - {}", e);
             redirectView.setUrl(adminService.failLogin(e));
             return redirectView;
         }

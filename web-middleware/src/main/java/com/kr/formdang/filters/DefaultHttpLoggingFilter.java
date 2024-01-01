@@ -28,8 +28,6 @@ import java.time.ZoneId;
 import java.util.Enumeration;
 
 @Slf4j
-@Order(Ordered.HIGHEST_PRECEDENCE + 1)
-@WebFilter(urlPatterns = "/*")
 public class DefaultHttpLoggingFilter extends OncePerRequestFilter {
   private final Gson gson = new GsonBuilder().create();
 

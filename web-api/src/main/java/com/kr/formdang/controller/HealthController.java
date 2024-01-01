@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RestController;
 @Slf4j
 public class HealthController {
 
-
     @GetMapping("/health")
     public ResponseEntity health() {
         log.debug("[private 헬스 체크]");

@@ -15,7 +15,7 @@ public class DateValidator implements ConstraintValidator<DateValid, String> {
         if (value == null || value.length() == 0) return true;
 
         try {
-            LocalDate.from(LocalDate.parse(value, DateTimeFormatter.ofPattern("yyyy-MM-dd")));
+            LocalDate.from(LocalDate.parse(value, DateTimeFormatter.ofPattern("yyyyMMdd")));
         } catch (DateTimeParseException e) {
             return false;
         }

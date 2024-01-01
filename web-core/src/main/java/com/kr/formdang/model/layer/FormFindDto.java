@@ -20,29 +20,24 @@ public class FormFindDto {
         this.status = status;
     }
 
-    public boolean isAllType() {
-        final Integer ALL = 99;
-        return this.type.equals(ALL);
-    }
-
-    public boolean isAllStatus() {
-        final Integer ALL = 99;
+    public boolean isAllStatus() { // 상태 전체 조회
+        final int ALL = 99;
         return this.status.equals(ALL);
     }
 
-    public boolean isProgressStatus() {
-        final Integer ALL = 0;
-        return this.status.equals(ALL);
+    public boolean isProgressStatus() { // 진행 상태 조회
+        final int PROGRESS = 0;
+        return this.status.equals(PROGRESS);
     }
 
-    public boolean isEndStatus() {
-        final Integer ALL = 1;
-        return this.status.equals(ALL);
+    public boolean isEndStatus() { // 종료 상태 조회
+        final int END = 1;
+        return this.status.equals(END);
     }
 
-    public boolean isTempStatus() {
-        final Integer ALL = 2;
-        return this.status.equals(ALL);
+    public boolean isTempStatus() { // 임시 상태 조회
+        final int TEMP = 2;
+        return this.status.equals(TEMP);
     }
 
 }

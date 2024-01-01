@@ -14,19 +14,14 @@ public class GoogleProp {
 
     @Value("${google.auth.url}")
     private String googleAuthUrl;
-
     @Value("${google.login.url}")
     private String googleLoginUrl;
-
     @Value("${google.redirect.uri}")
     private String googleRedirectUri;
-
     @Value("${google.client.id}")
     private String googleClientId;
-
     @Value("${google.secret}")
     private String googleSecret;
-
     @Value("${google.auth.scope}")
     private String scopes;
 
