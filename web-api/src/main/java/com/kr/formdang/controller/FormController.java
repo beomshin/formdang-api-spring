@@ -24,7 +24,6 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
-import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
@@ -50,6 +49,7 @@ public class FormController {
                 return ResponseEntity.ok().body(new DefaultResponse(GlobalCode.FAIL_SUBMIT_FORM));
             }
         } catch (CustomException e) {
+            log.error("{}", e.getCode());
             return ResponseEntity.ok().body(new DefaultResponse(e.getCode()));
         } catch (Exception e) {
             log.error("{}", e);

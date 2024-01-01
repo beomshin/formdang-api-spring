@@ -13,6 +13,12 @@ import org.springframework.web.bind.annotation.RestController;
 public class AuthController {
 
 
+    /**
+     * 토큰 검증 API
+     *
+     * 로그인 후 페이지 별로 해당 API를 통해 토큰 유효성 검증
+     * @return
+     */
     @GetMapping("/admin/validate")
     public ResponseEntity health() {
         return ResponseEntity.ok().body(new DefaultResponse());

@@ -21,27 +21,22 @@ public class AwsS3Utils {
 
     @Value("${cloud.aws.s3.bucket}")
     private String bucket;
-
     @Value("${cloud.aws.host}")
     private String host;
-
     private final AmazonS3Client amazonS3Client;
-
 
     public String fileUploadToS3(MultipartFile file, String ext) {
         try(InputStream inputStream = file.getInputStream()) {
-            String fileName = UUID.randomUUID().toString().concat(ext);
+            String fileName = UUID.randomUUID().toString().concat(ext); // 파일명 UUID 생성
             ObjectMetadata objectMetadata = new ObjectMetadata();
             objectMetadata.setContentLength(file.getSize());
             objectMetadata.setContentType(file.getContentType());
-
-            amazonS3Client.putObject(new PutObjectRequest(bucket, fileName, inputStream, objectMetadata).withCannedAcl(CannedAccessControlList.PublicRead));
+            amazonS3Client.putObject(new PutObjectRequest(bucket, fileName, inputStream, objectMetadata).withCannedAcl(CannedAccessControlList.PublicRead)); // 업로드 호출
             log.debug("[AWS 파일 업로드 성공] 업로드 파일명: {}", fileName);
-            return host + fileName;
+            return host + fileName; // 호스트명 + 파일명 URL 생성
         } catch(IOException e) {
             log.error("[AWS 이미지 업로드 실패] ========>");
             return null;
         }
     }
-
 }

@@ -20,10 +20,15 @@ public class FileController {
 
     private final FileService<GlobalFile> fileService;
 
+    /**
+     * 파일 업로드 API
+     *
+     * AWS S3에 파일 업로드 처리
+     * @param fileRequest
+     * @return
+     */
     @PostMapping("/public/file/upload")
-    public ResponseEntity uploadFile(
-            @ModelAttribute @Valid FileRequest fileRequest
-            ) {
+    public ResponseEntity uploadFile( @ModelAttribute @Valid FileRequest fileRequest) {
         GlobalFile file = fileService.uploadSingle(fileRequest.getFile());
         return ResponseEntity.ok().body(new FileResponse(file));
     }

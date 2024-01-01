@@ -60,21 +60,16 @@ public class FormServiceImpl implements FormService {
     @Override
     public Page findForm(FormFindDto formFindDto) {
         PageRequest pageRequest = PageRequest.of(formFindDto.getPage(), PageEnum.PAGE_12.getNum());
-        if (formFindDto.isAllType()) {
-
-            if (formFindDto.isAllStatus()) {
-                return formTbRepository.findByAidOrderByRegDtDesc(formFindDto.getAid(), pageRequest);
-            } else if (formFindDto.isProgressStatus()) {
-                return formTbRepository.findByAidAndStatusOrderByRegDtDesc(formFindDto.getAid(), FormStatusEnum.NORMAL_STATUS.getCode(), pageRequest);
-            } else if (formFindDto.isEndStatus()) {
-                return formTbRepository.findByAidAndEndFlagOrderByRegDtDesc(formFindDto.getAid(), FormStatusEnum.END_STATUS.getCode(), pageRequest);
-            } else if (formFindDto.isTempStatus()) {
-                return formTbRepository.findByAidAndStatusOrderByRegDtDesc(formFindDto.getAid(), FormStatusEnum.TEMP_STATUS.getCode(), pageRequest);
-            }
-
+        if (formFindDto.isAllStatus()) {
             return formTbRepository.findByAidOrderByRegDtDesc(formFindDto.getAid(), pageRequest);
-        }else {
-            return formTbRepository.findByFormTypeAndAidOrderByRegDtDesc(formFindDto.getType(), formFindDto.getAid(), pageRequest);
+        } else if (formFindDto.isProgressStatus()) {
+            return formTbRepository.findByAidAndStatusOrderByRegDtDesc(formFindDto.getAid(), FormStatusEnum.NORMAL_STATUS.getCode(), pageRequest);
+        } else if (formFindDto.isEndStatus()) {
+            return formTbRepository.findByAidAndEndFlagOrderByRegDtDesc(formFindDto.getAid(), FormStatusEnum.END_STATUS.getCode(), pageRequest);
+        } else if (formFindDto.isTempStatus()) {
+            return formTbRepository.findByAidAndStatusOrderByRegDtDesc(formFindDto.getAid(), FormStatusEnum.TEMP_STATUS.getCode(), pageRequest);
+        } else {
+            return formTbRepository.findByAidOrderByRegDtDesc(formFindDto.getAid(), pageRequest);
         }
     }
 
