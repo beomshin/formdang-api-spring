@@ -60,9 +60,10 @@ public class FormController {
     @GetMapping(value = "/form/find")
     public ResponseEntity findForm(@RequestParam @NotBlank @Min(value = 0, message = "페이지 개수는 0이상입니다.") Integer page,
                                    @RequestParam @NotBlank @Min(0) Integer type,
+                                   @RequestParam @NotBlank @Min(0) Integer status,
                                    @RequestHeader("Authorization") String token) {
         try {
-            Page pages = formService.findForm(new FormFindDto(page, type, jwtService.getId(token)));
+            Page pages = formService.findForm(new FormFindDto(page, type, jwtService.getId(token), status));
             return ResponseEntity.ok().body(new FindFormResponse(pages));
         } catch (CustomException e) {
             return ResponseEntity.ok().body(new DefaultResponse(e.getCode()));

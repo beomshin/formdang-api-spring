@@ -4,6 +4,7 @@ import com.kr.formdang.entity.AdminSubTbEntity;
 import com.kr.formdang.entity.FormSubTbEntity;
 import com.kr.formdang.entity.FormTbEntity;
 import com.kr.formdang.entity.QuestionTbEntity;
+import com.kr.formdang.enums.FormStatusEnum;
 import com.kr.formdang.enums.PageEnum;
 import com.kr.formdang.mapper.FormMapper;
 import com.kr.formdang.model.common.GlobalCode;
@@ -58,10 +59,22 @@ public class FormServiceImpl implements FormService {
 
     @Override
     public Page findForm(FormFindDto formFindDto) {
+        PageRequest pageRequest = PageRequest.of(formFindDto.getPage(), PageEnum.PAGE_12.getNum());
         if (formFindDto.isAllType()) {
-            return formTbRepository.findByAidOrderByRegDtDesc(formFindDto.getAid(), PageRequest.of(formFindDto.getPage(), PageEnum.PAGE_12.getNum()));
+
+            if (formFindDto.isAllStatus()) {
+                return formTbRepository.findByAidOrderByRegDtDesc(formFindDto.getAid(), pageRequest);
+            } else if (formFindDto.isProgressStatus()) {
+                return formTbRepository.findByAidAndStatusOrderByRegDtDesc(formFindDto.getAid(), FormStatusEnum.NORMAL_STATUS.getCode(), pageRequest);
+            } else if (formFindDto.isEndStatus()) {
+                return formTbRepository.findByAidAndEndFlagOrderByRegDtDesc(formFindDto.getAid(), FormStatusEnum.END_STATUS.getCode(), pageRequest);
+            } else if (formFindDto.isTempStatus()) {
+                return formTbRepository.findByAidAndStatusOrderByRegDtDesc(formFindDto.getAid(), FormStatusEnum.TEMP_STATUS.getCode(), pageRequest);
+            }
+
+            return formTbRepository.findByAidOrderByRegDtDesc(formFindDto.getAid(), pageRequest);
         }else {
-            return formTbRepository.findByFormTypeAndAidOrderByRegDtDesc(formFindDto.getType(), formFindDto.getAid(), PageRequest.of(formFindDto.getPage(), PageEnum.PAGE_12.getNum()));
+            return formTbRepository.findByFormTypeAndAidOrderByRegDtDesc(formFindDto.getType(), formFindDto.getAid(), pageRequest);
         }
     }
 

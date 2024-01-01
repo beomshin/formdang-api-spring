@@ -29,6 +29,7 @@ public class FormDataServiceImpl implements FormDataService {
                 .questionCount(formDataDto.getQuestionCount())
                 .logoUrl(formDataDto.getLogoUrl())
                 .themaUrl(formDataDto.getThemaUrl())
+                .status(formDataDto.getStatus())
                 .build();
     }
 
