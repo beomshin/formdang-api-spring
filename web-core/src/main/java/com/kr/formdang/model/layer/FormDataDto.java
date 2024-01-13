@@ -41,6 +41,7 @@ public class FormDataDto {
         this.maxRespondent = request.getMaxRespondent();
         this.logoUrl = request.getLogoUrl();
         this.themaUrl = request.getThemaUrl();
+        this.aid = aid;
     }
 
 }
