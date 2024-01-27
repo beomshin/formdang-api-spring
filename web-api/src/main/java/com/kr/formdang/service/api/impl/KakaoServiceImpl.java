@@ -53,9 +53,9 @@ public class KakaoServiceImpl implements KakaoService {
         headers.setBearerAuth(kakaoLoginResponseDto.getAccessToken());
         HttpEntity<GoogleLoginRequestDto> httpRequestEntity = new HttpEntity<>(null, headers);
 
-        log.info("[구글 사용자 정보 요청 ===> : [{}]", httpRequestEntity);
+        log.info("[카카오 사용자 정보 요청 ===> : [{}]", httpRequestEntity);
         ResponseEntity<String> response = snsApiRestTemplate.postForEntity(kakaoProp.getKakaoAuthUrl() + "/v2/user/me", httpRequestEntity, String.class); // 카카오 사용자 정보 요청
-        log.info("[구글 사용자 정보 응답 ===> : [{}]", response);
+        log.info("[카카오 사용자 정보 응답 ===> : [{}]", response);
 
         Map<String, Object> jsonResponse = apiObjectMapper.readValue(response.getBody(), Map.class);
 
