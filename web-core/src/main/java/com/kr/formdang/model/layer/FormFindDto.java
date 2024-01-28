@@ -22,6 +22,21 @@ public class FormFindDto {
         this.order = order;
     }
 
+    public boolean isAllType() { // 전체 타입
+        final int ALL = 99;
+        return this.type.equals(ALL);
+    }
+
+    public boolean isSurvey() { // 설문 타입
+        final int SURVEY = 0;
+        return this.type.equals(SURVEY);
+    }
+
+    public boolean isQuiz() { // 퀴즈 타입
+        final int QUIZ = 1;
+        return this.type.equals(QUIZ);
+    }
+
     public boolean isAllStatus() { // 상태 전체 조회
         final int ALL = 99;
         return this.status.equals(ALL);
@@ -41,5 +56,16 @@ public class FormFindDto {
         final int TEMP = 2;
         return this.status.equals(TEMP);
     }
+
+    public boolean isDelStatus() { // 삭제 상태 조회
+        final int DEL = 2;
+        return this.status.equals(DEL);
+    }
+
+    public boolean isRecent() {
+        final int RECENT = 0;
+        return this.order.equals(RECENT);
+    }
+
 
 }
