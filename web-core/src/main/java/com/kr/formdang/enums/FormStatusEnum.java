@@ -9,6 +9,7 @@ public enum FormStatusEnum {
 
     TEMP_STATUS(0),
     NORMAL_STATUS(1),
+    NOT_END_STATUS(0),
     END_STATUS(1),
 
     ;

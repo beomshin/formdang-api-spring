@@ -87,11 +87,11 @@ public class FormServiceImpl implements FormService {
         if (formFindDto.isAllStatus()) { // 전체 조회
             return formTbRepository.findByAidOrderByRegDtDesc(formFindDto.getAid(), pageRequest);
         } else if (formFindDto.isProgressStatus()) { // 진행중인 폼 리스트 조회
-            return formTbRepository.findByAidAndStatusOrderByRegDtDesc(formFindDto.getAid(), FormStatusEnum.NORMAL_STATUS.getCode(), pageRequest);
+            return formTbRepository.findByAidAndStatusAndEndFlagOrderByRegDtDesc(formFindDto.getAid(), FormStatusEnum.NORMAL_STATUS.getCode(), FormStatusEnum.NOT_END_STATUS.getCode(), pageRequest);
         } else if (formFindDto.isEndStatus()) { // 종료 폼 리스트 조회
             return formTbRepository.findByAidAndEndFlagOrderByRegDtDesc(formFindDto.getAid(), FormStatusEnum.END_STATUS.getCode(), pageRequest);
         } else if (formFindDto.isTempStatus()) { // 임시 폼 리스트 조회
-            return formTbRepository.findByAidAndStatusOrderByRegDtDesc(formFindDto.getAid(), FormStatusEnum.TEMP_STATUS.getCode(), pageRequest);
+            return formTbRepository.findByAidAndStatusAndEndFlagOrderByRegDtDesc(formFindDto.getAid(), FormStatusEnum.TEMP_STATUS.getCode(), FormStatusEnum.NOT_END_STATUS.getCode(), pageRequest);
         } else { // 예외시 기본 조회
             return formTbRepository.findByAidOrderByRegDtDesc(formFindDto.getAid(), pageRequest);
         }

@@ -96,11 +96,12 @@ public class FormController {
             @RequestParam @NotBlank @Min(value = 0, message = "페이지 개수는 0이상입니다.") Integer page,
             @RequestParam @NotBlank @Min(0) Integer type,
             @RequestParam @NotBlank @Min(0) Integer status,
+            @RequestParam @NotBlank @Min(0) Integer order,
             @RequestHeader("Authorization") String token)
     {
         try {
             final Long aid = jwtService.getId(token); // 관리자 아이디 세팅
-            Page pages = formService.findForm(new FormFindDto(page, type, aid, status)); // 폼 리스트 조회
+            Page pages = formService.findForm(new FormFindDto(page, type, aid, status, order)); // 폼 리스트 조회
             AdminSubTbEntity adminSubTb = formService.analyzeForm(aid); // 종합 정보 조회
             return ResponseEntity.ok().body(new FindFormResponse(pages, adminSubTb));
         } catch (CustomException e) {

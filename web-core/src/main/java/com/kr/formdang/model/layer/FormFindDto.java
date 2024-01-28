@@ -12,12 +12,14 @@ public class FormFindDto {
     private Integer type;
     private Long aid;
     private Integer status;
+    private Integer order;
 
-    public FormFindDto(Integer page, Integer type, Long aid, Integer status) {
+    public FormFindDto(Integer page, Integer type, Long aid, Integer status, Integer order) {
         this.page = page;
         this.type = type;
         this.aid = aid;
         this.status = status;
+        this.order = order;
     }
 
     public boolean isAllStatus() { // 상태 전체 조회

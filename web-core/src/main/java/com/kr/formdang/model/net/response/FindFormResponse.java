@@ -40,6 +40,8 @@ public class FindFormResponse extends DefaultResponse {
         private Integer type;
         private String title;
         private String logoUrl;
+        private Integer status;
+        private Integer endFlag;
 
         @JsonFormat(shape= JsonFormat.Shape.STRING, pattern="yyyy-MM-dd", timezone = "Asia/Seoul")
         private Timestamp regDt;
@@ -49,6 +51,8 @@ public class FindFormResponse extends DefaultResponse {
             this.type = formTbEntity.getFormType();
             this.title = formTbEntity.getTitle();
             this.logoUrl = formTbEntity.getLogoUrl();
+            this.status = formTbEntity.getStatus();
+            this.endFlag = formTbEntity.getEndFlag();
             this.regDt = formTbEntity.getRegDt();
         }
     }
