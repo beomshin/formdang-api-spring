@@ -58,13 +58,18 @@ public class FormFindDto {
     }
 
     public boolean isDelStatus() { // 삭제 상태 조회
-        final int DEL = 2;
+        final int DEL = 3;
         return this.status.equals(DEL);
     }
 
     public boolean isRecent() {
         final int RECENT = 0;
         return this.order.equals(RECENT);
+    }
+
+    public boolean isLast() {
+        final int LAST = 2;
+        return this.order.equals(LAST);
     }
 
 

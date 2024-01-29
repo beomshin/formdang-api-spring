@@ -5,10 +5,10 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public enum FormStatusEnum {
+public enum FormEndFlagEnum {
 
-    TEMP_STATUS(0),
-    NORMAL_STATUS(1),
+    PROGRESS(0),
+    END(1),
 
     ;
 

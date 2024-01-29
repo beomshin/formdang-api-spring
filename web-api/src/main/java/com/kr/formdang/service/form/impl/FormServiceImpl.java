@@ -4,8 +4,7 @@ import com.kr.formdang.entity.AdminSubTbEntity;
 import com.kr.formdang.entity.FormSubTbEntity;
 import com.kr.formdang.entity.FormTbEntity;
 import com.kr.formdang.entity.QuestionTbEntity;
-import com.kr.formdang.enums.FormStatusEnum;
-import com.kr.formdang.enums.PageEnum;
+import com.kr.formdang.enums.*;
 import com.kr.formdang.mapper.FormMapper;
 import com.kr.formdang.model.common.GlobalCode;
 import com.kr.formdang.model.layer.FormDataDto;
@@ -19,11 +18,14 @@ import com.kr.formdang.service.form.FormService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 @Slf4j
@@ -34,6 +36,7 @@ public class FormServiceImpl implements FormService {
     private final QuestionTbRepository questionTbRepository;
     private final FormSubTbRepository formSubTbRepository;
     private final AdminSubTbRepository adminSubTbRepository;
+    private final FormMapper formMapper;
 
     /**
      * 폼 저장
@@ -84,17 +87,41 @@ public class FormServiceImpl implements FormService {
     @Override
     public Page findForm(FormFindDto formFindDto) {
         PageRequest pageRequest = PageRequest.of(formFindDto.getPage(), PageEnum.PAGE_12.getNum());
-        if (formFindDto.isAllStatus()) { // 전체 조회
-            return formTbRepository.findByAidOrderByRegDtDesc(formFindDto.getAid(), pageRequest);
-        } else if (formFindDto.isProgressStatus()) { // 진행중인 폼 리스트 조회
-            return formTbRepository.findByAidAndStatusAndEndFlagOrderByRegDtDesc(formFindDto.getAid(), FormStatusEnum.NORMAL_STATUS.getCode(), FormStatusEnum.NOT_END_STATUS.getCode(), pageRequest);
-        } else if (formFindDto.isEndStatus()) { // 종료 폼 리스트 조회
-            return formTbRepository.findByAidAndEndFlagOrderByRegDtDesc(formFindDto.getAid(), FormStatusEnum.END_STATUS.getCode(), pageRequest);
-        } else if (formFindDto.isTempStatus()) { // 임시 폼 리스트 조회
-            return formTbRepository.findByAidAndStatusAndEndFlagOrderByRegDtDesc(formFindDto.getAid(), FormStatusEnum.TEMP_STATUS.getCode(), FormStatusEnum.NOT_END_STATUS.getCode(), pageRequest);
-        } else { // 예외시 기본 조회
-            return formTbRepository.findByAidOrderByRegDtDesc(formFindDto.getAid(), pageRequest);
+
+        HashMap<String, Object> params = new HashMap<>();
+        params.put("offset", pageRequest.getOffset());
+        params.put("pageSize", pageRequest.getPageSize());
+        params.put("aid", formFindDto.getAid());
+
+        if (formFindDto.isSurvey()) { // 설문 타입
+            params.put("type", FormTypeEnum.INSPECTION_TYPE.getCode());
         }
+        else if (formFindDto.isQuiz()) { // 퀴즈 타입
+            params.put("type", FormTypeEnum.QUIZ_TYPE.getCode());
+        }
+
+        if (formFindDto.isProgressStatus()) { // 진행중
+            params.put("end_flag", FormEndFlagEnum.PROGRESS.getCode());
+            params.put("del_flag", FormDelFlagEnum.NOT_DEL.getCode());
+            params.put("status", FormStatusEnum.NORMAL_STATUS.getCode());
+        }  else if (formFindDto.isEndStatus()) { // 종료
+            params.put("end_flag", FormEndFlagEnum.END.getCode());
+            params.put("del_flag", FormDelFlagEnum.NOT_DEL.getCode());
+        } else if (formFindDto.isTempStatus()) { // 임시저장
+            params.put("end_flag", FormEndFlagEnum.PROGRESS.getCode());
+            params.put("del_flag", FormDelFlagEnum.NOT_DEL.getCode());
+            params.put("status", FormStatusEnum.TEMP_STATUS.getCode());
+        } else if (formFindDto.isDelStatus()) { // 삭제
+            params.put("del_flag", FormDelFlagEnum.DEL.getCode());
+        }
+
+        if (formFindDto.isRecent()) { // 최신순
+            params.put("order", FormOrderEnum.RECENT.getCode());
+        } else if (formFindDto.isLast()) { // 마감 순
+            params.put("order", FormOrderEnum.LAST.getCode());
+        }
+
+        return new PageImpl(formMapper.findForms(params), pageRequest, formMapper.findFormsCnt(params));
     }
 
     /**

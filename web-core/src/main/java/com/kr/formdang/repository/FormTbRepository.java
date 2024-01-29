@@ -7,8 +7,4 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface FormTbRepository extends JpaRepository<FormTbEntity, Long> {
 
-    Page<FormTbEntity> findByAidOrderByRegDtDesc(Long aid, Pageable pageable);
-    Page<FormTbEntity> findByFormTypeAndAidOrderByRegDtDesc(Integer formType, Long aid, Pageable pageable);
-    Page<FormTbEntity> findByAidAndStatusAndEndFlagOrderByRegDtDesc(Long aid, Integer status, Integer endFlag, Pageable pageable);
-    Page<FormTbEntity> findByAidAndEndFlagOrderByRegDtDesc(Long aid, Integer endFlag , Pageable pageable);
 }

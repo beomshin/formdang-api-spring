@@ -5,10 +5,11 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public enum FormStatusEnum {
+public enum FormOrderEnum {
 
-    TEMP_STATUS(0),
-    NORMAL_STATUS(1),
+    RECENT(0),
+    MANY_RESPONSE(1),
+    LAST(2),
 
     ;
 

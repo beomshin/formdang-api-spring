@@ -5,5 +5,61 @@
 
 <mapper namespace="com.kr.formdang.mapper.FormMapper">
 
+    <select id="findForms" parameterType="map" resultType="com.kr.formdang.entity.FormTbEntity">
+        SELECT fid as 'fid', form_type as 'formType', title as 'title', logo_url as 'logoUrl', status as 'status', end_flag as 'endFlag', del_flag as 'delFlag', reg_dt as 'regDt'
+        FROM form_tb
+        WHERE 1=1
+        AND aid = ${aid}
+        <if test="type != null">
+            AND form_type = ${type}
+        </if>
+        <if test="status != null">
+            AND status = ${status}
+        </if>
+        <if test="del_flag != null">
+            AND del_flag = ${del_flag}
+        </if>
+        <if test="end_flag != null">
+            AND end_flag = ${end_flag}
+        </if>
+        <choose>
+            <when test="order == 0">
+                ORDER BY reg_dt desc
+            </when>
+            <when test="order == 1">
+
+            </when>
+            <when test="order == 2">
+                AND end_dt <![CDATA[<=]]> NOW()
+                ORDER BY end_dt desc
+            </when>
+            <otherwise>
+                ORDER BY reg_dt desc
+            </otherwise>
+        </choose>
+        LIMIT ${pageSize} OFFSET ${offset}
+    </select>
+
+    <select id="findFormsCnt" parameterType="map" resultType="long">
+        SELECT COUNT(*)
+        FROM form_tb
+        WHERE 1=1
+        AND aid = ${aid}
+        <if test="type != null">
+            AND form_type = ${type}
+        </if>
+        <if test="status != null">
+            AND status = ${status}
+        </if>
+        <if test="del_flag != null">
+            AND del_flag = ${del_flag}
+        </if>
+        <if test="end_flag != null">
+            AND end_flag = ${end_flag}
+        </if>
+        <if test="order == 2">
+            AND end_dt <![CDATA[<=]]> NOW()
+        </if>
+    </select>
 
 </mapper>
