@@ -207,6 +207,7 @@ public class DefaultHttpLoggingFilter extends OncePerRequestFilter {
    * @return {@code true} 로깅을 하지 않음
    */
   private boolean isIgnore(HttpServletRequest request) {
+    if (request.getRequestURI().startsWith("/api/sp/admin/validate")) return true;
     return false;
   }
 }

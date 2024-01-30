@@ -36,6 +36,7 @@ public class JwtServiceImpl implements JwtService {
     @Override
     public Long getId(String token) throws CustomException {
         try {
+            log.info("■ JWT 토큰 생성 [getId]");
             String id = jwtTokenProvider.getId(JWT_KEY, parseJwt(token));
             if (org.apache.commons.lang3.StringUtils.isBlank(id)) throw new CustomException(GlobalCode.NOT_EXIST_TOKEN);
             return Long.parseLong(id);

@@ -100,14 +100,18 @@ public class FormController {
             @RequestHeader("Authorization") String token)
     {
         try {
+            log.info("■ 1. 폼리스트 조회 시작");
             final Long aid = jwtService.getId(token); // 관리자 아이디 세팅
             Page pages = formService.findForm(new FormFindDto(page, type, aid, status, order)); // 폼 리스트 조회
             AdminSubTbEntity adminSubTb = formService.analyzeForm(aid); // 종합 정보 조회
+            log.info("■ 4. 폼리스트 조회 응답 성공");
             return ResponseEntity.ok().body(new FindFormResponse(pages, adminSubTb));
         } catch (CustomException e) {
+            log.info("■ 4. 폼리스트 조회 응답 실패");
             log.error("[폼 리스트 조회 API][/form/find] - {}", e.getCode());
             return ResponseEntity.ok().body(new DefaultResponse(e.getCode()));
         } catch (Exception e) {
+            log.info("■ 4. 폼리스트 조회 응답 실패");
             log.error("[폼 리스트 조회 API][/form/find] - {}", e);
             return ResponseEntity.ok().body(new DefaultResponse(GlobalCode.SYSTEM_ERROR));
         }

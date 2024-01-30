@@ -1,5 +1,6 @@
 package com.kr.formdang.model.layer;
 
+import com.kr.formdang.enums.*;
 import lombok.*;
 
 @NoArgsConstructor
@@ -22,55 +23,68 @@ public class FormFindDto {
         this.order = order;
     }
 
-    public boolean isAllType() { // 전체 타입
-        final int ALL = 99;
-        return this.type.equals(ALL);
+    public Integer getType() {
+        final int ALL = 99, SURVEY = 0, QUIZ = 1;
+        if (this.type == ALL) {
+            return null;
+        } else if (this.type == SURVEY) {
+            return FormTypeEnum.SURVEY_TYPE.getCode();
+        } else if (this.type == QUIZ) {
+            return FormTypeEnum.QUIZ_TYPE.getCode();
+        }
+        return null;
     }
 
-    public boolean isSurvey() { // 설문 타입
-        final int SURVEY = 0;
-        return this.type.equals(SURVEY);
+    public Integer getOrder() {
+        final int RECENT = 0, LAST = 2;
+        if (this.order == RECENT) {
+            return FormOrderEnum.RECENT.getCode();
+        } else if (this.order == LAST) {
+            return FormOrderEnum.LAST.getCode();
+        }
+        return null;
     }
 
-    public boolean isQuiz() { // 퀴즈 타입
-        final int QUIZ = 1;
-        return this.type.equals(QUIZ);
+    public Integer getEndFlag() {
+        final int PROGRESS = 0, END = 1, TEMP = 2, DEL = 3;
+        if (this.status == PROGRESS) {
+            return FormEndFlagEnum.PROGRESS.getCode();
+        } else if (this.status == END) {
+            return FormEndFlagEnum.END.getCode();
+        } else if (this.status == TEMP) {
+            return FormEndFlagEnum.PROGRESS.getCode();
+        } else if (this.status == DEL) {
+            return null;
+        }
+        return null;
     }
 
-    public boolean isAllStatus() { // 상태 전체 조회
-        final int ALL = 99;
-        return this.status.equals(ALL);
+    public Integer getDelFlag() {
+        final int PROGRESS = 0, END = 1, TEMP = 2, DEL = 3;
+        if (this.status == PROGRESS) {
+            return FormDelFlagEnum.NOT_DEL.getCode();
+        } else if (this.status == END) {
+            return FormDelFlagEnum.NOT_DEL.getCode();
+        } else if (this.status == TEMP) {
+            return FormDelFlagEnum.NOT_DEL.getCode();
+        } else if (this.status == DEL) {
+            return FormDelFlagEnum.DEL.getCode();
+        }
+        return null;
     }
 
-    public boolean isProgressStatus() { // 진행 상태 조회
-        final int PROGRESS = 0;
-        return this.status.equals(PROGRESS);
+    public Integer getStatus() {
+        final int PROGRESS = 0, END = 1, TEMP = 2, DEL = 3;
+        if (this.status == PROGRESS) {
+            return FormStatusEnum.NORMAL_STATUS.getCode();
+        } else if (this.status == END) {
+            return null;
+        } else if (this.status == TEMP) {
+            return FormStatusEnum.TEMP_STATUS.getCode();
+        } else if (this.status == DEL) {
+            return null;
+        }
+        return null;
     }
-
-    public boolean isEndStatus() { // 종료 상태 조회
-        final int END = 1;
-        return this.status.equals(END);
-    }
-
-    public boolean isTempStatus() { // 임시 상태 조회
-        final int TEMP = 2;
-        return this.status.equals(TEMP);
-    }
-
-    public boolean isDelStatus() { // 삭제 상태 조회
-        final int DEL = 3;
-        return this.status.equals(DEL);
-    }
-
-    public boolean isRecent() {
-        final int RECENT = 0;
-        return this.order.equals(RECENT);
-    }
-
-    public boolean isLast() {
-        final int LAST = 2;
-        return this.order.equals(LAST);
-    }
-
 
 }

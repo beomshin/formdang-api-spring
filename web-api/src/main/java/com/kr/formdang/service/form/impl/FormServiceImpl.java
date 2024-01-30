@@ -7,6 +7,7 @@ import com.kr.formdang.entity.QuestionTbEntity;
 import com.kr.formdang.enums.*;
 import com.kr.formdang.mapper.FormMapper;
 import com.kr.formdang.model.common.GlobalCode;
+import com.kr.formdang.model.dao.form.FindFormDto;
 import com.kr.formdang.model.layer.FormDataDto;
 import com.kr.formdang.model.layer.FormFindDto;
 import com.kr.formdang.model.layer.QuestionDataDto;
@@ -79,7 +80,9 @@ public class FormServiceImpl implements FormService {
      * 폼 리스트 조회
      * 페이징 12
      *
+     * 타입 처리 - 전체, 설문, 퀴즈
      * 상태 처리 - 전체, 진행, 종료, 임시
+     * 정렬 처리 - 최순, 답변, 마감
      *
      * @param formFindDto
      * @return
@@ -87,40 +90,18 @@ public class FormServiceImpl implements FormService {
     @Override
     public Page findForm(FormFindDto formFindDto) {
         PageRequest pageRequest = PageRequest.of(formFindDto.getPage(), PageEnum.PAGE_12.getNum());
+        FindFormDto params = FindFormDto.builder() // 조회 파라미터 생성
+                .aid(formFindDto.getAid())
+                .offset(pageRequest.getOffset())
+                .pageSize(pageRequest.getPageSize())
+                .type(formFindDto.getType())
+                .delFlag(formFindDto.getDelFlag())
+                .endFlag(formFindDto.getEndFlag())
+                .status(formFindDto.getStatus())
+                .order(formFindDto.getOrder())
+                .build();
 
-        HashMap<String, Object> params = new HashMap<>();
-        params.put("offset", pageRequest.getOffset());
-        params.put("pageSize", pageRequest.getPageSize());
-        params.put("aid", formFindDto.getAid());
-
-        if (formFindDto.isSurvey()) { // 설문 타입
-            params.put("type", FormTypeEnum.INSPECTION_TYPE.getCode());
-        }
-        else if (formFindDto.isQuiz()) { // 퀴즈 타입
-            params.put("type", FormTypeEnum.QUIZ_TYPE.getCode());
-        }
-
-        if (formFindDto.isProgressStatus()) { // 진행중
-            params.put("end_flag", FormEndFlagEnum.PROGRESS.getCode());
-            params.put("del_flag", FormDelFlagEnum.NOT_DEL.getCode());
-            params.put("status", FormStatusEnum.NORMAL_STATUS.getCode());
-        }  else if (formFindDto.isEndStatus()) { // 종료
-            params.put("end_flag", FormEndFlagEnum.END.getCode());
-            params.put("del_flag", FormDelFlagEnum.NOT_DEL.getCode());
-        } else if (formFindDto.isTempStatus()) { // 임시저장
-            params.put("end_flag", FormEndFlagEnum.PROGRESS.getCode());
-            params.put("del_flag", FormDelFlagEnum.NOT_DEL.getCode());
-            params.put("status", FormStatusEnum.TEMP_STATUS.getCode());
-        } else if (formFindDto.isDelStatus()) { // 삭제
-            params.put("del_flag", FormDelFlagEnum.DEL.getCode());
-        }
-
-        if (formFindDto.isRecent()) { // 최신순
-            params.put("order", FormOrderEnum.RECENT.getCode());
-        } else if (formFindDto.isLast()) { // 마감 순
-            params.put("order", FormOrderEnum.LAST.getCode());
-        }
-
+        log.info("■ 2. 폼 리스트 조회 쿼리 시작");
         return new PageImpl(formMapper.findForms(params), pageRequest, formMapper.findFormsCnt(params));
     }
 
@@ -131,6 +112,7 @@ public class FormServiceImpl implements FormService {
      */
     @Override
     public AdminSubTbEntity analyzeForm(Long aid) {
+        log.info("■ 3. 종합 분석 정보 조회 쿼리 시작");
         return adminSubTbRepository.findByAid(aid);
     }
 }

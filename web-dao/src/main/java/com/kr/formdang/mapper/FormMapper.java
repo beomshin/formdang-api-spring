@@ -1,6 +1,7 @@
 package com.kr.formdang.mapper;
 
 import com.kr.formdang.entity.FormTbEntity;
+import com.kr.formdang.model.dao.form.FindFormDto;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.HashMap;
@@ -11,8 +12,8 @@ import java.util.Objects;
 @Mapper
 public interface FormMapper {
 
-    List<FormTbEntity> findForms(Map<String, Object> params);
+    List<FormTbEntity> findForms(FindFormDto params);
 
-    Long findFormsCnt(Map<String, Object> params);
+    Long findFormsCnt(FindFormDto params);
 
 }

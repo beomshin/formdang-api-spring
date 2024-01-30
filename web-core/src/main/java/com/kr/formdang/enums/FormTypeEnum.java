@@ -7,8 +7,9 @@ import lombok.Getter;
 @AllArgsConstructor
 public enum FormTypeEnum {
 
-    INSPECTION_TYPE(0),
+    SURVEY_TYPE(0),
     QUIZ_TYPE(1),
+    ALL(99)
 
     ;
 
