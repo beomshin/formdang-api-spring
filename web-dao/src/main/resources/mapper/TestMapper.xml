@@ -24,17 +24,17 @@
         </if>
         <choose>
             <when test="order == 0">
-                ORDER BY reg_dt desc
+                ORDER BY reg_dt DESC
             </when>
             <when test="order == 1">
-
+                ORDER BY answer_count DESC, reg_dt DESC
             </when>
             <when test="order == 2">
                 AND end_dt <![CDATA[<=]]> NOW()
-                ORDER BY end_dt desc
+                ORDER BY end_dt DESC, reg_dt DESC
             </when>
             <otherwise>
-                ORDER BY reg_dt desc
+                ORDER BY reg_dt DESC
             </otherwise>
         </choose>
         LIMIT ${pageSize} OFFSET ${offset}

@@ -56,6 +56,9 @@ public class FormTbEntity extends DateEntity {
     @Column(name = "report_count")
     private int reportCount;
     @Basic
+    @Column(name = "answer_count")
+    private int answerCount;
+    @Basic
     @Column(name = "status")
     private int status;
     @Basic

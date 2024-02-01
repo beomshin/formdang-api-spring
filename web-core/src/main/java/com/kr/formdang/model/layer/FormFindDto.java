@@ -36,9 +36,11 @@ public class FormFindDto {
     }
 
     public Integer getOrder() {
-        final int RECENT = 0, LAST = 2;
+        final int RECENT = 0, MANY_ANSWER = 1, LAST = 2;
         if (this.order == RECENT) {
             return FormOrderEnum.RECENT.getCode();
+        } else if (this.order == MANY_ANSWER) {
+            return FormOrderEnum.MANY_RESPONSE.getCode();
         } else if (this.order == LAST) {
             return FormOrderEnum.LAST.getCode();
         }
