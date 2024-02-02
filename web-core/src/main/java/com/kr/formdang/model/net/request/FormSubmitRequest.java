@@ -72,6 +72,8 @@ public class FormSubmitRequest extends DefaultRequest {
 
         private String[] detail; // 질문 상세 내용
 
+        private String[] exampleDetail; // 질문 보기 상세 내용
+
         private Integer count; // 질문 개수
 
         private String[] answer; // 질문 정답

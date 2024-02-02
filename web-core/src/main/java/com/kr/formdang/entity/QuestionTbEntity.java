@@ -43,6 +43,9 @@ public class QuestionTbEntity extends DateEntity{
     @Column(name = "question_detail")
     private String questionDetail;
     @Basic
+    @Column(name = "question_example_detail")
+    private String questionExampleDetail;
+    @Basic
     @Column(name = "quiz_answer")
     private String quizAnswer;
     @Basic

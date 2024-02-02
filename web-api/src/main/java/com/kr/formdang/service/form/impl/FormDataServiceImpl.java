@@ -44,6 +44,10 @@ public class FormDataServiceImpl implements FormDataService {
                         questionDataDto.getDetail() != null ?
                         Arrays.stream(questionDataDto.getDetail()).collect(Collectors.joining("|")) : null
                 )
+                .questionExampleDetail(
+                        questionDataDto.getExampleDetail() != null ?
+                        Arrays.stream(questionDataDto.getExampleDetail()).collect(Collectors.joining("|")) : null
+                )
                 .count(questionDataDto.getCount())
                 .quizAnswer(
                         questionDataDto.getAnswer() != null ?
