@@ -53,6 +53,7 @@ public class FormController {
             @RequestHeader("Authorization") String token)
     {
         try {
+            log.info("■ 1. 폼 작성하기 요청 성공");
             final String pattern = "yyyyMMdd";
             final Long aid = jwtService.getId(token); // 관리자 아이디 세팅
 
@@ -66,13 +67,14 @@ public class FormController {
 
             GlobalCode resCode = formTb != null && formTb.getFid() != null ? GlobalCode.SUCCESS :  GlobalCode.FAIL_SUBMIT_FORM; // 폼 성공 여부 코드 저장
 
+            log.info("■ 5. 폼 작성하기 응답 성공");
             return ResponseEntity.ok().body(new DefaultResponse(resCode));
 
         } catch (CustomException e) {
-            log.error("[폼 등록 API][/form/submit] - {}", e.getCode());
+            log.error("■ 5. 폼 작성하기 응답 오류, {}", e);
             return ResponseEntity.ok().body(new DefaultResponse(e.getCode()));
         } catch (Exception e) {
-            log.error("[폼 등록 API][/form/submit] - {}", e);
+            log.error("■ 5. 폼 작성하기 응답 오류, {}", e);
             return ResponseEntity.ok().body(new DefaultResponse(GlobalCode.SYSTEM_ERROR));
         }
     }
@@ -100,19 +102,17 @@ public class FormController {
             @RequestHeader("Authorization") String token)
     {
         try {
-            log.info("■ 1. 폼리스트 조회 시작");
+            log.info("■ 1. 폼리스트 조회 요청 성공");
             final Long aid = jwtService.getId(token); // 관리자 아이디 세팅
             Page pages = formService.findForm(new FormFindDto(page, type, aid, status, order)); // 폼 리스트 조회
             AdminSubTbEntity adminSubTb = formService.analyzeForm(aid); // 종합 정보 조회
             log.info("■ 4. 폼리스트 조회 응답 성공");
             return ResponseEntity.ok().body(new FindFormResponse(pages, adminSubTb));
         } catch (CustomException e) {
-            log.info("■ 4. 폼리스트 조회 응답 실패");
-            log.error("[폼 리스트 조회 API][/form/list/find] - {}", e.getCode());
+            log.info("■ 4. 폼리스트 조회 응답 오류, {}", e);
             return ResponseEntity.ok().body(new DefaultResponse(e.getCode()));
         } catch (Exception e) {
-            log.info("■ 4. 폼리스트 조회 응답 실패");
-            log.error("[폼 리스트 조회 API][/form/list/find] - {}", e);
+            log.info("■ 4. 폼리스트 조회 응답 오류, {}", e);
             return ResponseEntity.ok().body(new DefaultResponse(GlobalCode.SYSTEM_ERROR));
         }
     }
@@ -131,14 +131,17 @@ public class FormController {
     @GetMapping(value = "/form/analyze")
     public ResponseEntity analyzeForm(@RequestHeader("Authorization") String token) {
         try {
+            log.info("■ 1. 종합 분석 조회 요청 성공");
             final Long aid = jwtService.getId(token); // 관리자 아이디 세팅
+            log.info("■ 2. 종합 분석 로그 단게 맞추기");
             AdminSubTbEntity adminSubTb = formService.analyzeForm(aid); // 종합 정보 조회
+            log.info("■ 4. 종합 분석 조회 응답 성공");
             return ResponseEntity.ok().body(new AnalyzeFormResponse(adminSubTb));
         } catch (CustomException e) {
-            log.error("[종합 분석 조회하기 API][/form/analyze] - {}", e.getCode());
+            log.info("■ 종합 분석 조회 응답 오류, {}", e);
             return ResponseEntity.ok().body(new DefaultResponse(e.getCode()));
         } catch (Exception e) {
-            log.error("[종합 분석 조회하기 API][/form/analyze] - {}", e);
+            log.info("■ 종합 분석 조회 응답 오류, {}", e);
             return ResponseEntity.ok().body(new DefaultResponse(GlobalCode.SYSTEM_ERROR));
         }
     }

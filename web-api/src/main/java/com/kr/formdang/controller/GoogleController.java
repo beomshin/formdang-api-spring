@@ -60,12 +60,14 @@ public class GoogleController {
     public RedirectView redirectGoogleLogin(@RequestParam(value = "code") String code) {
         RedirectView redirectView = new RedirectView();
         try {
+            log.info("■ 1. 구글 로그인 콜백 요청 성공");
             GoogleLoginDto googleLoginDto = googleService.googleOAuth(new GoogleLoginRequestDto(googleProp, code)); // 구글 로그인 정보 취득
             AdminTbEntity adminTb = adminService.saveSnsAdmin(adminDataServiceImpl.getAdminData(new AdminDataDto(googleLoginDto))); // 폼당폼당 로그인 및 가입
             redirectView.setUrl(adminService.successLogin(adminTb)); // 폼당폼당 로그인 성공 페이지 세팅
+            log.info("■ 8. 구글 로그인 콜백 리다이렉트 : {}", redirectView.getUrl());
             return redirectView;
         } catch (Exception e) {
-            log.error("[구글 로그인 콜백 API][/public/kakao/login/callback] - {}", e);
+            log.error("■ 구글 로그인 콜백 요청 오류, {}", e);
             redirectView.setUrl(adminService.failLogin(e)); // 폼당폼당 로그인 실패 페이지 세팅
             return redirectView;
         }

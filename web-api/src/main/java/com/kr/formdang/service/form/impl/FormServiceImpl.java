@@ -54,18 +54,23 @@ public class FormServiceImpl implements FormService {
     @Transactional
     public FormTbEntity submitForm(FormTbEntity formTbEntity, List<QuestionTbEntity> questionTbEntities) {
         try {
+            log.info("■ 2. 폼 테이블 등록");
             FormTbEntity formTb = formTbRepository.save(formTbEntity); // 폼 생성
 
+            log.info("■ 2. 질문 리스트 테이블 등록");
             questionTbEntities.stream().forEach(it -> it.setFid(formTb.getFid()));
             questionTbRepository.saveAll(questionTbEntities); // 질문 리스트 생성
 
+            log.info("■ 3. 폼 서브 테이블 등록");
             FormSubTbEntity formSubTb = new FormSubTbEntity();
             formSubTb.setFid(formTb.getFid());
             formSubTbRepository.save(formSubTb); // 폼 서브 저장 테이블 생성
 
             if (formTbEntity.getFormType() == 0) {
+                log.info("■ 4. 어드민 서브 테이블 설문 타입 개수 증가");
                 adminSubTbRepository.countUpInspectionCnt(formTbEntity.getAid()); // 설문 타입 생성 개수 증가
             } else if (formTbEntity.getFormType() == 1) {
+                log.info("■ 4. 어드민 서브 테이블 퀴즈 타입 개수 증가");
                 adminSubTbRepository.countUpQuizCnt(formTbEntity.getAid()); // 퀴즈 타입 생성 개수 증가
             }
 

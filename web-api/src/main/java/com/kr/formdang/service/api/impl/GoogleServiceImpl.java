@@ -29,28 +29,32 @@ public class GoogleServiceImpl implements GoogleService {
 
     @Override
     public GoogleLoginDto googleOAuth(GoogleLoginRequestDto googleLoginRequestDto) throws Exception {
+
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         HttpEntity<GoogleLoginRequestDto> httpRequestEntity = new HttpEntity<>(googleLoginRequestDto, headers);
 
 
-        log.info("[구글 토큰 요청 ===> : [{}]", httpRequestEntity);
+        log.info("■ 2. 구글 로그인 구글 토큰 요청");
+        log.info("■ 구글 토큰 요청 정보 : [{}]", httpRequestEntity);
         ResponseEntity<String> apiResponseJson = snsApiRestTemplate.postForEntity(googleProp.getGoogleAuthUrl() + "/token", httpRequestEntity, String.class); // 구글 토큰 API 요청
-        log.info("[구글 토큰 응답 ===> : [{}]", apiResponseJson);
+        log.info("■ 구글 토큰 응답 정보 : [{}]", apiResponseJson);
 
         GoogleLoginResponseDto googleLoginResponse = apiObjectMapper.readValue(apiResponseJson.getBody(), new TypeReference<GoogleLoginResponseDto>() {});
 
         String requestUrl = UriComponentsBuilder.fromHttpUrl(googleProp.getGoogleAuthUrl() + "/tokeninfo").queryParam("id_token", googleLoginResponse.getIdToken()).toUriString(); // 구글 사용자 정보 요청
 
-        log.info("[구글 사용자 정보 요청 ===> : [{}]", requestUrl);
+        log.info("■ 3. 구글 로그인 구글 토큰 요청");
+        log.info("■ 구글 사용자 정보 요청 정보 : [{}]", requestUrl);
         String resultJson = snsApiRestTemplate.getForObject(requestUrl, String.class);
-        log.info("[구글 사용자 정보 응답 ===> : [{}]", resultJson);
+        log.info("■ 구글 사용자 정보 응답 응답 : [{}]", resultJson);
 
         if(resultJson != null) {
             GoogleLoginDto userInfoDto = apiObjectMapper.readValue(resultJson, new TypeReference<GoogleLoginDto>() {});
             return userInfoDto;
         }
         else {
+            log.error("■ 구글 사용자 정보 누락");
             throw new Exception("Google OAuth failed!");
         }
 

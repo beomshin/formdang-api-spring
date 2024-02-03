@@ -26,9 +26,9 @@ public class TokenServiceImpl implements TokenService {
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_JSON);
             HttpEntity<JwtTokenRequest> httpRequestEntity = new HttpEntity<>(new JwtTokenRequest(id, key, name), headers);
-            log.info("[폼당폼당 인증서버 토큰 요청] ===> [{}]", httpRequestEntity.getBody());
+            log.info("■ 폼당폼당 인증서버 토큰 요청 정보: [{}]", httpRequestEntity.getBody());
             ResponseEntity<JwtTokenResponse> response = commonRestTemplate.postForEntity(formdang_auth_issue, httpRequestEntity, JwtTokenResponse.class);
-            log.info("[폼당폼당 인증서버 토큰 응답] ===> [{}]", response);
+            log.info("■ 폼당폼당 인증서버 토큰 응답 정보: [{}]", response);
             return response.getBody();
         } catch (Exception e) {
             log.error("{}", e);

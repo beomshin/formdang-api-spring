@@ -42,9 +42,10 @@ public class KakaoServiceImpl implements KakaoService {
         params.add("redirect_uri", requestDto.getRedirectUri());
         params.add("code", requestDto.getCode());
 
-        log.info("[카카오 토큰 요청 ===> : [{}]", params);
+        log.info("■ 2. 카카오 로그인 구글 토큰 요청");
+        log.info("■ 카카오 토큰 요청 정보 : [{}]", params);
         ResponseEntity<String> apiResponseJson = snsApiRestTemplate.postForEntity(kakaoProp.getKakaoLoginUrl() + "/oauth/token", params, String.class); // 카카오 토큰 API 요청
-        log.info("[카카오 토큰 응답 ===> : [{}]", apiResponseJson);
+        log.info("■ 카카오 토큰 응답 정보 : [{}]", apiResponseJson);
 
         KakaoLoginResponseDto kakaoLoginResponseDto = apiObjectMapper.readValue(apiResponseJson.getBody(), new TypeReference<KakaoLoginResponseDto>() {});
 
@@ -53,9 +54,10 @@ public class KakaoServiceImpl implements KakaoService {
         headers.setBearerAuth(kakaoLoginResponseDto.getAccessToken());
         HttpEntity<GoogleLoginRequestDto> httpRequestEntity = new HttpEntity<>(null, headers);
 
-        log.info("[카카오 사용자 정보 요청 ===> : [{}]", httpRequestEntity);
+        log.info("■ 3. 카카오 로그인 구글 토큰 요청");
+        log.info("■ 카카오 사용자 정보 요청 정보 : [{}]", httpRequestEntity);
         ResponseEntity<String> response = snsApiRestTemplate.postForEntity(kakaoProp.getKakaoAuthUrl() + "/v2/user/me", httpRequestEntity, String.class); // 카카오 사용자 정보 요청
-        log.info("[카카오 사용자 정보 응답 ===> : [{}]", response);
+        log.info("■ 카카오 정보 응답 응답 : [{}]", response);
 
         Map<String, Object> jsonResponse = apiObjectMapper.readValue(response.getBody(), Map.class);
 
@@ -63,6 +65,7 @@ public class KakaoServiceImpl implements KakaoService {
             KakaoLoginDto userInfoDto = apiObjectMapper.convertValue(jsonResponse, new TypeReference<KakaoLoginDto>() {});
             return userInfoDto;
         } else {
+            log.error("■ 카카오 사용자 정보 누락");
             throw new Exception("Kakao OAuth failed!");
         }
     }
