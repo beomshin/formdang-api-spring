@@ -64,7 +64,7 @@ public class GoogleController {
             GoogleLoginDto googleLoginDto = googleService.googleOAuth(new GoogleLoginRequestDto(googleProp, code)); // 구글 로그인 정보 취득
             AdminTbEntity adminTb = adminService.saveSnsAdmin(adminDataServiceImpl.getAdminData(new AdminDataDto(googleLoginDto))); // 폼당폼당 로그인 및 가입
             redirectView.setUrl(adminService.successLogin(adminTb)); // 폼당폼당 로그인 성공 페이지 세팅
-            log.info("■ 8. 구글 로그인 콜백 리다이렉트 : {}", redirectView.getUrl());
+            log.info("■ 6. 구글 로그인 콜백 리다이렉트 : {}", redirectView.getUrl());
             return redirectView;
         } catch (Exception e) {
             log.error("■ 구글 로그인 콜백 요청 오류, {}", e);

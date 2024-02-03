@@ -57,7 +57,7 @@ public class KakaoServiceImpl implements KakaoService {
         log.info("■ 3. 카카오 로그인 구글 토큰 요청");
         log.info("■ 카카오 사용자 정보 요청 정보 : [{}]", httpRequestEntity);
         ResponseEntity<String> response = snsApiRestTemplate.postForEntity(kakaoProp.getKakaoAuthUrl() + "/v2/user/me", httpRequestEntity, String.class); // 카카오 사용자 정보 요청
-        log.info("■ 카카오 정보 응답 응답 : [{}]", response);
+        log.info("■ 카카오 사용자 응답 응답 : [{}]", response);
 
         Map<String, Object> jsonResponse = apiObjectMapper.readValue(response.getBody(), Map.class);
 
