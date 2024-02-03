@@ -91,7 +91,7 @@ public class FormController {
      * @param token
      * @return
      */
-    @GetMapping(value = "/form/find")
+    @GetMapping(value = "/form/list/find")
     public ResponseEntity findForm(
             @RequestParam @NotBlank @Min(value = 0, message = "페이지 개수는 0이상입니다.") Integer page,
             @RequestParam @NotBlank @Min(0) Integer type,
@@ -108,11 +108,11 @@ public class FormController {
             return ResponseEntity.ok().body(new FindFormResponse(pages, adminSubTb));
         } catch (CustomException e) {
             log.info("■ 4. 폼리스트 조회 응답 실패");
-            log.error("[폼 리스트 조회 API][/form/find] - {}", e.getCode());
+            log.error("[폼 리스트 조회 API][/form/list/find] - {}", e.getCode());
             return ResponseEntity.ok().body(new DefaultResponse(e.getCode()));
         } catch (Exception e) {
             log.info("■ 4. 폼리스트 조회 응답 실패");
-            log.error("[폼 리스트 조회 API][/form/find] - {}", e);
+            log.error("[폼 리스트 조회 API][/form/list/find] - {}", e);
             return ResponseEntity.ok().body(new DefaultResponse(GlobalCode.SYSTEM_ERROR));
         }
     }
