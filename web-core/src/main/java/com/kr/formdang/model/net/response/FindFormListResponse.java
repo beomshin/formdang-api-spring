@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
 @ToString(callSuper = true)
 @AllArgsConstructor
 @NoArgsConstructor
-public class FindFormResponse extends DefaultResponse {
+public class FindFormListResponse extends DefaultResponse {
 
     private List list;
     private Long totalElements;
@@ -24,7 +24,7 @@ public class FindFormResponse extends DefaultResponse {
     private Integer curPage;
     private Analyze analyze;
 
-    public FindFormResponse(Page<FormTbEntity> pages, AdminSubTbEntity adminSubTb) {
+    public FindFormListResponse(Page<FormTbEntity> pages, AdminSubTbEntity adminSubTb) {
         this.list = pages.getContent().stream().map(Forms::new).collect(Collectors.toList());
         this.totalElements = pages.getTotalElements();
         this.totalPage = pages.getTotalPages();

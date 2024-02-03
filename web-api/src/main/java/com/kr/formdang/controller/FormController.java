@@ -11,7 +11,8 @@ import com.kr.formdang.model.layer.FormFindDto;
 import com.kr.formdang.model.layer.QuestionDataDto;
 import com.kr.formdang.model.net.request.FormSubmitRequest;
 import com.kr.formdang.model.net.response.AnalyzeFormResponse;
-import com.kr.formdang.model.net.response.FindFormResponse;
+import com.kr.formdang.model.net.response.FindFormDetailResponse;
+import com.kr.formdang.model.net.response.FindFormListResponse;
 import com.kr.formdang.model.root.DefaultResponse;
 import com.kr.formdang.service.form.FormDataService;
 import com.kr.formdang.service.form.FormService;
@@ -94,7 +95,7 @@ public class FormController {
      * @return
      */
     @GetMapping(value = "/form/list/find")
-    public ResponseEntity findForm(
+    public ResponseEntity findFormList(
             @RequestParam @NotBlank @Min(value = 0, message = "페이지 개수는 0이상입니다.") Integer page,
             @RequestParam @NotBlank @Min(0) Integer type,
             @RequestParam @NotBlank @Min(0) Integer status,
@@ -104,10 +105,10 @@ public class FormController {
         try {
             log.info("■ 1. 폼리스트 조회 요청 성공");
             final Long aid = jwtService.getId(token); // 관리자 아이디 세팅
-            Page pages = formService.findForm(new FormFindDto(page, type, aid, status, order)); // 폼 리스트 조회
+            Page pages = formService.findFormList(new FormFindDto(page, type, aid, status, order)); // 폼 리스트 조회
             AdminSubTbEntity adminSubTb = formService.analyzeForm(aid); // 종합 정보 조회
             log.info("■ 4. 폼리스트 조회 응답 성공");
-            return ResponseEntity.ok().body(new FindFormResponse(pages, adminSubTb));
+            return ResponseEntity.ok().body(new FindFormListResponse(pages, adminSubTb));
         } catch (CustomException e) {
             log.info("■ 4. 폼리스트 조회 응답 오류, {}", e);
             return ResponseEntity.ok().body(new DefaultResponse(e.getCode()));
@@ -145,5 +146,32 @@ public class FormController {
             return ResponseEntity.ok().body(new DefaultResponse(GlobalCode.SYSTEM_ERROR));
         }
     }
+
+    /**
+     * 폼 상세 정보 조회하기
+     *
+     * @param token
+     * @param fid
+     * @return
+     */
+    @GetMapping(value = "/form/detail/{fid}/find")
+    public ResponseEntity findFormDetail(@RequestHeader("Authorization") String token, @PathVariable("fid") Long fid) {
+        try {
+            log.info("■ 1. 폼 상세 정보 조회 요청 성공");
+            final Long aid = jwtService.getId(token); // 관리자 아이디 세팅
+            FormTbEntity formTbEntity = formService.findForm(aid, fid); // 폼 상세 조회
+            List<QuestionTbEntity> questionTbEntities = formService.findQuestions(fid); // 질문 리스트 조회
+            log.info("■ 4. 폼 상세 정보 조회 응답 성공");
+            return ResponseEntity.ok().body(new FindFormDetailResponse(formTbEntity, questionTbEntities));
+        } catch (CustomException e) {
+            log.info("■ 폼 상세 정보 조회 응답 오류, {}", e);
+            return ResponseEntity.ok().body(new DefaultResponse(e.getCode()));
+        } catch (Exception e) {
+            log.info("■ 폼 상세 정보 조회 응답 오류, {}", e);
+            return ResponseEntity.ok().body(new DefaultResponse(GlobalCode.SYSTEM_ERROR));
+        }
+    }
+
+
 
 }

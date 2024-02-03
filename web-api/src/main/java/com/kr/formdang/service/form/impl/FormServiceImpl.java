@@ -5,6 +5,7 @@ import com.kr.formdang.entity.FormSubTbEntity;
 import com.kr.formdang.entity.FormTbEntity;
 import com.kr.formdang.entity.QuestionTbEntity;
 import com.kr.formdang.enums.*;
+import com.kr.formdang.exception.CustomException;
 import com.kr.formdang.mapper.FormMapper;
 import com.kr.formdang.model.common.GlobalCode;
 import com.kr.formdang.model.dao.form.FindFormDto;
@@ -27,6 +28,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 @Service
 @Slf4j
@@ -54,23 +56,23 @@ public class FormServiceImpl implements FormService {
     @Transactional
     public FormTbEntity submitForm(FormTbEntity formTbEntity, List<QuestionTbEntity> questionTbEntities) {
         try {
-            log.info("■ 2. 폼 테이블 등록");
+            log.info("■ 2. 폼 테이블 등록 쿼리 시작");
             FormTbEntity formTb = formTbRepository.save(formTbEntity); // 폼 생성
 
-            log.info("■ 2. 질문 리스트 테이블 등록");
+            log.info("■ 2. 질문 리스트 테이블 등록 쿼리 시작");
             questionTbEntities.stream().forEach(it -> it.setFid(formTb.getFid()));
             questionTbRepository.saveAll(questionTbEntities); // 질문 리스트 생성
 
-            log.info("■ 3. 폼 서브 테이블 등록");
+            log.info("■ 3. 폼 서브 테이블 등록 쿼리 시작");
             FormSubTbEntity formSubTb = new FormSubTbEntity();
             formSubTb.setFid(formTb.getFid());
             formSubTbRepository.save(formSubTb); // 폼 서브 저장 테이블 생성
 
             if (formTbEntity.getFormType() == 0) {
-                log.info("■ 4. 어드민 서브 테이블 설문 타입 개수 증가");
+                log.info("■ 4. 어드민 서브 테이블 설문 타입 개수 증가 쿼리 시작");
                 adminSubTbRepository.countUpInspectionCnt(formTbEntity.getAid()); // 설문 타입 생성 개수 증가
             } else if (formTbEntity.getFormType() == 1) {
-                log.info("■ 4. 어드민 서브 테이블 퀴즈 타입 개수 증가");
+                log.info("■ 4. 어드민 서브 테이블 퀴즈 타입 개수 증가 쿼리 시작");
                 adminSubTbRepository.countUpQuizCnt(formTbEntity.getAid()); // 퀴즈 타입 생성 개수 증가
             }
 
@@ -93,7 +95,7 @@ public class FormServiceImpl implements FormService {
      * @return
      */
     @Override
-    public Page findForm(FormFindDto formFindDto) {
+    public Page findFormList(FormFindDto formFindDto) {
         PageRequest pageRequest = PageRequest.of(formFindDto.getPage(), PageEnum.PAGE_12.getNum());
         FindFormDto params = FindFormDto.builder() // 조회 파라미터 생성
                 .aid(formFindDto.getAid())
@@ -119,5 +121,27 @@ public class FormServiceImpl implements FormService {
     public AdminSubTbEntity analyzeForm(Long aid) {
         log.info("■ 3. 종합 분석 정보 조회 쿼리 시작");
         return adminSubTbRepository.findByAid(aid);
+    }
+
+    @Override
+    public FormTbEntity findForm(Long aid, Long fid) throws CustomException {
+        log.info("■ 2. 폼 상세 정보 조회 쿼리 시작");
+        Optional<FormTbEntity> formTb = formTbRepository.findByAidAndFid(aid, fid);
+        if (formTb.isPresent()) {
+            return formTb.get();
+        } else {
+            throw new CustomException(GlobalCode.NOT_FIND_FORM);
+        }
+    }
+
+    @Override
+    public List<QuestionTbEntity> findQuestions(Long fid) throws CustomException {
+        log.info("■ 3. 폼 질문 리스트 조회 쿼리 시작");
+        List<QuestionTbEntity> questionTbEntities = questionTbRepository.findByFid(fid);
+        if (questionTbEntities != null && questionTbEntities.size() > 0) {
+            return questionTbEntities;
+        } else {
+            throw new CustomException(GlobalCode.NOT_FIND_QUESTIONS);
+        }
     }
 }
