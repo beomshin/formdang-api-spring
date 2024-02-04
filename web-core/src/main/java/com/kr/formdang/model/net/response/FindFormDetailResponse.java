@@ -46,7 +46,7 @@ public class FindFormDetailResponse extends DefaultResponse {
 
     private String logoUrl; // 로그 url
 
-    private String themaUrl; // 테마 url
+    private String themeUrl; // 테마 url
     private List<FindFormDetailResponse.FormDetailQuestionResponse> question;
 
 
@@ -61,7 +61,7 @@ public class FindFormDetailResponse extends DefaultResponse {
         this.status = formTbEntity.getStatus();
         this.maxRespondent = formTbEntity.getMaxRespondent();
         this.logoUrl = formTbEntity.getLogoUrl();
-        this.themaUrl = formTbEntity.getThemaUrl();
+        this.themeUrl = formTbEntity.getThemaUrl();
         this.question = questionTbEntities.stream().map(FormDetailQuestionResponse::new).collect(Collectors.toList());;
     }
 

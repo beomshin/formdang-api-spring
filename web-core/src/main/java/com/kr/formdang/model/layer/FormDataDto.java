@@ -27,7 +27,7 @@ public class FormDataDto {
     private Integer status; // 폼 상태 (0: 임시저장, 1: 등록)
     private Integer maxRespondent; // 인원 제한수 ( 0: 제한 없음, 1~ 제한인원)
     private String logoUrl; // 로그 url
-    private String themaUrl; // 테마 url
+    private String themeUrl; // 테마 url
 
     public FormDataDto(FormSubmitRequest request, Long aid, String pattern) throws ParseException {
         this.type = request.getType();
@@ -40,7 +40,7 @@ public class FormDataDto {
         this.maxRespondent = request.getStatus();
         this.maxRespondent = request.getMaxRespondent();
         this.logoUrl = request.getLogoUrl();
-        this.themaUrl = request.getThemaUrl();
+        this.themeUrl = request.getThemeUrl();
         this.aid = aid;
     }
 

@@ -46,7 +46,7 @@ public class FormSubmitRequest extends DefaultRequest {
 
     private String logoUrl; // 로그 url
 
-    private String themaUrl; // 테마 url
+    private String themeUrl; // 테마 url
 
     @Valid @NotNull(message = "질문 리스트가 누락되었습니다.")
     private List<FormSubmitQuestionRequest> question;
