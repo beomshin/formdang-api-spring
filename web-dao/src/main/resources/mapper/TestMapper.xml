@@ -31,7 +31,7 @@
             </when>
             <when test="order == 2">
                 AND end_dt <![CDATA[>=]]> NOW()
-                ORDER BY end_dt DESC, reg_dt DESC
+                ORDER BY end_dt ASC, reg_dt DESC
             </when>
             <otherwise>
                 ORDER BY reg_dt DESC
