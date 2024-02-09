@@ -1,5 +1,6 @@
 package com.kr.formdang.entity;
 
+import com.kr.formdang.model.layer.FormDataDto;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
@@ -48,7 +49,7 @@ public class FormTbEntity extends DateEntity {
     private String logoUrl;
     @Basic
     @Column(name = "thema_url")
-    private String themaUrl;
+    private String themeUrl;
     @Basic
     @Column(name = "question_count")
     private int questionCount;
@@ -68,4 +69,16 @@ public class FormTbEntity extends DateEntity {
     @Column(name = "del_flag")
     private int delFlag;
 
+    public void updateForm(FormDataDto formDataDto) {
+        this.formType = formDataDto.getType();
+        this.title = formDataDto.getTitle();
+        this.formDetail = formDataDto.getDetail();
+        this.beginDt = formDataDto.getBeginDt();
+        this.endDt = formDataDto.getEndDt();
+        this.questionCount = formDataDto.getQuestionCount();
+        this.status = formDataDto.getStatus();
+        this.maxRespondent = formDataDto.getMaxRespondent();
+        this.logoUrl = formDataDto.getLogoUrl();
+        this.themeUrl = formDataDto.getThemeUrl();
+    }
 }

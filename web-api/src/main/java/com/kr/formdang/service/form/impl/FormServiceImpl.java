@@ -16,6 +16,7 @@ import com.kr.formdang.repository.AdminSubTbRepository;
 import com.kr.formdang.repository.FormSubTbRepository;
 import com.kr.formdang.repository.FormTbRepository;
 import com.kr.formdang.repository.QuestionTbRepository;
+import com.kr.formdang.service.form.FormDataService;
 import com.kr.formdang.service.form.FormService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,10 +26,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 @Slf4j
@@ -40,6 +38,7 @@ public class FormServiceImpl implements FormService {
     private final FormSubTbRepository formSubTbRepository;
     private final AdminSubTbRepository adminSubTbRepository;
     private final FormMapper formMapper;
+    private final FormDataService formDataService;
 
     /**
      * 폼 저장
@@ -144,4 +143,45 @@ public class FormServiceImpl implements FormService {
             throw new CustomException(GlobalCode.NOT_FIND_QUESTIONS);
         }
     }
+
+    @Override
+    @Transactional
+    public void updateForm(FormDataDto formDataDto, List<QuestionDataDto> questionDataDtos) throws CustomException {
+        log.info("■ 2. 폼 상세 정보 조회 쿼리 시작");
+        Optional<FormTbEntity> formTb = formTbRepository.findByAidAndFid(formDataDto.getAid(), formDataDto.getFid());
+        if (!formTb.isPresent()) throw new CustomException(GlobalCode.NOT_FIND_FORM);
+        else if (formTb.get().getStatus() == FormStatusEnum.NORMAL_STATUS.getCode()) throw new CustomException(GlobalCode.REFUSE_ALREADY_START_FORM);
+        List<QuestionTbEntity> questionTbEntities = questionTbRepository.findByFidOrderByOrderAsc(formTb.get().getFid());
+        log.info("■ 3. 폼 수정 데이터 엔티티 적용");
+        formTb.get().updateForm(formDataDto); // 변경감지를 통한 업데이트 기존 정보와 동일하면 업데이트 안함
+        log.info("■ 4. 폼 질문 수정 데이터 엔티티 적용");
+        int question_cnt = 0, over_cnt = 0;
+        if (questionDataDtos.size() == questionTbEntities.size()) {
+            question_cnt = questionDataDtos.size();
+        } else if (questionDataDtos.size() > questionTbEntities.size()) {
+            question_cnt = questionTbEntities.size();
+            over_cnt = questionDataDtos.size();
+            List<QuestionTbEntity> insertEntities = new ArrayList<>();
+            for (int i=question_cnt; i < over_cnt; i++) {
+                QuestionTbEntity questionTb = formDataService.getQuestionData(questionDataDtos.get(i));
+                questionTb.setFid(formTb.get().getFid());
+                insertEntities.add(questionTb);
+            }
+            log.info("■ 5. 폼 추가 질문 등록 쿼리 시작");
+            questionTbRepository.saveAll(insertEntities);
+        } else if (questionDataDtos.size() < questionTbEntities.size()) {
+            question_cnt = questionDataDtos.size();
+            over_cnt = questionTbEntities.size();
+            List<QuestionTbEntity> deleteEntities = new ArrayList<>();
+            for (int i=question_cnt; i< over_cnt; i++) {
+                deleteEntities.add(questionTbEntities.get(i));
+            }
+            log.info("■ 5. 폼 등록 질문 삭제 쿼리 시작");
+            questionTbRepository.deleteAll(deleteEntities);
+        }
+        for(int i=0; i < question_cnt; i++) {
+            questionTbEntities.get(i).updateQuestion(questionDataDtos.get(i));
+        }
+    }
+
 }

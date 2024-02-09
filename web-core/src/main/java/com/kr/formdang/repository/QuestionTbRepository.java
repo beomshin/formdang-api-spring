@@ -8,4 +8,5 @@ import java.util.List;
 public interface QuestionTbRepository extends JpaRepository<QuestionTbEntity, Long> {
 
     List<QuestionTbEntity> findByFid(Long fid);
+    List<QuestionTbEntity> findByFidOrderByOrderAsc(Long fid);
 }

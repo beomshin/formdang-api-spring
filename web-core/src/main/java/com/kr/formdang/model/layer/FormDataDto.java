@@ -3,6 +3,7 @@ package com.kr.formdang.model.layer;
 import com.kr.formdang.model.net.annotation.BeforeDateValid;
 import com.kr.formdang.model.net.annotation.DateValid;
 import com.kr.formdang.model.net.request.FormSubmitRequest;
+import com.kr.formdang.model.net.request.FormUpdateRequest;
 import com.kr.formdang.utils.TimeUtils;
 import lombok.*;
 
@@ -17,6 +18,7 @@ import java.text.ParseException;
 @ToString
 public class FormDataDto {
 
+    private Long fid;
     private Long aid; // 관리자 아이디
     private Integer type; // 폼 타입 ( 0: 설문, 1: 퀴즈, 2: 쪽지시험 )
     private String title; // 폼 제목
@@ -37,11 +39,24 @@ public class FormDataDto {
         this.endDt = TimeUtils.getTimeStamp(request.getEndDt(), pattern);
         this.questionCount = request.getQuestionCount() == request.getQuestion().size() ? request.getQuestionCount() : request.getQuestion().size();
         this.status = request.getStatus();
-        this.maxRespondent = request.getStatus();
         this.maxRespondent = request.getMaxRespondent();
         this.logoUrl = request.getLogoUrl();
         this.themeUrl = request.getThemeUrl();
         this.aid = aid;
     }
 
+    public FormDataDto(FormUpdateRequest request, Long fid, Long aid, String pattern) throws ParseException {
+        this.fid = fid;
+        this.type = request.getType();
+        this.title = request.getTitle();
+        this.detail = request.getDetail();
+        this.beginDt = TimeUtils.getTimeStamp(request.getBeginDt(), pattern);
+        this.endDt = TimeUtils.getTimeStamp(request.getEndDt(), pattern);
+        this.questionCount = request.getQuestionCount() == request.getQuestion().size() ? request.getQuestionCount() : request.getQuestion().size();
+        this.status = request.getStatus();
+        this.maxRespondent = request.getMaxRespondent();
+        this.logoUrl = request.getLogoUrl();
+        this.themeUrl = request.getThemeUrl();
+        this.aid = aid;
+    }
 }

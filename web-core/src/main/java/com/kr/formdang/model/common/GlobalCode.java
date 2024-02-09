@@ -15,6 +15,7 @@ public enum GlobalCode {
     NOT_EXIST_FILE("30004", "파일 미존재"),
     FAIL_FILE_CONDITION("30005", "파일 업로드 미부합 조건"),
     NOT_FIND_FORM("30006", "폼 상세정보 조회 실패"),
+    REFUSE_ALREADY_START_FORM("30007", "설문 시작 폼으로 수정 거부"),
     NOT_FIND_QUESTIONS("30007", "폼 질문 리스트 조회 실패"),
     NOT_EXIST_PARAM("9993", "파라미터 누락 오류"),
     NOT_EXIST_HEADER("9993", "헤더 누락 오류"),

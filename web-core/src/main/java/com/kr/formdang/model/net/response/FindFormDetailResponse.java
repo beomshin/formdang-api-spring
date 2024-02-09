@@ -61,7 +61,7 @@ public class FindFormDetailResponse extends DefaultResponse {
         this.status = formTbEntity.getStatus();
         this.maxRespondent = formTbEntity.getMaxRespondent();
         this.logoUrl = formTbEntity.getLogoUrl();
-        this.themeUrl = formTbEntity.getThemaUrl();
+        this.themeUrl = formTbEntity.getThemeUrl();
         this.question = questionTbEntities.stream().map(FormDetailQuestionResponse::new).collect(Collectors.toList());;
     }
 

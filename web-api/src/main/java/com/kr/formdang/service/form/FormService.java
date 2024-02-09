@@ -4,7 +4,9 @@ import com.kr.formdang.entity.AdminSubTbEntity;
 import com.kr.formdang.entity.FormTbEntity;
 import com.kr.formdang.entity.QuestionTbEntity;
 import com.kr.formdang.exception.CustomException;
+import com.kr.formdang.model.layer.FormDataDto;
 import com.kr.formdang.model.layer.FormFindDto;
+import com.kr.formdang.model.layer.QuestionDataDto;
 import org.springframework.data.domain.Page;
 
 import java.util.List;
@@ -18,4 +20,5 @@ public interface FormService {
     AdminSubTbEntity analyzeForm(Long aid); // 종합분석 조회 서비스
     FormTbEntity findForm(Long aid, Long fid) throws CustomException;
     List<QuestionTbEntity> findQuestions(Long fid) throws CustomException;
+    void updateForm(FormDataDto formDataDto, List<QuestionDataDto> questionDataDtos) throws CustomException;
 }

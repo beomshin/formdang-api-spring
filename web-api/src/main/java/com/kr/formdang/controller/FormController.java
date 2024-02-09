@@ -10,6 +10,7 @@ import com.kr.formdang.model.layer.FormDataDto;
 import com.kr.formdang.model.layer.FormFindDto;
 import com.kr.formdang.model.layer.QuestionDataDto;
 import com.kr.formdang.model.net.request.FormSubmitRequest;
+import com.kr.formdang.model.net.request.FormUpdateRequest;
 import com.kr.formdang.model.net.response.AnalyzeFormResponse;
 import com.kr.formdang.model.net.response.FindFormDetailResponse;
 import com.kr.formdang.model.net.response.FindFormListResponse;
@@ -25,6 +26,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -174,8 +176,23 @@ public class FormController {
 
 
     @PostMapping(value = "/form/{fid}/update")
-    public ResponseEntity updateForm(@RequestHeader("Authorization") String token, @PathVariable("fid") Long fid) {
-        return ResponseEntity.ok().body(new DefaultResponse());
+    public ResponseEntity updateForm(@RequestHeader("Authorization") String token, @PathVariable("fid") Long fid,
+                                     @Valid @RequestBody FormUpdateRequest request) {
+        try {
+            final String pattern = "yyyyMMdd";
+            log.info("■ 1. 폼 상세 정보 조회 요청 성공");
+            final Long aid = jwtService.getId(token); // 관리자 아이디 세팅
+            FormDataDto formDataDto = new FormDataDto(request, fid, aid, pattern); // 폼 데이터
+            List<QuestionDataDto> questionDataDtos = request.getQuestion().stream().map(it -> new QuestionDataDto(it)).sorted(Comparator.comparing(QuestionDataDto::getOrder)).collect(Collectors.toList()); // 질문 데이터 order 순 정렬
+            formService.updateForm(formDataDto, questionDataDtos); // 업데이트 처리
+            return ResponseEntity.ok().body(new DefaultResponse());
+        } catch (CustomException e) {
+            log.info("■ 폼 상세 정보 조회 응답 오류, {}", e);
+            return ResponseEntity.ok().body(new DefaultResponse(e.getCode()));
+        } catch (Exception e) {
+            log.info("■ 폼 상세 정보 조회 응답 오류, {}", e);
+            return ResponseEntity.ok().body(new DefaultResponse(GlobalCode.SYSTEM_ERROR));
+        }
     }
 
 

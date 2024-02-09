@@ -28,7 +28,7 @@ public class FormDataServiceImpl implements FormDataService {
                 .maxRespondent(formDataDto.getMaxRespondent())
                 .questionCount(formDataDto.getQuestionCount())
                 .logoUrl(formDataDto.getLogoUrl())
-                .themaUrl(formDataDto.getThemeUrl())
+                .themeUrl(formDataDto.getThemeUrl())
                 .status(formDataDto.getStatus())
                 .build();
     }

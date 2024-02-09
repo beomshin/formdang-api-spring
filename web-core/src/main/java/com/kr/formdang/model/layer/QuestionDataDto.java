@@ -1,6 +1,7 @@
 package com.kr.formdang.model.layer;
 
 import com.kr.formdang.model.net.request.FormSubmitRequest;
+import com.kr.formdang.model.net.request.FormUpdateRequest;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
@@ -21,6 +22,18 @@ public class QuestionDataDto {
     private String[] exampleDetail; // 질문 보기 상세 내용
 
     public QuestionDataDto(FormSubmitRequest.FormSubmitQuestionRequest request) {
+        this.type = request.getType();
+        this.order = request.getOrder();
+        this.title = request.getTitle();
+        this.placeholder = request.getPlaceholder();
+        this.imageUrl = request.getImageUrl();
+        this.detail = request.getDetail();
+        this.exampleDetail = request.getExampleDetail();
+        this.count = request.getCount();
+        this.answer = request.getAnswer();
+    }
+
+    public QuestionDataDto(FormUpdateRequest.FormSubmitQuestionRequest request) {
         this.type = request.getType();
         this.order = request.getOrder();
         this.title = request.getTitle();
