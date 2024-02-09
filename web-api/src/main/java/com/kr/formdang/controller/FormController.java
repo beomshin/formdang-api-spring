@@ -173,5 +173,11 @@ public class FormController {
     }
 
 
+    @PostMapping(value = "/form/{fid}/update")
+    public ResponseEntity updateForm(@RequestHeader("Authorization") String token, @PathVariable("fid") Long fid) {
+        return ResponseEntity.ok().body(new DefaultResponse());
+    }
+
+
 
 }
