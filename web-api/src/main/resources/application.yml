@@ -23,10 +23,14 @@ spring:
   web:
     resources:
       add-mappings: false
+  servlet:
+    multipart:
+      max-file-size: 30MB
+      max-request-size:  30MB
 
 file:
   size:
-    image: 31457280 # 3 * 1024 * 1024
+    image: 3145728 # 3 * 1024 * 1024
 
 token:
   access-key: r5ZW27aCNHCnabMd2sQ534mnuIrHAcnshjGXBadqQnpiKKfv2sdAsa7fx4hVSJU5
