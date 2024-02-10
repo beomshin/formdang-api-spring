@@ -18,6 +18,8 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.servlet.NoHandlerFoundException;
 
+import java.io.IOException;
+
 @RestControllerAdvice
 @RequiredArgsConstructor
 @Slf4j
@@ -67,6 +69,12 @@ public class GlobalExceptionAdvice {
     public ResponseEntity<DefaultResponse> handle(MethodArgumentTypeMismatchException e) { // 파라미터 검증 오류 글로벌 처리
         log.error("[MethodArgumentTypeMismatchException]");
         return ResponseEntity.ok().body(new DefaultResponse(GlobalCode.BIND_ERROR));
+    }
+
+    @ExceptionHandler
+    public ResponseEntity<DefaultResponse> handle(IOException e) { // IO Exception 글로벌 처리
+        log.error("[IOException]: {}", e);
+        return ResponseEntity.ok().body(new DefaultResponse(GlobalCode.IO_EXCEPTION));
     }
 
     @ExceptionHandler(value = CustomException.class)

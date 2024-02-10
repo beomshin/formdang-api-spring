@@ -20,6 +20,7 @@ public enum GlobalCode {
     NOT_EXIST_PARAM("9993", "파라미터 누락 오류"),
     NOT_EXIST_HEADER("9993", "헤더 누락 오류"),
     NOT_EXIST_TOKEN("9994", "토큰 누락 오류"),
+    IO_EXCEPTION("9994", "입출력 오류"),
     BIND_ERROR("9995", "파라미터 검증 오류"),
     HTTP_MESSAGE_NOT_READABLE_ERROR("9996","잘못된 자료형 요청 오류"),
     NOT_FOUND_PAGE("9997", "잘못된 API PATH 요청 오류"),
