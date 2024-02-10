@@ -3,15 +3,19 @@ package com.kr.formdang.service.file.impl;
 import com.kr.formdang.exception.CustomException;
 import com.kr.formdang.model.common.GlobalCode;
 import com.kr.formdang.model.common.GlobalFile;
+import com.kr.formdang.model.layer.FileDataDto;
 import com.kr.formdang.service.file.FileService;
 import com.kr.formdang.utils.AwsS3Utils;
 import com.kr.formdang.utils.FileUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.*;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Future;
 
 @Service
 @Slf4j
@@ -39,6 +43,14 @@ public class FileServiceImpl implements FileService<GlobalFile> {
     @Override
     public GlobalFile uploadSingle(MultipartFile file) {
         return this.upload(file, IMAGE_MAX_SIZE, accessFileExt); // 이미지 최대사이즈, 확장자 제어 결정 후 공통 함수 호출
+    }
+
+    @Override
+    @Async
+    public CompletableFuture<FileDataDto> uploadSingle(FileDataDto fileDataDto) {
+        GlobalFile globalFile = this.upload(fileDataDto.getFile(), IMAGE_MAX_SIZE, accessFileExt);
+        fileDataDto.setAwsFile(globalFile);
+        return CompletableFuture.completedFuture(fileDataDto);
     }
 
 

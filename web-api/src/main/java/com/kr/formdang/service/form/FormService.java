@@ -4,6 +4,7 @@ import com.kr.formdang.entity.AdminSubTbEntity;
 import com.kr.formdang.entity.FormTbEntity;
 import com.kr.formdang.entity.QuestionTbEntity;
 import com.kr.formdang.exception.CustomException;
+import com.kr.formdang.model.layer.FileDataDto;
 import com.kr.formdang.model.layer.FormDataDto;
 import com.kr.formdang.model.layer.FormFindDto;
 import com.kr.formdang.model.layer.QuestionDataDto;
@@ -21,4 +22,5 @@ public interface FormService {
     FormTbEntity findForm(Long aid, Long fid) throws CustomException;
     List<QuestionTbEntity> findQuestions(Long fid) throws CustomException;
     void updateForm(FormDataDto formDataDto, List<QuestionDataDto> questionDataDtos) throws CustomException;
+    void updateImage(Long fid, List<FileDataDto> fileDataDtos);
 }

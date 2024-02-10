@@ -14,6 +14,7 @@ import com.kr.formdang.model.net.request.FormUpdateRequest;
 import com.kr.formdang.model.net.response.AnalyzeFormResponse;
 import com.kr.formdang.model.net.response.FindFormDetailResponse;
 import com.kr.formdang.model.net.response.FindFormListResponse;
+import com.kr.formdang.model.net.response.SubmitFormResponse;
 import com.kr.formdang.model.root.DefaultResponse;
 import com.kr.formdang.service.form.FormDataService;
 import com.kr.formdang.service.form.FormService;
@@ -71,7 +72,7 @@ public class FormController {
             GlobalCode resCode = formTb != null && formTb.getFid() != null ? GlobalCode.SUCCESS :  GlobalCode.FAIL_SUBMIT_FORM; // 폼 성공 여부 코드 저장
 
             log.info("■ 5. 폼 작성하기 응답 성공");
-            return ResponseEntity.ok().body(new DefaultResponse(resCode));
+            return ResponseEntity.ok().body(new SubmitFormResponse(resCode, formTb != null ? formTb.getFid() : null));
 
         } catch (CustomException e) {
             log.error("■ 5. 폼 작성하기 응답 오류, {}", e);

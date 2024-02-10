@@ -9,6 +9,7 @@ import com.kr.formdang.exception.CustomException;
 import com.kr.formdang.mapper.FormMapper;
 import com.kr.formdang.model.common.GlobalCode;
 import com.kr.formdang.model.dao.form.FindFormDto;
+import com.kr.formdang.model.layer.FileDataDto;
 import com.kr.formdang.model.layer.FormDataDto;
 import com.kr.formdang.model.layer.FormFindDto;
 import com.kr.formdang.model.layer.QuestionDataDto;
@@ -181,6 +182,19 @@ public class FormServiceImpl implements FormService {
         }
         for(int i=0; i < question_cnt; i++) {
             questionTbEntities.get(i).updateQuestion(questionDataDtos.get(i));
+        }
+    }
+
+    @Override
+    @Transactional
+    public void updateImage(Long fid, List<FileDataDto> fileDataDtos) {
+        log.info("■ 5. 이미지 URL 업데이트 쿼리 실행");
+        for (FileDataDto fileDataDto : fileDataDtos) {
+            if (fileDataDto.isLogo()) {
+                formTbRepository.updateLogoUrl(fid, fileDataDto.getAwsFile().getPath());
+            } else if (fileDataDto.isQuestion()) {
+                questionTbRepository.updateImageUrl(fid, fileDataDto.getAwsFile().getPath(), fileDataDto.getOrder());
+            }
         }
     }
 
