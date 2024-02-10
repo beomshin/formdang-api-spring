@@ -58,7 +58,7 @@ public class FileServiceImpl implements FileService<GlobalFile> {
         try {
             if (file == null || file.isEmpty()) throw new CustomException(GlobalCode.NOT_EXIST_FILE); // 파일 누락
             String ext = FileUtils.getAccessFileExtension(file.getOriginalFilename()); // 확장자 제어
-            log.debug("[파일 업로드] 파일명 [{}], 사이즈 [{}], 최대 사이즈 [{}], 확장자 [{}]", file.getOriginalFilename(), file.getSize(), maxSize, ext);
+            log.info("[파일 업로드] 파일명 [{}], 사이즈 [{}], 최대 사이즈 [{}], 확장자 [{}]", file.getOriginalFilename(), file.getSize(), maxSize, ext);
             if (file.getSize() >= maxSize || !accessSet.contains(ext)) throw new CustomException(GlobalCode.FAIL_FILE_CONDITION); // 파일 사이즈 제어
             String path = awsS3Utils.fileUploadToS3(file, ext); // AWS S3 파일 업로드
             return path != null ? new GlobalFile(file, path) : null;
