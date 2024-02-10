@@ -209,7 +209,8 @@ public class DefaultHttpLoggingFilter extends OncePerRequestFilter {
   private boolean isIgnore(HttpServletRequest request) {
     if (request.getRequestURI().startsWith("/api/sp/admin/validate")
     || request.getRequestURI().startsWith("/api/sp/public/kakao/login")
-    || request.getRequestURI().startsWith("/api/sp/public/google/login")) return true;
+    || request.getRequestURI().startsWith("/api/sp/public/google/login")
+    || request.getRequestURI().startsWith("/api/sp/public/file/upload")) return true;
     return false;
   }
 }
