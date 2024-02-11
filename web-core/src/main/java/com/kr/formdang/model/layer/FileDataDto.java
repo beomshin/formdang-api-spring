@@ -30,4 +30,8 @@ public class FileDataDto {
         return this.type == 1;
     }
 
+    public boolean isUploadSuccess() {
+        return this.awsFile != null;
+    }
+
 }

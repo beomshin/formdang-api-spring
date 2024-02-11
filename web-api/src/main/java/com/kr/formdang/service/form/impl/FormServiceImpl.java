@@ -1,9 +1,6 @@
 package com.kr.formdang.service.form.impl;
 
-import com.kr.formdang.entity.AdminSubTbEntity;
-import com.kr.formdang.entity.FormSubTbEntity;
-import com.kr.formdang.entity.FormTbEntity;
-import com.kr.formdang.entity.QuestionTbEntity;
+import com.kr.formdang.entity.*;
 import com.kr.formdang.enums.*;
 import com.kr.formdang.exception.CustomException;
 import com.kr.formdang.mapper.FormMapper;
@@ -13,12 +10,10 @@ import com.kr.formdang.model.layer.FileDataDto;
 import com.kr.formdang.model.layer.FormDataDto;
 import com.kr.formdang.model.layer.FormFindDto;
 import com.kr.formdang.model.layer.QuestionDataDto;
-import com.kr.formdang.repository.AdminSubTbRepository;
-import com.kr.formdang.repository.FormSubTbRepository;
-import com.kr.formdang.repository.FormTbRepository;
-import com.kr.formdang.repository.QuestionTbRepository;
+import com.kr.formdang.repository.*;
 import com.kr.formdang.service.form.FormDataService;
 import com.kr.formdang.service.form.FormService;
+import com.kr.formdang.utils.FileUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -40,6 +35,7 @@ public class FormServiceImpl implements FormService {
     private final AdminSubTbRepository adminSubTbRepository;
     private final FormMapper formMapper;
     private final FormDataService formDataService;
+    private final FileUploadFailTbRepository fileUploadFailTbRepository;
 
     /**
      * 폼 저장
@@ -190,10 +186,19 @@ public class FormServiceImpl implements FormService {
     public void updateImage(Long fid, List<FileDataDto> fileDataDtos) {
         log.info("■ 5. 이미지 URL 업데이트 쿼리 실행");
         for (FileDataDto fileDataDto : fileDataDtos) {
-            if (fileDataDto.isLogo()) {
-                formTbRepository.updateLogoUrl(fid, fileDataDto.getAwsFile().getPath());
-            } else if (fileDataDto.isQuestion()) {
-                questionTbRepository.updateImageUrl(fid, fileDataDto.getAwsFile().getPath(), fileDataDto.getOrder());
+            if (fileDataDto.isUploadSuccess()) {
+                if (fileDataDto.isLogo()) {
+                    formTbRepository.updateLogoUrl(fid, fileDataDto.getAwsFile().getPath());
+                } else if (fileDataDto.isQuestion()) {
+                    questionTbRepository.updateImageUrl(fid, fileDataDto.getAwsFile().getPath(), fileDataDto.getOrder());
+                }
+            } else {
+                log.error("■ 이미지 업로드 실패 확인 필요");
+                fileUploadFailTbRepository.save(FileUploadFailTbEntity.builder()
+                                .oriName(fileDataDto.getFile().getOriginalFilename())
+                                .ext(FileUtils.getAccessFileExtension(fileDataDto.getFile().getOriginalFilename()))
+                                .size(String.valueOf(fileDataDto.getFile().getSize()))
+                        .build());
             }
         }
     }

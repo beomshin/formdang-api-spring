@@ -58,6 +58,16 @@ public class FileController {
         }
     }
 
+    /**
+     * 다량 파일 업로드 및 폼 데이터 업데이트
+     *
+     * 비동기 블로킹 방식으로 다량의 파일 AWS 업로드 처리
+     * 업로드 완료후 이미지 정보 업데이트 처리
+     * @param fileListRequest
+     * @param token
+     * @param fid
+     * @return
+     */
     @PostMapping("/public/file/list/upload/{fid}")
     public ResponseEntity uploadFileList(@ModelAttribute @Valid FileListRequest fileListRequest, @RequestHeader("Authorization") String token, @PathVariable("fid") Long fid){
         try {
