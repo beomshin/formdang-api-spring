@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
+import org.hibernate.annotations.DynamicInsert;
 
 import javax.persistence.*;
 
@@ -13,6 +14,7 @@ import javax.persistence.*;
 @ToString(callSuper = true)
 @SuperBuilder
 @NoArgsConstructor
+@DynamicInsert
 public class FileUploadFailTbEntity extends DateEntity{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
