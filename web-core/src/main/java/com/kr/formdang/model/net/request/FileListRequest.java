@@ -13,12 +13,12 @@ import java.util.List;
 public class FileListRequest {
 
     @NotNull(message = "파일이 누락되었습니다.")
-    List<MultipartFile> files;
+    private List<MultipartFile> files;
 
     @NotNull(message = "순번이 누락되었습니다.")
-    List<Integer> orders; // 질문 순번
+    private List<Integer> orders; // 질문 순번
 
     @NotNull(message = "타입이 누락되었습니다.")
-    List<Integer> types; // 타입 (0: 로고, 0: 질문)
+    private List<Integer> types; // 타입 (0: 로고, 1: 질문)
 
 }

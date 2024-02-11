@@ -13,5 +13,5 @@ import javax.validation.constraints.NotNull;
 public class FileRequest {
 
     @NotNull
-    MultipartFile file;
+    private MultipartFile file;
 }
