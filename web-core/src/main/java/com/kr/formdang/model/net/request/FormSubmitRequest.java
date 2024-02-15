@@ -1,15 +1,13 @@
 package com.kr.formdang.model.net.request;
 
+import com.kr.formdang.model.net.annotation.ArrayLenValid;
 import com.kr.formdang.model.net.annotation.BeforeDateValid;
 import com.kr.formdang.model.net.annotation.DateValid;
 import com.kr.formdang.model.root.DefaultRequest;
 import lombok.*;
 
 import javax.validation.Valid;
-import javax.validation.constraints.FutureOrPresent;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Pattern;
+import javax.validation.constraints.*;
 import java.util.List;
 
 @Getter
@@ -23,9 +21,11 @@ public class FormSubmitRequest extends DefaultRequest {
     private Integer type; // 폼 타입 ( 0: 설문, 1: 퀴즈, 2: 쪽지시험 )
 
     @NotBlank(message = "폼 제목이 누락되었습니다.")
+    @Size(min = 1, max = 256, message = "폼 제목 길이가 초과되었습니다.")
     private String title; // 폼 제목
 
     @NotBlank(message = "폼 설명이 누락되었습니다.")
+    @Size(min = 1, max = 512, message = "폼 설명 길이가 초과되었습니다.")
     private String detail; // 폼 설명
 
     @NotBlank(message = "폼 시작일이 누락되었습니다.")
@@ -37,6 +37,7 @@ public class FormSubmitRequest extends DefaultRequest {
     private String endDt; // 종료일 (yyyyMMdd)
 
     @NotNull(message = "폼 질문 개수 값이 누락되었습니다.")
+    @Max(20)
     private Integer questionCount; // 질문 개수
 
     @NotNull(message = "폼 상태 값이 누락되었습니다.")
@@ -64,14 +65,18 @@ public class FormSubmitRequest extends DefaultRequest {
         private Integer order; // 순번
 
         @NotNull(message = "질문 제목이 누락되었습니다.")
+        @Size(min = 1, max = 256, message = "질문 제목 길이가 초과되었습니다.")
         private String title; // 질문 제목
 
+        @Size(max = 64, message = "질문 창 내용 길이가 초과되었습니다.")
         private String placeholder; // 질문 placeholder
 
         private String imageUrl; // 이미지 url
 
+        @ArrayLenValid
         private String[] detail; // 질문 상세 내용
 
+        @ArrayLenValid
         private String[] exampleDetail; // 질문 보기 상세 내용
 
         private Integer count; // 질문 개수
