@@ -62,6 +62,7 @@ public class FormServiceImpl implements FormService {
             log.info("■ 3. 폼 서브 테이블 등록 쿼리 시작");
             FormSubTbEntity formSubTb = new FormSubTbEntity();
             formSubTb.setFid(formTb.getFid());
+            formSubTb.generateUrl(formTb.getFid(), formTbEntity.getFormType() == 0 ? "survey" : "quiz"); // 폼 URL 생성
             formSubTbRepository.save(formSubTb); // 폼 서브 저장 테이블 생성
 
             if (formTbEntity.getFormType() == 0) {
