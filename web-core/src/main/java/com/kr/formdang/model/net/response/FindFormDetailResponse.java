@@ -43,6 +43,7 @@ public class FindFormDetailResponse extends DefaultResponse {
     private Integer status; // 폼 상태 (0: 임시저장, 1: 등록)
     private Integer endFlag; // 종료 플래그 ( 0: 미종료, 1: 종료)
     private Integer delFlag; // 삭제 플래그 ( 0: 미삭제, 1: 삭제)
+    private Integer answerCount; // 질문 응답자 수
 
     private Integer maxRespondent; // 인원 제한수 ( 0: 제한 없음, 1~ 제한인원)
 
@@ -63,6 +64,7 @@ public class FindFormDetailResponse extends DefaultResponse {
         this.status = formTbEntity.getStatus();
         this.endFlag = formTbEntity.getEndFlag();
         this.delFlag = formTbEntity.getDelFlag();
+        this.answerCount = formTbEntity.getAnswerCount();
         this.maxRespondent = formTbEntity.getMaxRespondent();
         this.logoUrl = formTbEntity.getLogoUrl();
         this.themeUrl = formTbEntity.getThemeUrl();

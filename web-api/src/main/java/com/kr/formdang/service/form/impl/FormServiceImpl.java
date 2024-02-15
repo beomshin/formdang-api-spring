@@ -147,7 +147,10 @@ public class FormServiceImpl implements FormService {
         log.info("■ 2. 폼 상세 정보 조회 쿼리 시작");
         Optional<FormTbEntity> formTb = formTbRepository.findByAidAndFid(formDataDto.getAid(), formDataDto.getFid());
         if (!formTb.isPresent()) throw new CustomException(GlobalCode.NOT_FIND_FORM);
-        else if (formTb.get().getStatus() == FormStatusEnum.NORMAL_STATUS.getCode()) throw new CustomException(GlobalCode.REFUSE_ALREADY_START_FORM);
+        else if (formTb.get().getAnswerCount() > 0) throw new CustomException(GlobalCode.REFUSE_ALREADY_START_FORM);
+        else if (formTb.get().getDelFlag() == 1) throw new CustomException(GlobalCode.REFUSE_ALREADY_DELETE_FORM);
+        else if (formTb.get().getEndFlag() == 1) throw new CustomException(GlobalCode.REFUSE_ALREADY_END_FORM);
+
         List<QuestionTbEntity> questionTbEntities = questionTbRepository.findByFidOrderByOrderAsc(formTb.get().getFid());
         log.info("■ 3. 폼 수정 데이터 엔티티 적용");
         formTb.get().updateForm(formDataDto); // 변경감지를 통한 업데이트 기존 정보와 동일하면 업데이트 안함
