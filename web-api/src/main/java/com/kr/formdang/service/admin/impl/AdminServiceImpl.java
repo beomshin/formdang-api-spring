@@ -2,19 +2,24 @@ package com.kr.formdang.service.admin.impl;
 
 import com.kr.formdang.entity.AdminSubTbEntity;
 import com.kr.formdang.entity.AdminTbEntity;
+import com.kr.formdang.entity.FileUploadFailTbEntity;
 import com.kr.formdang.exception.CustomException;
 import com.kr.formdang.model.common.GlobalCode;
+import com.kr.formdang.model.common.GlobalFile;
 import com.kr.formdang.model.external.auth.JwtTokenResponse;
 import com.kr.formdang.repository.AdminSubTbRepository;
 import com.kr.formdang.repository.AdminTbRepository;
+import com.kr.formdang.repository.FileUploadFailTbRepository;
 import com.kr.formdang.service.admin.AdminService;
 import com.kr.formdang.service.api.TokenService;
+import com.kr.formdang.utils.FileUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -29,6 +34,7 @@ public class AdminServiceImpl implements AdminService {
     private final AdminTbRepository adminTbRepository;
     private final AdminSubTbRepository adminSubTbRepository;
     private final TokenService tokenService;
+    private final FileUploadFailTbRepository fileUploadFailTbRepository;
 
     @Value("${formdang.url.fail-login}")
     private String formdang_fail_login;
@@ -71,7 +77,7 @@ public class AdminServiceImpl implements AdminService {
     @Override
     public String successLogin(AdminTbEntity adminTb)  {
         log.info("■ 4. 폼당폼당 로그인 토큰 생성");
-        JwtTokenResponse jwtTokenResponse = tokenService.getLoginToken(String.valueOf(adminTb.getAid()), adminTb.getName(), accessKey); // 폼당폼당 JWT 토큰 요청
+        JwtTokenResponse jwtTokenResponse = tokenService.getLoginToken(String.valueOf(adminTb.getAid()), adminTb.getName(), adminTb.getProfile(), accessKey); // 폼당폼당 JWT 토큰 요청
         Map<String, Object> params = new HashMap<>();
         params.put("accessToken", jwtTokenResponse.getAccessToken());
         params.put("refreshToken", jwtTokenResponse.getRefreshToken());
@@ -89,5 +95,27 @@ public class AdminServiceImpl implements AdminService {
     @Override
     public String failLogin(Exception e) {
         return formdang_fail_login;
+    }
+
+    @Override
+    @Transactional
+    public int updateProfile(Long aid, GlobalFile profile, MultipartFile file) {
+        if (profile == null) {
+            log.error("■ 이미지 업로드 실패 확인 필요");
+            fileUploadFailTbRepository.save(FileUploadFailTbEntity.builder()
+                    .oriName(file.getOriginalFilename())
+                    .ext(FileUtils.getAccessFileExtension(file.getOriginalFilename()))
+                    .size(String.valueOf(file.getSize()))
+                    .build());
+            return 0;
+        } else {
+            log.info("■ 2. 프로필 업데이트 쿼리 시작");
+            return adminTbRepository.updateProfile(aid, profile.getPath());
+        }
+    }
+
+    @Override
+    public String getToken(String token) {
+        return null;
     }
 }

@@ -36,10 +36,22 @@ public class JwtServiceImpl implements JwtService {
     @Override
     public Long getId(String token) throws CustomException {
         try {
-            log.info("■ JWT 토큰 생성 [getId]");
+            log.info("■ JWT 토큰 아이디 조회 [getId]");
             String id = jwtTokenProvider.getId(JWT_KEY, parseJwt(token));
             if (org.apache.commons.lang3.StringUtils.isBlank(id)) throw new CustomException(GlobalCode.NOT_EXIST_TOKEN);
             return Long.parseLong(id);
+        } catch (Exception e) {
+            throw new CustomException(GlobalCode.NOT_EXIST_TOKEN);
+        }
+    }
+
+    @Override
+    public String getName(String token) throws CustomException {
+        try {
+            log.info("■ JWT 토큰 이름 조회 [getName]");
+            String name = jwtTokenProvider.getName(JWT_KEY, parseJwt(token));
+            if (org.apache.commons.lang3.StringUtils.isBlank(name)) throw new CustomException(GlobalCode.NOT_EXIST_TOKEN);
+            return name;
         } catch (Exception e) {
             throw new CustomException(GlobalCode.NOT_EXIST_TOKEN);
         }

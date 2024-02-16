@@ -19,6 +19,10 @@ public class JwtTokenProvider {
         return this.getClaims(key,token).get("id").toString();
     }
 
+    public String getName(String key, String token) {
+        return this.getClaims(key,token).get("name").toString();
+    }
+
     private Claims getClaims(String key, String token) {
         try {
             return Jwts.parser().setSigningKey(key).parseClaimsJws(token).getBody();

@@ -36,6 +36,9 @@ public class AdminTbEntity extends DateEntity{
     @Column(name = "sub_id")
     private String subId;
     @Basic
+    @Column(name = "profile")
+    private String profile;
+    @Basic
     @Column(name = "type")
     private int type;
     @Basic

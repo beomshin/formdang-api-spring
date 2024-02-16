@@ -4,5 +4,5 @@ import com.kr.formdang.model.external.auth.JwtTokenResponse;
 
 public interface TokenService {
 
-    JwtTokenResponse getLoginToken(String id, String name, String key);
+    JwtTokenResponse getLoginToken(String id, String name, String profile, String key);
 }
