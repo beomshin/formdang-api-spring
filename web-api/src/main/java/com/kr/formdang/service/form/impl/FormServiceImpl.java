@@ -222,6 +222,8 @@ public class FormServiceImpl implements FormService {
                 throw new CustomException(GlobalCode.END_FORM);
             } else if (formTb.get().getStatus() != 1) {
                 throw new CustomException(GlobalCode.NOT_START_FORM);
+            } else if (formTb.get().getMaxRespondent() !=  0 && formTb.get().getAnswerCount() >= formTb.get().getMaxRespondent()) {
+                throw new CustomException(GlobalCode.IS_MAX_RESPONSE);
             }
 
             log.info("■ 그룹 폼 조회 쿼리 시작");

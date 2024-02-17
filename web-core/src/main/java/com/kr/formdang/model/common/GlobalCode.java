@@ -25,6 +25,7 @@ public enum GlobalCode {
     END_FORM("30014", "종료 된 폼으로 접근 금지"),
     NOT_LOGIN_GROUP_FORM("30015", "그룹 폼 로그인 필요"),
     IS_NOT_GROUP_FORM_USER("30016", "그룹 폼 권한 미유저"),
+    IS_MAX_RESPONSE("30017", "설문 최대 응답자 수 초과"),
     NOT_EXIST_PARAM("9993", "파라미터 누락 오류"),
     NOT_EXIST_HEADER("9993", "헤더 누락 오류"),
     NOT_EXIST_TOKEN("9994", "토큰 누락 오류"),
