@@ -9,11 +9,8 @@ import org.springframework.web.multipart.MultipartFile;
 public interface AdminService {
 
     AdminTbEntity saveSnsAdmin(AdminTbEntity adminTbEntity) throws CustomException;
-
     String successLogin(AdminTbEntity adminTb) ;
-
     String failLogin(Exception e) ;
-    int updateProfile(Long aid, GlobalFile profile, MultipartFile file);
-    String getToken(String token);
+    boolean updateProfile(Long aid, GlobalFile profile, MultipartFile file);
 
 }

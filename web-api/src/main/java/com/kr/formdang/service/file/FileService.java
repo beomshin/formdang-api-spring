@@ -9,7 +9,8 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Future;
 
 public interface FileService<T> {
-    T uploadSingle(MultipartFile file);
 
+    T uploadSingle(MultipartFile file);
     CompletableFuture<FileDataDto> uploadSingle(FileDataDto fileDataDto);
+
 }

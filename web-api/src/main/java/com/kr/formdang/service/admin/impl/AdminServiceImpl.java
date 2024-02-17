@@ -94,12 +94,12 @@ public class AdminServiceImpl implements AdminService {
 
     @Override
     public String failLogin(Exception e) {
-        return formdang_fail_login;
+        return formdang_fail_login + "?fail=true";
     }
 
     @Override
     @Transactional
-    public int updateProfile(Long aid, GlobalFile profile, MultipartFile file) {
+    public boolean updateProfile(Long aid, GlobalFile profile, MultipartFile file) {
         if (profile == null) {
             log.error("■ 이미지 업로드 실패 확인 필요");
             fileUploadFailTbRepository.save(FileUploadFailTbEntity.builder()
@@ -107,15 +107,11 @@ public class AdminServiceImpl implements AdminService {
                     .ext(FileUtils.getAccessFileExtension(file.getOriginalFilename()))
                     .size(String.valueOf(file.getSize()))
                     .build());
-            return 0;
+            return false;
         } else {
             log.info("■ 2. 프로필 업데이트 쿼리 시작");
-            return adminTbRepository.updateProfile(aid, profile.getPath());
+            return adminTbRepository.updateProfile(aid, profile.getPath()) > 0 ? true : false;
         }
     }
 
-    @Override
-    public String getToken(String token) {
-        return null;
-    }
 }

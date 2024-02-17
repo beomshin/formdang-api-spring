@@ -30,4 +30,14 @@ public class JwtTokenProvider {
             return e.getClaims();
         }
     }
+
+    public boolean  validateJwtToken(String key, String token) {
+        try {
+            Jwts.parser().setSigningKey(key).parseClaimsJws(token);
+            return true;
+        } catch (Exception e) {
+            log.error("[토큰 인증 실패 에러] ==================> ");
+            return false;
+        }
+    }
 }

@@ -29,6 +29,7 @@ public enum GlobalCode {
     NOT_FOUND_PAGE("9997", "잘못된 API PATH 요청 오류"),
     PARAMETER_ERROR("9998", "요청 파라미터 오류"),
     SYSTEM_ERROR("9999", "미지정 오류"),
+    FAIL_VALIDATE_TOKEN("17002", "토큰 인증 실패"),
 
     ;
 

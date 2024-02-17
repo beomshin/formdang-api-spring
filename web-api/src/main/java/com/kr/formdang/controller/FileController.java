@@ -46,51 +46,37 @@ public class FileController {
     @Value("${token.access-key}")
     private String accessKey;
 
+
     /**
-     * 파일 업로드 API
-     *
-     * AWS S3에 파일 업로드 처리
+     * 프로필 이미지 변경
      * @param fileRequest
+     * @param token
      * @return
      */
-    @PostMapping("/public/file/upload")
-    public ResponseEntity uploadFile(@ModelAttribute @Valid FileRequest fileRequest, @RequestHeader("Authorization") String token) {
-        try {
-            jwtService.getId(token); // 관리자 아이디 세팅
-            GlobalFile file = fileService.uploadSingle(fileRequest.getFile());
-            return ResponseEntity.ok().body(new FileResponse(file));
-        } catch (CustomException e) {
-            log.info("■ 이미지 리스트 등록 응답 오류, {}", e);
-            return ResponseEntity.ok().body(new DefaultResponse(e.getCode()));
-        } catch (Exception e) {
-            log.info("■이미지 리스트 등록 응답 오류, {}", e);
-            return ResponseEntity.ok().body(new DefaultResponse(GlobalCode.SYSTEM_ERROR));
-        }
-    }
-
     @PostMapping("/public/file/upload/profile")
     public ResponseEntity uploadFileProfile(@ModelAttribute @Valid FileProfileRequest fileRequest, @RequestHeader("Authorization") String token) {
         try {
-            DefaultResponse response = null;
             log.info("■ 1. 프로필 등록 요청 성공");
-            Long aid = jwtService.getId(token); // 관리자 아이디 세팅
-            GlobalFile profile = fileService.uploadSingle(fileRequest.getProfile());
-            int result = adminService.updateProfile(aid, profile, fileRequest.getProfile());
-            if (result != 0) {
-                log.info("■ JWT 토큰 재발급 신청 [프로필 값 업데이트]");
-                String name = jwtService.getName(token);
-                JwtTokenResponse jwtTokenResponse = tokenService.getLoginToken(String.valueOf(aid), name, profile.getPath(), accessKey); // 폼당폼당 JWT 토큰 요청
-                response = new FileProfileResponse(profile, jwtTokenResponse.getAccessToken());
-            } else {
-                response = new DefaultResponse(GlobalCode.FAIL_UPLOAD_PROFILE);
+            if (!jwtService.validateToken(token)) throw new CustomException(GlobalCode.FAIL_VALIDATE_TOKEN); // 토큰 검사
+
+            final Long aid = jwtService.getId(token); // 관리자 아이디 세팅
+            GlobalFile profile = fileService.uploadSingle(fileRequest.getProfile()); // 파일 등록
+            boolean result = adminService.updateProfile(aid, profile, fileRequest.getProfile()); // 프로필 정보 업데이트
+
+            if (result) { // 프로필 등록 성공
+                log.debug("■ JWT 토큰 재발급 신청 [프로필 값 업데이트]");
+                JwtTokenResponse jwtTokenResponse = tokenService.getLoginToken(String.valueOf(aid), jwtService.getName(token), profile.getPath(), accessKey); // 폼당폼당 JWT 토큰 요청 (프로필 내용 변경)
+                log.info("■ 3. 프로필 등록 응답 성공");
+                return ResponseEntity.ok().body(new FileProfileResponse(profile, jwtTokenResponse.getAccessToken()));
+            } else { // 프로필 등록 실패
+                log.error("■ 3. 프로필 등록 응답 실패");
+                return ResponseEntity.ok().body(new DefaultResponse(GlobalCode.FAIL_UPLOAD_PROFILE));
             }
-            log.info("■ 3. 프로필 등록 응답 성공");
-            return ResponseEntity.ok().body(response);
         } catch (CustomException e) {
-            log.info("■ 이미지 리스트 등록 응답 오류, {}", e);
+            log.error("■ 프로필 등록 응답 오류, {}", e);
             return ResponseEntity.ok().body(new DefaultResponse(e.getCode()));
         } catch (Exception e) {
-            log.info("■이미지 리스트 등록 응답 오류, {}", e);
+            log.error("■ 프로필 등록응답 오류, {}", e);
             return ResponseEntity.ok().body(new DefaultResponse(GlobalCode.SYSTEM_ERROR));
         }
     }
@@ -110,12 +96,15 @@ public class FileController {
     public ResponseEntity uploadFileList(@ModelAttribute @Valid FileListRequest fileListRequest, @RequestHeader("Authorization") String token, @PathVariable("fid") Long fid){
         try {
             log.info("■ 1. 이미지 리스트 등록 요청 성공 (fid: {})", fid);
+            if (!jwtService.validateToken(token)) throw new CustomException(GlobalCode.FAIL_VALIDATE_TOKEN);// 토큰 검사
+
+            final Long aid = jwtService.getId(token); // 관리자 아이디 세팅
+            formService.findForm(aid, fid); // 유효한 폼 유효성 처리
+
             List<FileDataDto> fileDataDtos = new ArrayList<>();
             for (int i=0; i < fileListRequest.getFiles().size(); i++) {
                 fileDataDtos.add(new FileDataDto(fileListRequest, i));
             }
-            final Long aid = jwtService.getId(token); // 관리자 아이디 세팅
-            formService.findForm(aid, fid); // 유효한 폼 유효성 처리
 
             StopWatch stopWatch = new StopWatch();
             log.info("■ 3. AWS 이미지 등록 비동기 처리 시작");
@@ -128,10 +117,10 @@ public class FileController {
             formService.updateImage(fid, files);
             return ResponseEntity.ok().body(new DefaultResponse());
         } catch (CustomException e) {
-            log.info("■ 이미지 리스트 등록 응답 오류, {}", e);
+            log.error("■ 이미지 리스트 등록 응답 오류, {}", e);
             return ResponseEntity.ok().body(new DefaultResponse(e.getCode()));
         } catch (Exception e) {
-            log.info("■이미지 리스트 등록 응답 오류, {}", e);
+            log.error("■이미지 리스트 등록 응답 오류, {}", e);
             return ResponseEntity.ok().body(new DefaultResponse(GlobalCode.SYSTEM_ERROR));
         }
     }

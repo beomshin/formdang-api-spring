@@ -67,7 +67,7 @@ public class KakaoController {
             log.info("■ 8. 카카오 로그인 콜백 리다이렉트 : {}", redirectView.getUrl());
             return redirectView;
         } catch (Exception e) {
-            log.error("■ 카카오 로그인 콜백 요청 오류, {}", e);
+            log.error("■ 카카오 로그인 콜백 요청 오류 ", e);
             redirectView.setUrl(adminService.failLogin(e));
             return redirectView;
         }
