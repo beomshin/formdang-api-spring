@@ -32,6 +32,9 @@ public class FormSubTbEntity extends DateEntity{
     @Column(name = "form_url")
     private String formUrl;
     @Basic
+    @Column(name = "form_url_key")
+    private String formUrlKey;
+    @Basic
     @Column(name = "form_qr")
     private String formQr;
     @Basic
@@ -39,7 +42,8 @@ public class FormSubTbEntity extends DateEntity{
     private String formWebHockUrl;
 
     public void generateUrl(Long fid, String type) {
-        this.formUrl = "https://formdang.com/paper/" + type + "/" + fid + "/" + UUID.randomUUID().toString().substring(0, 16);
+        this.formUrlKey = UUID.randomUUID().toString().replace("-", "").substring(0, 16);
+        this.formUrl = "https://formdang.com/web/paper.html?type=" + type + "&fid=" + fid + "&key=" + this.formUrlKey;
     }
 
 }
