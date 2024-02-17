@@ -23,4 +23,5 @@ public interface FormService {
     List<QuestionTbEntity> findQuestions(Long fid) throws CustomException;
     void updateForm(FormDataDto formDataDto, List<QuestionDataDto> questionDataDtos) throws CustomException;
     void updateImage(Long fid, List<FileDataDto> fileDataDtos);
+    FormTbEntity findPaper(String token, Long fid) throws CustomException;
 }

@@ -3,6 +3,7 @@ package com.kr.formdang.service.form.impl;
 import com.kr.formdang.entity.*;
 import com.kr.formdang.enums.*;
 import com.kr.formdang.exception.CustomException;
+import com.kr.formdang.jwt.JwtService;
 import com.kr.formdang.mapper.FormMapper;
 import com.kr.formdang.model.common.GlobalCode;
 import com.kr.formdang.model.dao.form.FindFormDto;
@@ -36,6 +37,9 @@ public class FormServiceImpl implements FormService {
     private final FormMapper formMapper;
     private final FormDataService formDataService;
     private final FileUploadFailTbRepository fileUploadFailTbRepository;
+    private final GroupFormTbRepository groupFormTbRepository;
+    private final JwtService jwtService;
+    private final GroupMemberTbRepository groupMemberTbRepository;
 
     /**
      * 폼 저장
@@ -204,6 +208,41 @@ public class FormServiceImpl implements FormService {
                                 .size(String.valueOf(fileDataDto.getFile().getSize()))
                         .build());
             }
+        }
+    }
+
+    @Override
+    public FormTbEntity findPaper(String token, Long fid) throws CustomException {
+        log.info("■ 2. 폼 상세 정보 조회 쿼리 시작");
+        Optional<FormTbEntity> formTb = formTbRepository.findById(fid);
+        if (formTb.isPresent()) {
+            if (formTb.get().getDelFlag() == 1) {
+                throw new CustomException(GlobalCode.DELETE_FORM);
+            } else if (formTb.get().getEndFlag() == 1) {
+                throw new CustomException(GlobalCode.END_FORM);
+            } else if (formTb.get().getStatus() != 1) {
+                throw new CustomException(GlobalCode.NOT_START_FORM);
+            }
+
+            log.info("■ 그룹 폼 조회 쿼리 시작");
+            Optional<GroupFormTbEntity> groupFormTbEntity = groupFormTbRepository.findByFid(fid);
+
+            if (groupFormTbEntity.isPresent()) {
+                log.info("■ 그룹 폼 권한 검사 시작");
+                if (!jwtService.validateToken(token)) throw new CustomException(GlobalCode.NOT_LOGIN_GROUP_FORM); // 그룹 폼은 로그인 권한 필요
+                final Long aid = jwtService.getId(token);
+
+                log.info("■ 그룹 권한 유저 조회 쿼리 시작");
+                Optional<GroupMemberTbEntity> groupMemberTbEntity = groupMemberTbRepository.findByAidAndGid(aid, groupFormTbEntity.get().getGid());
+                if (!groupMemberTbEntity.isPresent()) {
+                    throw new CustomException(GlobalCode.IS_NOT_GROUP_FORM_USER); // 그룹 폼 권한 미유저
+                }
+                log.info("■ 그룹 폼 권한 검사 통과");
+            }
+
+            return formTb.get();
+        } else {
+            throw new CustomException(GlobalCode.NOT_FIND_FORM);
         }
     }
 
