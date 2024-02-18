@@ -22,12 +22,12 @@ public class FindPaperResponse extends DefaultResponse {
     private Integer type; // 폼 타입 ( 0: 설문, 1: 퀴즈, 2: 쪽지시험 )
     private String title; // 폼 제목
     private String detail; // 폼 설명
-    @JsonFormat(shape= JsonFormat.Shape.STRING, pattern="yyyy-MM-dd", timezone = "Asia/Seoul")
-    private Timestamp beginDt; // 시작일 (yyyyMMdd)
-    @JsonFormat(shape= JsonFormat.Shape.STRING, pattern="yyyy-MM-dd", timezone = "Asia/Seoul")
-    private Timestamp endDt; // 종료일 (yyyyMMdd)
-    private Integer questionCount; // 질문 개수
-    private Integer answerCount; // 질문 응답자 수
+//    @JsonFormat(shape= JsonFormat.Shape.STRING, pattern="yyyy-MM-dd", timezone = "Asia/Seoul")
+//    private Timestamp beginDt; // 시작일 (yyyyMMdd)
+//    @JsonFormat(shape= JsonFormat.Shape.STRING, pattern="yyyy-MM-dd", timezone = "Asia/Seoul")
+//    private Timestamp endDt; // 종료일 (yyyyMMdd)
+//    private Integer questionCount; // 질문 개수
+//    private Integer answerCount; // 질문 응답자 수
     private Integer maxRespondent; // 인원 제한수 ( 0: 제한 없음, 1~ 제한인원)
     private String logoUrl; // 로그 url
     private String themeUrl; // 테마 url
@@ -39,10 +39,10 @@ public class FindPaperResponse extends DefaultResponse {
         this.type = formTbEntity.getFormType();
         this.title = formTbEntity.getTitle();
         this.detail = formTbEntity.getFormDetail();
-        this.beginDt = formTbEntity.getBeginDt();
-        this.endDt = formTbEntity.getEndDt();
-        this.questionCount = formTbEntity.getQuestionCount();
-        this.answerCount = formTbEntity.getAnswerCount();
+//        this.beginDt = formTbEntity.getBeginDt();
+//        this.endDt = formTbEntity.getEndDt();
+//        this.questionCount = formTbEntity.getQuestionCount();
+//        this.answerCount = formTbEntity.getAnswerCount();
         this.maxRespondent = formTbEntity.getMaxRespondent();
         this.logoUrl = formTbEntity.getLogoUrl();
         this.themeUrl = formTbEntity.getThemeUrl();
