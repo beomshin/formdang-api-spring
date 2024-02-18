@@ -23,6 +23,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.*;
 
 @Service
@@ -218,6 +220,8 @@ public class FormServiceImpl implements FormService {
         Optional<FormSubTbEntity> formSubTb = formSubTbRepository.findByFormTbAndFormUrlKey(FormTbEntity.builder().fid(formDataDto.getFid()).build(), formDataDto.getKey());
         if (formSubTb.isPresent()) {
             FormTbEntity formTb = formSubTb.get().getFormTb();
+            Timestamp now = Timestamp.valueOf(LocalDateTime.now());
+
             if (formTb.getDelFlag() == 1) {
                 throw new CustomException(GlobalCode.DELETE_FORM);
             } else if (formTb.getEndFlag() == 1) {
@@ -226,6 +230,8 @@ public class FormServiceImpl implements FormService {
                 throw new CustomException(GlobalCode.NOT_START_FORM);
             } else if (formTb.getMaxRespondent() !=  0 && formTb.getAnswerCount() >= formTb.getMaxRespondent()) {
                 throw new CustomException(GlobalCode.IS_MAX_RESPONSE);
+            } else if (!(now.compareTo(formTb.getBeginDt()) >= 0 && now.compareTo(formTb.getEndDt()) <= 0)) {
+                throw new CustomException(GlobalCode.IS_NOT_RIGHT_DATE);
             }
 
             log.info("■ 그룹 폼 조회 쿼리 시작");
