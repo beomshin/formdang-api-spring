@@ -34,4 +34,7 @@ public class DateEntity {
     @JsonFormat(shape= JsonFormat.Shape.STRING, pattern="yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
     private Timestamp modDt;
 
+    public void updateModDt() {
+        this.modDt = new Timestamp(System.currentTimeMillis());
+    }
 }

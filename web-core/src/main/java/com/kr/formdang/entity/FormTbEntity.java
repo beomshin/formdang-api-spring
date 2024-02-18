@@ -80,5 +80,6 @@ public class FormTbEntity extends DateEntity {
         this.maxRespondent = formDataDto.getMaxRespondent();
         this.logoUrl = formDataDto.getLogoUrl();
         this.themeUrl = formDataDto.getThemeUrl();
+        super.updateModDt();
     }
 }

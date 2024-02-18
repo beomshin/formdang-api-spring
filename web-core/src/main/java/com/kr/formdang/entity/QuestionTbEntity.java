@@ -71,5 +71,6 @@ public class QuestionTbEntity extends DateEntity{
         this.quizAnswer = questionDataDto.getAnswer() != null ?
                 Arrays.stream(questionDataDto.getAnswer()).collect(Collectors.joining("|")) : null;
         this.imageUrl = questionDataDto.getImageUrl();
+        super.updateModDt();
     }
 }
