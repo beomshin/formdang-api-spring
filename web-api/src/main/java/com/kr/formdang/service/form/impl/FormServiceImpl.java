@@ -65,8 +65,8 @@ public class FormServiceImpl implements FormService {
 
             log.info("■ 3. 폼 서브 테이블 등록 쿼리 시작");
             FormSubTbEntity formSubTb = new FormSubTbEntity();
-            formSubTb.setFid(formTb.getFid());
-            formSubTb.generateUrl(formTb.getFid(), formTbEntity.getFormType() == 0 ? "survey" : "quiz"); // 폼 URL 생성
+            formSubTb.setFormTb(formTb);
+            formSubTb.generateUrl(formTb.getFid(), formTbEntity.getFormType()); // 폼 URL 생성
             formSubTbRepository.save(formSubTb); // 폼 서브 저장 테이블 생성
 
             if (formTbEntity.getFormType() == 0) {
@@ -212,27 +212,29 @@ public class FormServiceImpl implements FormService {
     }
 
     @Override
-    public FormTbEntity findPaper(String token, Long fid) throws CustomException {
+    @Transactional
+    public FormTbEntity findPaper(FormDataDto formDataDto) throws CustomException {
         log.info("■ 2. 폼 상세 정보 조회 쿼리 시작");
-        Optional<FormTbEntity> formTb = formTbRepository.findById(fid);
-        if (formTb.isPresent()) {
-            if (formTb.get().getDelFlag() == 1) {
+        Optional<FormSubTbEntity> formSubTb = formSubTbRepository.findByFormTbAndFormUrlKey(FormTbEntity.builder().fid(formDataDto.getFid()).build(), formDataDto.getKey());
+        if (formSubTb.isPresent()) {
+            FormTbEntity formTb = formSubTb.get().getFormTb();
+            if (formTb.getDelFlag() == 1) {
                 throw new CustomException(GlobalCode.DELETE_FORM);
-            } else if (formTb.get().getEndFlag() == 1) {
+            } else if (formTb.getEndFlag() == 1) {
                 throw new CustomException(GlobalCode.END_FORM);
-            } else if (formTb.get().getStatus() != 1) {
+            } else if (formTb.getStatus() != 1) {
                 throw new CustomException(GlobalCode.NOT_START_FORM);
-            } else if (formTb.get().getMaxRespondent() !=  0 && formTb.get().getAnswerCount() >= formTb.get().getMaxRespondent()) {
+            } else if (formTb.getMaxRespondent() !=  0 && formTb.getAnswerCount() >= formTb.getMaxRespondent()) {
                 throw new CustomException(GlobalCode.IS_MAX_RESPONSE);
             }
 
             log.info("■ 그룹 폼 조회 쿼리 시작");
-            Optional<GroupFormTbEntity> groupFormTbEntity = groupFormTbRepository.findByFid(fid);
+            Optional<GroupFormTbEntity> groupFormTbEntity = groupFormTbRepository.findByFid(formTb.getFid());
 
             if (groupFormTbEntity.isPresent()) {
                 log.info("■ 그룹 폼 권한 검사 시작");
-                if (!jwtService.validateToken(token)) throw new CustomException(GlobalCode.NOT_LOGIN_GROUP_FORM); // 그룹 폼은 로그인 권한 필요
-                final Long aid = jwtService.getId(token);
+                if (!jwtService.validateToken(formDataDto.getToken())) throw new CustomException(GlobalCode.NOT_LOGIN_GROUP_FORM); // 그룹 폼은 로그인 권한 필요
+                final Long aid = jwtService.getId(formDataDto.getToken());
 
                 log.info("■ 그룹 권한 유저 조회 쿼리 시작");
                 Optional<GroupMemberTbEntity> groupMemberTbEntity = groupMemberTbRepository.findByAidAndGid(aid, groupFormTbEntity.get().getGid());
@@ -242,7 +244,7 @@ public class FormServiceImpl implements FormService {
                 log.info("■ 그룹 폼 권한 검사 통과");
             }
 
-            return formTb.get();
+            return formTb;
         } else {
             throw new CustomException(GlobalCode.NOT_FIND_FORM);
         }

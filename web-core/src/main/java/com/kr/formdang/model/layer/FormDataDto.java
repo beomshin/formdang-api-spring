@@ -30,6 +30,8 @@ public class FormDataDto {
     private Integer maxRespondent; // 인원 제한수 ( 0: 제한 없음, 1~ 제한인원)
     private String logoUrl; // 로그 url
     private String themeUrl; // 테마 url
+    private String key; // 유저 화면 폼 키
+    private String token; // 헤더 토큰
 
     public FormDataDto(FormSubmitRequest request, Long aid, String pattern) throws ParseException {
         this.type = request.getType();
@@ -58,5 +60,12 @@ public class FormDataDto {
         this.logoUrl = request.getLogoUrl();
         this.themeUrl = request.getThemeUrl();
         this.aid = aid;
+    }
+
+    public FormDataDto(Long fid, Integer type, String key, String token) {
+        this.fid = fid;
+        this.type = type;
+        this.key = key;
+        this.token = token;
     }
 }

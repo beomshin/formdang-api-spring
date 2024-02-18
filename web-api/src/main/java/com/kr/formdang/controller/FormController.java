@@ -201,11 +201,14 @@ public class FormController {
      * @param fid
      * @return
      */
-    @GetMapping(value = "/public/form/paper/{fid}")
-    public ResponseEntity findPaper(@RequestHeader(value = "Authorization", required = false) String token, @PathVariable("fid") Long fid) {
+    @GetMapping(value = "/public/form/paper")
+    public ResponseEntity findPaper(@RequestHeader(value = "Authorization", required = false) String token,
+                                    @RequestParam @NotBlank @Min(0) Integer type,
+                                    @RequestParam @NotBlank @Min(0) Long fid,
+                                    @RequestParam @NotBlank String key) {
         try {
             log.info("■ 1. 유저 화면 정보 조회 요청 성공");
-            FormTbEntity formTbEntity = formService.findPaper(token, fid); // 폼 상세 조회
+            FormTbEntity formTbEntity = formService.findPaper(new FormDataDto(fid, type, key, token)); // 폼 상세 조회
             List<QuestionTbEntity> questionTbEntities = formService.findQuestions(fid); // 질문 리스트 조회
             log.info("■ 4. 유저 화면 정보 조회 응답 성공");
             return ResponseEntity.ok().body(new FindPaperResponse(formTbEntity, questionTbEntities));

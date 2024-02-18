@@ -24,10 +24,10 @@ public class FormSubTbEntity extends DateEntity{
     @Id
     @Column(name = "fsid")
     private long fsid;
-    @Basic
-    @Column(name = "fid")
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "fid")
     @Setter
-    private long fid;
+    private FormTbEntity formTb;
     @Basic
     @Column(name = "form_url")
     private String formUrl;
@@ -41,7 +41,7 @@ public class FormSubTbEntity extends DateEntity{
     @Column(name = "form_web_hock_url")
     private String formWebHockUrl;
 
-    public void generateUrl(Long fid, String type) {
+    public void generateUrl(Long fid, Integer type) {
         this.formUrlKey = UUID.randomUUID().toString().replace("-", "").substring(0, 16);
         this.formUrl = "https://formdang.com/web/paper.html?type=" + type + "&fid=" + fid + "&key=" + this.formUrlKey;
     }
