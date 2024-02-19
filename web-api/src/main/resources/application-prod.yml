@@ -1,9 +1,41 @@
 #LOG
 logging:
   file:
-    name: logs/web-api.log
+    name: ./logs/web-api.log
   level:
     com.kr.formdang: debug
     jdbc.sqltiming: info #SQL 문과 이 SQL 문을 수행하는 시간(ms)을 같이 보여준다.
     jdbc.result-settable: info #SQL 의 결과로 조회된 데이터를 table 형태로 로그를 보여준다.
     http.logging: info
+
+kakao:
+  auth:
+    url: https://kapi.kakao.com
+  login:
+    url: https://kauth.kakao.com
+  redirect:
+    login:
+      uri: http://formdang-api.com/api/sp/public/kakao/login/callback
+  client:
+    id: 0a106f8a1ca7560173fcc5420818e404
+  secret: dI5BQb3Hpu9T8wq0tU1D29KiRME8AeY1
+
+
+google:
+  auth:
+    url: https://oauth2.googleapis.com
+    scope: profile,email,openid
+
+  login:
+    url: https://accounts.google.com
+  redirect:
+    uri: http://formdang-api.com/api/sp/public/google/login/callback
+  client:
+    id: 480280719023-pcds17du2k26mpsebqpcm6n6240j3vi2
+  secret: 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
+
+formdang:
+  url:
+    fail-login: https://formdang.com/admin/login.html
+    success-login: https://formdang.com/admin/index.html
+    auth-issue: http://127.0.0.1:22081/auth/sp/issue

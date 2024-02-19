@@ -38,7 +38,7 @@ spring:
     activate:
       on-profile: local
 
-# LOCAL
+# TEST
 ---
 spring:
   datasource:
@@ -49,3 +49,16 @@ spring:
   config:
     activate:
       on-profile: test
+
+
+# PROD
+---
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://form-dang-database.cfsxwgisoif6.ap-northeast-2.rds.amazonaws.com/form_dang?useSSL=false&characterEncoding=UTF-8&serverTimezone=Asia/Seoul&allowPublicKeyRetrieval=true
+    username: test_formdang
+    password: formdang12!#
+  config:
+    activate:
+      on-profile: prod
