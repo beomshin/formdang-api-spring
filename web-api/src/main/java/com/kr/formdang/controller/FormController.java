@@ -70,7 +70,6 @@ public class FormController {
 
             log.info("■ 5. 폼 작성하기 응답 성공");
             return ResponseEntity.ok().body(new SubmitFormResponse(resCode, formTb != null ? formTb.getFid() : null));
-
         } catch (CustomException e) {
             log.error("■ 5. 폼 작성하기 응답 오류, {}", e);
             return ResponseEntity.ok().body(new DefaultResponse(e.getCode()));
