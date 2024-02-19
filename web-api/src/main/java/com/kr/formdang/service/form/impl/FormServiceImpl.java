@@ -26,6 +26,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -65,10 +66,14 @@ public class FormServiceImpl implements FormService {
             questionTbEntities.stream().forEach(it -> it.setFid(formTb.getFid()));
             questionTbRepository.saveAll(questionTbEntities); // 질문 리스트 생성
 
+
             log.info("■ 3. 폼 서브 테이블 등록 쿼리 시작");
-            FormSubTbEntity formSubTb = new FormSubTbEntity();
-            formSubTb.setFormTb(formTb);
-            formSubTb.generateUrl(formTb.getFid(), formTbEntity.getFormType()); // 폼 URL 생성
+            String key = UUID.randomUUID().toString().replace("-", "").substring(0, 16);
+            FormSubTbEntity formSubTb = FormSubTbEntity.builder()
+                    .formTb(formTb)
+                    .formUrlKey(key)
+                    .formUrl("https://formdang.com/web/paper.html?type=" + formTb.getFormType() + "&fid=" + formTb.getFid() + "&key=" + key)
+                    .build();
             formSubTbRepository.save(formSubTb); // 폼 서브 저장 테이블 생성
 
             if (formTbEntity.getFormType() == 0) {
@@ -235,16 +240,16 @@ public class FormServiceImpl implements FormService {
             }
 
             log.info("■ 그룹 폼 조회 쿼리 시작");
-            Optional<GroupFormTbEntity> groupFormTbEntity = groupFormTbRepository.findByFid(formTb.getFid());
+            List<GroupFormTbEntity> groupFormTbEntity = groupFormTbRepository.findByFid(formTb.getFid());
 
-            if (groupFormTbEntity.isPresent()) {
+            if (groupFormTbEntity.size() > 0) {
                 log.info("■ 그룹 폼 권한 검사 시작");
                 if (!jwtService.validateToken(formDataDto.getToken())) throw new CustomException(GlobalCode.NOT_LOGIN_GROUP_FORM); // 그룹 폼은 로그인 권한 필요
                 final Long aid = jwtService.getId(formDataDto.getToken());
 
                 log.info("■ 그룹 권한 유저 조회 쿼리 시작");
-                Optional<GroupMemberTbEntity> groupMemberTbEntity = groupMemberTbRepository.findByAidAndGid(aid, groupFormTbEntity.get().getGid());
-                if (!groupMemberTbEntity.isPresent()) {
+                List<GroupMemberTbEntity> groupMemberTbEntity = groupMemberTbRepository.findByAidAndGroupTbIn(aid, groupFormTbEntity.stream().map(it -> new GroupTbEntity(it.getGid())).collect(Collectors.toList()));
+                if (groupMemberTbEntity.size() == 0) {
                     throw new CustomException(GlobalCode.IS_NOT_GROUP_FORM_USER); // 그룹 폼 권한 미유저
                 }
                 log.info("■ 그룹 폼 권한 검사 통과");

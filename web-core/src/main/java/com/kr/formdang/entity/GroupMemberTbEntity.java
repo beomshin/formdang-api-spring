@@ -1,8 +1,6 @@
 package com.kr.formdang.entity;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.DynamicInsert;
 
@@ -13,7 +11,7 @@ import javax.persistence.*;
 @Getter
 @ToString(callSuper = true)
 @SuperBuilder
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @DynamicInsert
 public class GroupMemberTbEntity extends DateEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -23,9 +21,10 @@ public class GroupMemberTbEntity extends DateEntity {
     @Basic
     @Column(name = "aid")
     private Long aid;
-    @Basic
-    @Column(name = "gid")
-    private Long gid;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "gid")
+    @Setter
+    private GroupTbEntity groupTb;
     @Basic
     @Column(name = "name")
     private String name;

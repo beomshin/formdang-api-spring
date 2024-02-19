@@ -1,5 +1,6 @@
 package com.kr.formdang.entity;
 
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
@@ -14,7 +15,7 @@ import java.util.Objects;
 @Getter
 @ToString(callSuper = true)
 @SuperBuilder
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class LogoTbEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id

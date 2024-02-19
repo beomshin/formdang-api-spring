@@ -1,6 +1,7 @@
 package com.kr.formdang.entity;
 
 import com.kr.formdang.model.layer.FormDataDto;
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
@@ -15,7 +16,7 @@ import java.sql.Timestamp;
 @Getter
 @ToString(callSuper = true)
 @SuperBuilder
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @DynamicInsert
 public class GroupFormTbEntity extends DateEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)

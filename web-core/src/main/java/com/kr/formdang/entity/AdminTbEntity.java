@@ -1,9 +1,6 @@
 package com.kr.formdang.entity;
 
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.DynamicInsert;
 
@@ -16,7 +13,7 @@ import java.util.Objects;
 @Getter
 @ToString(callSuper = true)
 @SuperBuilder
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @DynamicInsert
 public class AdminTbEntity extends DateEntity{
     @GeneratedValue(strategy = GenerationType.IDENTITY)

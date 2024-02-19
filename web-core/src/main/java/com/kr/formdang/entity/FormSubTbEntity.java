@@ -1,9 +1,6 @@
 package com.kr.formdang.entity;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.DynamicInsert;
 
@@ -17,7 +14,7 @@ import java.util.UUID;
 @Getter
 @ToString(callSuper = true)
 @SuperBuilder
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @DynamicInsert
 public class FormSubTbEntity extends DateEntity{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -40,10 +37,5 @@ public class FormSubTbEntity extends DateEntity{
     @Basic
     @Column(name = "form_web_hock_url")
     private String formWebHockUrl;
-
-    public void generateUrl(Long fid, Integer type) {
-        this.formUrlKey = UUID.randomUUID().toString().replace("-", "").substring(0, 16);
-        this.formUrl = "https://formdang.com/web/paper.html?type=" + type + "&fid=" + fid + "&key=" + this.formUrlKey;
-    }
 
 }
