@@ -1,6 +1,6 @@
 FROM maven as builder
 
-RUN mvn -Dmaven.test.skip=true -B package --file ./pom.xml
+RUN mvn -Dmaven.test.skip=true -B package --file
 
 FROM openjdk:8
 
