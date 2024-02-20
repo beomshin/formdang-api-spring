@@ -1,18 +1,12 @@
 FROM maven as builder
 
-WORKDIR /home
-
-COPY pom.xml .
-RUN mvn -B dependency:go-offline
-
-COPY . .
-RUN mvn -Dmaven.test.skip=true package
+RUN mvn -Dmaven.test.skip=true -B package --file ./pom.xml
 
 FROM openjdk:8
 
 WORKDIR /app
 
-COPY --from=builder /home/target/formdang-sp.was.jar /app/ROOT.jar
+COPY --from=builder /target/formdang-sp.was.jar /app/ROOT.jar
 
 EXPOSE 12001
 
