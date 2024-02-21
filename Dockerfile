@@ -1,4 +1,4 @@
-FROM maven as builder
+FROM maven:3.0.0 as builder
 
 #WORKDIR /build
 #
