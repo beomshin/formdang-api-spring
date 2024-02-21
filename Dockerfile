@@ -1,12 +1,12 @@
 FROM maven as builder
 
-WORKDIR /build
-
-COPY pom.xml .
-COPY web-api/pom.xml ./web-api
-COPY web-core/pom.xml ./web-core
-COPY web-dao/pom.xml ./web-dao
-COPY web-middleware/pom.xml ./web-middleware
+#WORKDIR /build
+#
+#COPY pom.xml .
+#COPY web-api/pom.xml ./web-api
+#COPY web-core/pom.xml ./web-core
+#COPY web-dao/pom.xml ./web-dao
+#COPY web-middleware/pom.xml ./web-middleware
 
 RUN mvn -B dependency:go-offline
 
