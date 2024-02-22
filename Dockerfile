@@ -10,7 +10,7 @@ EXPOSE 12001
 
 #VOLUME ['/var/log']
 
-ENTRYPOINT ["java", "-jar", "-Xincgc", "-Xmx1024m", "-Duser.timezone=Asia/Seoul", "app.jar"]
+ENTRYPOINT ["java", "-jar", "-Xincgc", "-Xmx1024m", "-Dsentry.environment=test", "-Duser.timezone=Asia/Seoul", "app.jar"]
 
 #
 #CMD java -Xincgc -Xmx1024m -Dserver.port=12001 -Dsentry.environment=test -Duser.timezone=Asia/Seoul -jar /app/ROOT.jar --logging.path=/app/logs --spring.profiles.active=test
