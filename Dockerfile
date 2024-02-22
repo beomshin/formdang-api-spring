@@ -17,7 +17,7 @@ WORKDIR /app
 
 ARG JAR_FILE_PATH=/web-api/target/*.jar
 
-COPY --from=MAVEN_BUILD /build/target/${JAR_FILE_PATH} app.jar
+COPY --from=MAVEN_BUILD /build/${JAR_FILE_PATH} app.jar
 
 EXPOSE 12001
 
