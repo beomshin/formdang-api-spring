@@ -8,7 +8,7 @@ COPY /${JAR_FILE_PATH} app.jar
 
 EXPOSE 12001
 
-VOLUME ['/var/log']
+#VOLUME ['/var/log']
 
 ENTRYPOINT ["java", "-jar", "-Xincgc", "-Xmx1024m", "-Duser.timezone=Asia/Seoul", "app.jar"]
 
