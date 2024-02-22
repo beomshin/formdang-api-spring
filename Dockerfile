@@ -8,7 +8,9 @@ COPY /${JAR_FILE_PATH} app.jar
 
 EXPOSE 12001
 
-ENTRYPOINT ["java", "-jar", "-Xincgc", "-Xmx1024m", "-Duser.timezone=Asia/Seoul", "--logging.path=/app/logs", "app.jar"]
+VOLUME ['/var/log']
+
+ENTRYPOINT ["java", "-jar", "-Xincgc", "-Xmx1024m", "-Duser.timezone=Asia/Seoul", "app.jar"]
 
 #
 #CMD java -Xincgc -Xmx1024m -Dserver.port=12001 -Dsentry.environment=test -Duser.timezone=Asia/Seoul -jar /app/ROOT.jar --logging.path=/app/logs --spring.profiles.active=test
