@@ -13,6 +13,7 @@ RUN mvn dependency:go-offline
 
 RUN mvn package -Dmaven.test.skip=true
 
+
 FROM openjdk:8
 
 WORKDIR /app
