@@ -1,13 +1,15 @@
 FROM maven:3.8.6-jdk-11 as MAVEN_BUILD
 
-#WORKDIR /build
-#
-#COPY pom.xml .
-#
-#COPY web-api ./web-api
-#COPY web-core ./web-core
-#COPY web-dao ./web-dao
-#COPY web-middleware ./web-middleware
+WORKDIR /build
+
+COPY pom.xml .
+
+COPY web-api ./web-api
+COPY web-core ./web-core
+COPY web-dao ./web-dao
+COPY web-middleware ./web-middleware
+
+RUN mvn dependency:go-offline
 
 RUN mvn package -Dmaven.test.skip=true
 
@@ -17,7 +19,7 @@ WORKDIR /app
 
 ARG JAR_FILE_PATH=/web-api/target/*.jar
 
-COPY --from=MAVEN_BUILD ${JAR_FILE_PATH} app.jar
+COPY --from=MAVEN_BUILD /build/${JAR_FILE_PATH} app.jar
 
 EXPOSE 12001
 
