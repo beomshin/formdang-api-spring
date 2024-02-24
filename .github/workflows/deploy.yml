@@ -53,8 +53,6 @@ jobs:
           username: ubuntu
           key: ${{ secrets.EC2_KEY }}
           script: |
-            docker stop $(docker ps -a -q)
-            docker rm formdang-was
             docker rmi $NAME/$REPO
             docker pull $NAME/$REPO
             docker run -d --name formdang-was -p 12001:12001 --network nginx_server-connection -v formdang-was-log:/app/logs -e ACTIVE_PROFILE=test $NAME/$REPO
