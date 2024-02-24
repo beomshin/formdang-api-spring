@@ -45,15 +45,3 @@ jobs:
         run : |
           docker tag $REPO:latest $NAME/$REPO:latest
           docker push $NAME/$REPO:latest
-
-      - name: Deploy to EC2
-        uses: appleboy/ssh-action@master
-        with:
-          host: ${{ secrets.EC2_HOST }}
-          username: ubuntu
-          key: ${{ secrets.EC2_KEY }}
-          script: |
-            sudo docker login -u  ${{ secrets.DOCKER_HUB_USER }} -p ${{ secrets.DOCKER_HUB_PASSWORD }}
-            sudo docker rmi $NAME/$REPO
-            sudo docker pull $NAME/$REPO
-            sud odocker run -d --name formdang-was -p 12001:12001 --network nginx_server-connection -v formdang-was-log:/app/logs -e ACTIVE_PROFILE=test $NAME/$REPO
