@@ -31,6 +31,7 @@ google:
     url: https://accounts.google.com
   redirect:
     uri: http://formdang-api.com/api/sp/public/google/login/callback
+    paper_uri: http://formdang-api.com/api/sp/public/google/login/paper/callback
   client:
     id: 480280719023-pcds17du2k26mpsebqpcm6n6240j3vi2
   secret: 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
