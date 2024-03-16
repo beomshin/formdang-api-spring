@@ -18,6 +18,8 @@ public class GoogleProp {
     private String googleLoginUrl;
     @Value("${google.redirect.uri}")
     private String googleRedirectUri;
+    @Value("${google.redirect.paper_uri}")
+    private String googleRedirectPaperUri;
     @Value("${google.client.id}")
     private String googleClientId;
     @Value("${google.secret}")
@@ -31,6 +33,23 @@ public class GoogleProp {
         Map<String, Object> params = new HashMap<>();
         params.put("client_id", getGoogleClientId());
         params.put("redirect_uri", getGoogleRedirectUri());
+        params.put("response_type", "code");
+        params.put("scope", getScopeUrl());
+
+        String paramStr = params.entrySet().stream()
+                .map(param -> param.getKey() + "=" + param.getValue())
+                .collect(Collectors.joining("&"));
+
+        return getGoogleLoginUrl()
+                + "/o/oauth2/v2/auth"
+                + "?"
+                + paramStr;
+    }
+
+    public String googleInitPaperUrl() {
+        Map<String, Object> params = new HashMap<>();
+        params.put("client_id", getGoogleClientId());
+        params.put("redirect_uri", getGoogleRedirectPaperUri());
         params.put("response_type", "code");
         params.put("scope", getScopeUrl());
 

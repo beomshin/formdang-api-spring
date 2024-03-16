@@ -27,12 +27,31 @@ public class KakaoProp {
     @Value("${kakao.secret}")
     private String kakaoSecret;
 
+    @Value("${kakao.redirect.login.paper_uri}")
+    private String kakaoRedirectLoginPaperUri;
+
 
     // Kakao 로그인 URL 생성 로직
     public String kakaoInitUrl() {
         Map<String, Object> params = new HashMap<>();
         params.put("client_id", getKakaoClientId());
         params.put("redirect_uri", getKakaoRedirectLoginUri());
+        params.put("response_type", "code");
+
+        String paramStr = params.entrySet().stream()
+                .map(param -> param.getKey() + "=" + param.getValue())
+                .collect(Collectors.joining("&"));
+
+        return getKakaoLoginUrl()
+                + "/oauth/authorize"
+                + "?"
+                + paramStr;
+    }
+
+    public String kakaoInitPaperUrl() {
+        Map<String, Object> params = new HashMap<>();
+        params.put("client_id", getKakaoClientId());
+        params.put("redirect_uri", getKakaoRedirectLoginPaperUri());
         params.put("response_type", "code");
 
         String paramStr = params.entrySet().stream()

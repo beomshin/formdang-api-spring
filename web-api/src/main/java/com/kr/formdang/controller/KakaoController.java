@@ -41,6 +41,20 @@ public class KakaoController {
     }
 
     /**
+     * 카카오 로그인 페이지 이동 API (유저화면 로그인)
+     *
+     * - 카캌오 로그인 페이지 포워딩
+     * @return
+     */
+    @GetMapping(value = "/public/kakao/paper/login")
+    public RedirectView moveGoogleInitPaperUrl() {
+        RedirectView redirectView = new RedirectView();
+        redirectView.setStatusCode(HttpStatus.SEE_OTHER);
+        redirectView.setUrl(kakaoProp.kakaoInitPaperUrl());
+        return redirectView;
+    }
+
+    /**
      * 카카오 로그인 콜백 API
      *
      * - 폼당폼당 페이지로 포워딩
@@ -61,13 +75,31 @@ public class KakaoController {
         RedirectView redirectView = new RedirectView();
         try {
             log.info("■ 1. 카카오 로그인 콜백 요청 성공");
-            KakaoLoginDto kakaoLoginDto = kakaoService.kakaoOAuth(new KakaoLoginRequestDto(kakaoProp, code)); // 카카오 로그인 정보 취득
+            KakaoLoginDto kakaoLoginDto = kakaoService.kakaoOAuth(new KakaoLoginRequestDto(kakaoProp, kakaoProp.getKakaoRedirectLoginUri(), code)); // 카카오 로그인 정보 취득
             AdminTbEntity adminTb = adminService.saveSnsAdmin(adminDataServiceImpl.getAdminData(new AdminDataDto(kakaoLoginDto)));  // 폼당폼당 로그인 및 가입
             redirectView.setUrl(adminService.successLogin(adminTb)); // 폼당폼당 로그인 성공 페이지 세팅
             log.info("■ 8. 카카오 로그인 콜백 리다이렉트 : {}", redirectView.getUrl());
             return redirectView;
         } catch (Exception e) {
             log.error("■ 카카오 로그인 콜백 요청 오류 ", e);
+            redirectView.setUrl(adminService.failLogin(e));
+            return redirectView;
+        }
+    }
+
+
+    @GetMapping(value = "/public/kakao/login/paper/callback")
+    public RedirectView redirectKakaoLoginPaper(@RequestParam(value = "code") String code) {
+        RedirectView redirectView = new RedirectView();
+        try {
+            log.info("■ 1. 카카오 페이퍼 로그인 콜백 요청 성공");
+            KakaoLoginDto kakaoLoginDto = kakaoService.kakaoOAuth(new KakaoLoginRequestDto(kakaoProp, kakaoProp.getKakaoRedirectLoginPaperUri(), code)); // 카카오 로그인 정보 취득
+            AdminTbEntity adminTb = adminService.saveSnsAdmin(adminDataServiceImpl.getAdminData(new AdminDataDto(kakaoLoginDto)));  // 폼당폼당 로그인 및 가입
+            redirectView.setUrl(adminService.successPaperLogin(adminTb)); // 폼당폼당 유저화면 로그인 성공 페이지 세팅
+            log.info("■ 8. 카카오 페이퍼 로그인 콜백 리다이렉트 : {}", redirectView.getUrl());
+            return redirectView;
+        } catch (Exception e) {
+            log.error("■ 카카오 페이퍼 로그인 콜백 요청 오류 ", e);
             redirectView.setUrl(adminService.failLogin(e));
             return redirectView;
         }

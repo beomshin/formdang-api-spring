@@ -16,6 +16,7 @@ kakao:
   redirect:
     login:
       uri: http://formdang-api.com/api/sp/public/kakao/login/callback
+      paper_uri: http://formdang-api.com/api/sp/public/kakao/login/paper/callback
   client:
     id: 0a106f8a1ca7560173fcc5420818e404
   secret: dI5BQb3Hpu9T8wq0tU1D29KiRME8AeY1
@@ -38,4 +39,5 @@ formdang:
   url:
     fail-login: https://formdang.com/admin/login.html
     success-login: https://formdang.com/admin/index.html
+    success-paper-login: https://formdang.com/web/paper.html
     auth-issue: http://127.0.0.1:22081/auth/sp/issue

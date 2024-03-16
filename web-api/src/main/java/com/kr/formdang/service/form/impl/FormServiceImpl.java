@@ -221,9 +221,14 @@ public class FormServiceImpl implements FormService {
     @Override
     @Transactional
     public FormTbEntity findPaper(FormDataDto formDataDto) throws CustomException {
+        log.info("■ 로그인 유저 검사");
+        if (!jwtService.validateToken(formDataDto.getToken())) throw new CustomException(GlobalCode.NOT_LOGIN_GROUP_FORM); // 그룹 폼은 로그인 권한 필요
+        final Long aid = jwtService.getId(formDataDto.getToken());
+
         log.info("■ 2. 폼 상세 정보 조회 쿼리 시작");
         Optional<FormSubTbEntity> formSubTb = formSubTbRepository.findByFormTbAndFormUrlKey(FormTbEntity.builder().fid(formDataDto.getFid()).build(), formDataDto.getKey());
         if (formSubTb.isPresent()) {
+
             FormTbEntity formTb = formSubTb.get().getFormTb();
             Timestamp now = Timestamp.valueOf(LocalDateTime.now());
 
@@ -243,9 +248,6 @@ public class FormServiceImpl implements FormService {
             List<GroupFormTbEntity> groupFormTbEntity = groupFormTbRepository.findByFid(formTb.getFid());
 
             if (groupFormTbEntity.size() > 0) {
-                log.info("■ 그룹 폼 권한 검사 시작");
-                if (!jwtService.validateToken(formDataDto.getToken())) throw new CustomException(GlobalCode.NOT_LOGIN_GROUP_FORM); // 그룹 폼은 로그인 권한 필요
-                final Long aid = jwtService.getId(formDataDto.getToken());
 
                 log.info("■ 그룹 권한 유저 조회 쿼리 시작");
                 List<GroupMemberTbEntity> groupMemberTbEntity = groupMemberTbRepository.findByAidAndGroupTbIn(aid, groupFormTbEntity.stream().map(it -> new GroupTbEntity(it.getGid())).collect(Collectors.toList()));

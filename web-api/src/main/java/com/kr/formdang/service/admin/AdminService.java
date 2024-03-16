@@ -10,6 +10,7 @@ public interface AdminService {
 
     AdminTbEntity saveSnsAdmin(AdminTbEntity adminTbEntity) throws CustomException;
     String successLogin(AdminTbEntity adminTb) ;
+    String successPaperLogin(AdminTbEntity adminTb);
     String failLogin(Exception e) ;
     boolean updateProfile(Long aid, GlobalFile profile, MultipartFile file);
 

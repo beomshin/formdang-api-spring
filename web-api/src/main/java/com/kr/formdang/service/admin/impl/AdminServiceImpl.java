@@ -42,6 +42,9 @@ public class AdminServiceImpl implements AdminService {
     @Value("${formdang.url.success-login}")
     private String formdang_success_login;
 
+    @Value("${formdang.url.success-paper-login}")
+    private String formdang_success_paper_login;
+
     @Value("${token.access-key}")
     private String accessKey;
 
@@ -88,6 +91,24 @@ public class AdminServiceImpl implements AdminService {
 
         log.info("■ 5. 폼당폼당 로그인 URL 생성");
         return formdang_success_login
+                + "?"
+                + paramStr; // 폼당폼당 관리자 메인 페이지 URL
+    }
+
+    @Override
+    public String successPaperLogin(AdminTbEntity adminTb) {
+        log.info("■ 4. 폼당폼당 로그인 토큰 생성");
+        JwtTokenResponse jwtTokenResponse = tokenService.getLoginToken(String.valueOf(adminTb.getAid()), adminTb.getName(), adminTb.getProfile(), accessKey); // 폼당폼당 JWT 토큰 요청
+        Map<String, Object> params = new HashMap<>();
+        params.put("accessToken", jwtTokenResponse.getAccessToken());
+        params.put("refreshToken", jwtTokenResponse.getRefreshToken());
+
+        String paramStr = params.entrySet().stream()
+                .map(param -> param.getKey() + "=" + param.getValue())
+                .collect(Collectors.joining("&"));
+
+        log.info("■ 5. 폼당폼당 로그인 URL 생성");
+        return formdang_success_paper_login
                 + "?"
                 + paramStr; // 폼당폼당 관리자 메인 페이지 URL
     }

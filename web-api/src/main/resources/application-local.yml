@@ -14,6 +14,7 @@ kakao:
   redirect:
     login:
       uri: http://localhost:12001/api/sp/public/kakao/login/callback
+      paper_uri: http://localhost:12001/api/sp/public/kakao/login/paper/callback
   client:
     id: 0a106f8a1ca7560173fcc5420818e404
   secret: dI5BQb3Hpu9T8wq0tU1D29KiRME8AeY1
@@ -27,6 +28,7 @@ google:
     url: https://accounts.google.com
   redirect:
     uri: http://localhost:12001/api/sp/public/google/login/callback
+    paper_uri: http://localhost:12001/api/sp/public/google/login/paper/callback
   client:
     id: 480280719023-pcds17du2k26mpsebqpcm6n6240j3vi2
   secret: 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
@@ -35,4 +37,5 @@ formdang:
   url:
     fail-login: http://localhost:63342/formdang-publishing/admin/login.html
     success-login: http://localhost:63342/formdang-publishing/admin/index.html
+    success-paper-login: http://localhost:63342/formdang-publishing/web/paper.html
     auth-issue: http://localhost:22081/auth/sp/issue
