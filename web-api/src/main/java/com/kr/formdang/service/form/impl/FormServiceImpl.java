@@ -43,6 +43,7 @@ public class FormServiceImpl implements FormService {
     private final GroupFormTbRepository groupFormTbRepository;
     private final JwtService jwtService;
     private final GroupMemberTbRepository groupMemberTbRepository;
+    private final AnswerTbRepository answerTbRepository;
 
     /**
      * 폼 저장
@@ -242,6 +243,12 @@ public class FormServiceImpl implements FormService {
                 throw new CustomException(GlobalCode.IS_MAX_RESPONSE);
             } else if (!(now.compareTo(formTb.getBeginDt()) >= 0 && now.compareTo(formTb.getEndDt()) <= 0)) {
                 throw new CustomException(GlobalCode.IS_NOT_RIGHT_DATE);
+            }
+
+            log.info("■ 제출 여부 확인 조회 쿼리 시작");
+            int isSubmit = answerTbRepository.countByFidAndAid(formTb.getFid(), aid);
+            if (isSubmit > 0) {
+                throw new CustomException(GlobalCode.IS_SUBMIT);
             }
 
             log.info("■ 그룹 폼 조회 쿼리 시작");
