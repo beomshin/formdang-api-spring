@@ -212,7 +212,7 @@ public class FormController {
             log.info("■ 4. 유저 화면 정보 조회 응답 성공");
             return ResponseEntity.ok().body(new FindPaperResponse(formTbEntity, questionTbEntities));
         } catch (CustomException e) {
-            log.error("■ 유저 화면 정보 조회 응답 오류, {}", e);
+            log.error("■ 유저 화면 정보 조회 응답 오류, {}", e.getCode().getMsg());
             return ResponseEntity.ok().body(new DefaultResponse(e.getCode()));
         } catch (Exception e) {
             log.error("■ 유저 화면 정보 조회 응답 오류, {}", e);
