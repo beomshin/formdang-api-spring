@@ -14,6 +14,15 @@ spring:
       - core
       - dao
       - middleware
+    group:
+      local:
+        - console-logging # 콘솔 로깅만 사용
+      test:
+        - console-logging
+        - file-logging # 파일 로깅 사용
+      prod:
+        - console-logging
+        - file-logging # 파일 로깅 사용
   application:
     name: web-api
   jackson:
@@ -34,23 +43,3 @@ file:
 
 token:
   access-key: r5ZW27aCNHCnabMd2sQ534mnuIrHAcnshjGXBadqQnpiKKfv2sdAsa7fx4hVSJU5
-
-
-#LOG
-logging:
-  level:
-    root: info
-    jdbc.sqlonly: debug
-    jdbc.audit: debug
-    jdbc.resultset: debug
-    jdbc.connection: debug
-    http.logging: debug
-    org.springframework.test: warn
-    com.amazonaws.util.EC2MetadataUtils: error
-  pattern:
-    console: "%d{yyyy-MM-dd HH:mm:ss} [%-5level] [%thread] [%logger{0}:%line] [%X{request_id:-startup}] - %msg%n"
-    file: "%d{yyyy-MM-dd HH:mm:ss} [%-5level] [%thread] [%logger{0}:%line] [%X{request_id:-startup}] - %msg%n"
-  logback:
-    rolling policy:
-      max-history: 365
-      max-file-size: 100MB
