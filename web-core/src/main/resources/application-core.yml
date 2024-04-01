@@ -1,6 +1,9 @@
 spring:
   datasource:
-    driver-class-name:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: ${spring.datasource.url}
+    username: ${spring.datasource.username}
+    password: ${spring.datasource.password}
   jpa:
     generate-ddl: false
     hibernate:
@@ -14,7 +17,6 @@ spring:
     redis:
       repositories:
         enabled: false
-
 cloud:
   aws:
     s3:
@@ -26,14 +28,10 @@ cloud:
       auto: false
     host: https://s3.ap-northeast-2.amazonaws.com/formmaster-s3/
 
+
 # LOCAL
 ---
 spring:
-  datasource:
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://form-dang-database.cfsxwgisoif6.ap-northeast-2.rds.amazonaws.com/form_dang?useSSL=false&characterEncoding=UTF-8&serverTimezone=Asia/Seoul&allowPublicKeyRetrieval=true
-    username: test_formdang
-    password: formdang12!#
   config:
     activate:
       on-profile: local
@@ -41,11 +39,6 @@ spring:
 # TEST
 ---
 spring:
-  datasource:
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://form-dang-database.cfsxwgisoif6.ap-northeast-2.rds.amazonaws.com/form_dang?useSSL=false&characterEncoding=UTF-8&serverTimezone=Asia/Seoul&allowPublicKeyRetrieval=true
-    username: test_formdang
-    password: formdang12!#
   config:
     activate:
       on-profile: test
@@ -54,11 +47,6 @@ spring:
 # PROD
 ---
 spring:
-  datasource:
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://form-dang-database.cfsxwgisoif6.ap-northeast-2.rds.amazonaws.com/form_dang?useSSL=false&characterEncoding=UTF-8&serverTimezone=Asia/Seoul&allowPublicKeyRetrieval=true
-    username: test_formdang
-    password: formdang12!#
   config:
     activate:
       on-profile: prod
