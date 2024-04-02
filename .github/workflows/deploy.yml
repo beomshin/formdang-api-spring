@@ -39,10 +39,10 @@ jobs:
       - name: Docker Build Image
         run: | 
           docker build \
-          --build-arg DATASOURCE_KEY="${{ env.DATASOURCE_KEY }}" \
-          --build-arg DATASOURCE_URL="${{ env.DATASOURCE_URL }}" \
-          --build-arg DATASOURCE_USERNAME="${{ env.DATASOURCE_USERNAME }}" \
-          --build-arg DATASOURCE_PASSWORD="${{ env.DATASOURCE_PASSWORD }}" \
+          --build-arg DATASOURCE_KEY=${{ env.DATASOURCE_KEY }} \
+          --build-arg DATASOURCE_URL=${{ env.DATASOURCE_URL }} \
+          --build-arg DATASOURCE_USERNAME=${{ env.DATASOURCE_USERNAME }} \
+          --build-arg DATASOURCE_PASSWORD=${{ env.DATASOURCE_PASSWORD }} \
           -t ${{ env.DOCKER_HUB_REPO }} .
 
       # Docker Hub Login
