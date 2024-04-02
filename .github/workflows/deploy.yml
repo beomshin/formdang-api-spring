@@ -31,9 +31,9 @@ jobs:
         run: | 
           docker build \
           --build-arg DATASOURCE_KEY="${{ secrets.DATASOURCE_KEY }}" \
-          --build-arg DATASOURCE_URL="${{ vars.DATASOURCE_URL }}" \
-          --build-arg DATASOURCE_USERNAME="${{ vars.DATASOURCE_USERNAME }}" \
-          --build-arg DATASOURCE_PASSWORD="${{ vars.DATASOURCE_PASSWORD }}" \
+          --build-arg DATASOURCE_URL="${{ secrets.DATASOURCE_URL }}" \
+          --build-arg DATASOURCE_USERNAME="${{ secrets.DATASOURCE_USERNAME }}" \
+          --build-arg DATASOURCE_PASSWORD="${{ secrets.DATASOURCE_PASSWORD }}" \
           -t ${{ secrets.DOCKER_HUB_REPO }} .
 
       # Docker Hub Login
