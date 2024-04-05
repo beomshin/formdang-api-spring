@@ -13,6 +13,7 @@ import com.kr.formdang.model.net.request.FormSubmitRequest;
 import com.kr.formdang.model.net.request.FormUpdateRequest;
 import com.kr.formdang.model.net.response.*;
 import com.kr.formdang.model.root.DefaultResponse;
+import com.kr.formdang.model.root.RootResponse;
 import com.kr.formdang.service.form.FormDataService;
 import com.kr.formdang.service.form.FormService;
 import lombok.RequiredArgsConstructor;
@@ -49,7 +50,7 @@ public class FormController {
      * @return
      */
     @PostMapping(value = "/form/submit")
-    public ResponseEntity submitForm(
+    public ResponseEntity<RootResponse> submitForm(
             @Valid @RequestBody FormSubmitRequest request,
             @RequestHeader("Authorization") String token)
     {
@@ -71,10 +72,10 @@ public class FormController {
             log.info("■ 5. 폼 작성하기 응답 성공");
             return ResponseEntity.ok().body(new SubmitFormResponse(resCode, formTb != null ? formTb.getFid() : null));
         } catch (CustomException e) {
-            log.error("■ 5. 폼 작성하기 응답 오류, {}", e);
+            log.error("■ 5. 폼 작성하기 응답 오류", e);
             return ResponseEntity.ok().body(new DefaultResponse(e.getCode()));
         } catch (Exception e) {
-            log.error("■ 5. 폼 작성하기 응답 오류, {}", e);
+            log.error("■ 5. 폼 작성하기 응답 오류", e);
             return ResponseEntity.ok().body(new DefaultResponse(GlobalCode.SYSTEM_ERROR));
         }
     }
@@ -94,7 +95,7 @@ public class FormController {
      * @return
      */
     @GetMapping(value = "/form/list/find")
-    public ResponseEntity findFormList(
+    public ResponseEntity<RootResponse> findFormList(
             @RequestParam @NotBlank @Min(value = 0, message = "페이지 개수는 0이상입니다.") Integer page,
             @RequestParam @NotBlank @Min(0) Integer type,
             @RequestParam @NotBlank @Min(0) Integer status,
@@ -109,10 +110,10 @@ public class FormController {
             log.info("■ 4. 폼리스트 조회 응답 성공");
             return ResponseEntity.ok().body(new FindFormListResponse(pages, adminSubTb));
         } catch (CustomException e) {
-            log.error("■ 4. 폼리스트 조회 응답 오류, {}", e);
+            log.error("■ 4. 폼리스트 조회 응답 오류", e);
             return ResponseEntity.ok().body(new DefaultResponse(e.getCode()));
         } catch (Exception e) {
-            log.error("■ 4. 폼리스트 조회 응답 오류, {}", e);
+            log.error("■ 4. 폼리스트 조회 응답 오류", e);
             return ResponseEntity.ok().body(new DefaultResponse(GlobalCode.SYSTEM_ERROR));
         }
     }
@@ -129,7 +130,7 @@ public class FormController {
      * @return
      */
     @GetMapping(value = "/form/analyze")
-    public ResponseEntity analyzeForm(@RequestHeader("Authorization") String token) {
+    public ResponseEntity<RootResponse> analyzeForm(@RequestHeader("Authorization") String token) {
         try {
             log.info("■ 1. 종합 분석 조회 요청 성공");
             final Long aid = jwtService.getId(token); // 관리자 아이디 세팅
@@ -138,10 +139,10 @@ public class FormController {
             log.info("■ 4. 종합 분석 조회 응답 성공");
             return ResponseEntity.ok().body(new AnalyzeFormResponse(adminSubTb));
         } catch (CustomException e) {
-            log.error("■ 종합 분석 조회 응답 오류, {}", e);
+            log.error("■ 종합 분석 조회 응답 오류", e);
             return ResponseEntity.ok().body(new DefaultResponse(e.getCode()));
         } catch (Exception e) {
-            log.error("■ 종합 분석 조회 응답 오류, {}", e);
+            log.error("■ 종합 분석 조회 응답 오류", e);
             return ResponseEntity.ok().body(new DefaultResponse(GlobalCode.SYSTEM_ERROR));
         }
     }
@@ -154,7 +155,7 @@ public class FormController {
      * @return
      */
     @GetMapping(value = "/form/detail/{fid}/find")
-    public ResponseEntity findFormDetail(@RequestHeader("Authorization") String token, @PathVariable("fid") Long fid) {
+    public ResponseEntity<RootResponse> findFormDetail(@RequestHeader("Authorization") String token, @PathVariable("fid") Long fid) {
         try {
             log.info("■ 1. 폼 상세 정보 조회 요청 성공");
             final Long aid = jwtService.getId(token); // 관리자 아이디 세팅
@@ -163,17 +164,17 @@ public class FormController {
             log.info("■ 4. 폼 상세 정보 조회 응답 성공");
             return ResponseEntity.ok().body(new FindFormDetailResponse(formTbEntity, questionTbEntities));
         } catch (CustomException e) {
-            log.error("■ 폼 상세 정보 조회 응답 오류, {}", e);
+            log.error("■ 폼 상세 정보 조회 응답 오류", e);
             return ResponseEntity.ok().body(new DefaultResponse(e.getCode()));
         } catch (Exception e) {
-            log.error("■ 폼 상세 정보 조회 응답 오류, {}", e);
+            log.error("■ 폼 상세 정보 조회 응답 오류", e);
             return ResponseEntity.ok().body(new DefaultResponse(GlobalCode.SYSTEM_ERROR));
         }
     }
 
 
     @PostMapping(value = "/form/{fid}/update")
-    public ResponseEntity updateForm(@RequestHeader("Authorization") String token, @PathVariable("fid") Long fid,
+    public ResponseEntity<RootResponse> updateForm(@RequestHeader("Authorization") String token, @PathVariable("fid") Long fid,
                                      @Valid @RequestBody FormUpdateRequest request) {
         try {
             final String pattern = "yyyyMMdd";
@@ -184,10 +185,10 @@ public class FormController {
             formService.updateForm(formDataDto, questionDataDtos); // 업데이트 처리
             return ResponseEntity.ok().body(new DefaultResponse());
         } catch (CustomException e) {
-            log.error("■ 폼 상세 정보 조회 응답 오류, {}", e);
+            log.error("■ 폼 상세 정보 조회 응답 오류", e);
             return ResponseEntity.ok().body(new DefaultResponse(e.getCode()));
         } catch (Exception e) {
-            log.error("■ 폼 상세 정보 조회 응답 오류, {}", e);
+            log.error("■ 폼 상세 정보 조회 응답 오류", e);
             return ResponseEntity.ok().body(new DefaultResponse(GlobalCode.SYSTEM_ERROR));
         }
     }
@@ -201,21 +202,22 @@ public class FormController {
      * @return
      */
     @GetMapping(value = "/public/form/paper")
-    public ResponseEntity findPaper(@RequestHeader(value = "Authorization", required = false) String token,
-                                    @RequestParam @NotBlank @Min(0) Integer type,
-                                    @RequestParam @NotBlank @Min(0) Long fid,
-                                    @RequestParam @NotBlank String key) {
+    public ResponseEntity<RootResponse> findPaper(@RequestHeader(value = "Authorization", required = false) String token,
+                                                  @RequestParam @NotBlank @Min(0) Integer type,
+                                                  @RequestParam @NotBlank @Min(0) Long fid,
+                                                  @RequestParam @NotBlank String key) {
         try {
             log.info("■ 1. 유저 화면 정보 조회 요청 성공");
-            FormTbEntity formTbEntity = formService.findPaper(new FormDataDto(fid, type, key, token)); // 폼 상세 조회
+            long aid = formService.validateLogin(token);
+            FormTbEntity formTbEntity = formService.findPaper(new FormDataDto(fid, type, key, aid)); // 폼 상세 조회
             List<QuestionTbEntity> questionTbEntities = formService.findQuestions(fid); // 질문 리스트 조회
             log.info("■ 4. 유저 화면 정보 조회 응답 성공");
-            return ResponseEntity.ok().body(new FindPaperResponse(formTbEntity, questionTbEntities));
+            return ResponseEntity.ok().body(new FindPaperResponse(aid, formTbEntity, questionTbEntities));
         } catch (CustomException e) {
             log.error("■ 유저 화면 정보 조회 응답 오류, {}", e.getCode().getMsg());
             return ResponseEntity.ok().body(new DefaultResponse(e.getCode()));
         } catch (Exception e) {
-            log.error("■ 유저 화면 정보 조회 응답 오류, {}", e);
+            log.error("■ 유저 화면 정보 조회 응답 오류", e);
             return ResponseEntity.ok().body(new DefaultResponse(GlobalCode.SYSTEM_ERROR));
         }
     }

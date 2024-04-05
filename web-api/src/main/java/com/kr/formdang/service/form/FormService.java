@@ -24,4 +24,5 @@ public interface FormService {
     void updateForm(FormDataDto formDataDto, List<QuestionDataDto> questionDataDtos) throws CustomException;
     void updateImage(Long fid, List<FileDataDto> fileDataDtos);
     FormTbEntity findPaper(FormDataDto formDataDto) throws CustomException;
+    long validateLogin(String token) throws CustomException;
 }

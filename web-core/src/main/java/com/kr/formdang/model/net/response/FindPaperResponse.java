@@ -32,9 +32,10 @@ public class FindPaperResponse extends DefaultResponse {
     private String logoUrl; // 로그 url
     private String themeUrl; // 테마 url
     private List<FindPaperResponse.FormDetailQuestionResponse> question;
+    private boolean worker;
 
 
-    public FindPaperResponse(FormTbEntity formTbEntity, List<QuestionTbEntity> questionTbEntities) {
+    public FindPaperResponse(long aid, FormTbEntity formTbEntity, List<QuestionTbEntity> questionTbEntities) {
         this.fid = formTbEntity.getFid();
         this.type = formTbEntity.getFormType();
         this.title = formTbEntity.getTitle();
@@ -47,6 +48,8 @@ public class FindPaperResponse extends DefaultResponse {
         this.logoUrl = formTbEntity.getLogoUrl();
         this.themeUrl = formTbEntity.getThemeUrl();
         this.question = questionTbEntities.stream().map(FormDetailQuestionResponse::new).collect(Collectors.toList());;
+        this.worker = aid == formTbEntity.getAid();
+
     }
 
     @Getter

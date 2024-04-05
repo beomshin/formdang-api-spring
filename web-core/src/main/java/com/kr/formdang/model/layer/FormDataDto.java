@@ -62,10 +62,10 @@ public class FormDataDto {
         this.aid = aid;
     }
 
-    public FormDataDto(Long fid, Integer type, String key, String token) {
+    public FormDataDto(Long fid, Integer type, String key, Long aid) {
         this.fid = fid;
         this.type = type;
         this.key = key;
-        this.token = token;
+        this.aid = aid;
     }
 }
