@@ -17,7 +17,7 @@ public class JwtTokenProvider {
         try {
             log.debug("■ JWT 토큰 아이디 조회 [getId]");
             String id = getClaims(JWT_KEY, parseJwt(token)).get("id").toString();
-            if (org.apache.commons.lang3.StringUtils.isBlank(id)) throw new CustomException(GlobalCode.NOT_EXIST_TOKEN);
+            if (id == null || id.isEmpty()) throw new CustomException(GlobalCode.NOT_EXIST_TOKEN);
             return Long.parseLong(id);
         } catch (Exception e) {
             throw new CustomException(GlobalCode.NOT_EXIST_TOKEN);
@@ -28,7 +28,7 @@ public class JwtTokenProvider {
         try {
             log.debug("■ JWT 토큰 이름 조회 [getName]");
             String name = getClaims(JWT_KEY, parseJwt(token)).get("name").toString();
-            if (org.apache.commons.lang3.StringUtils.isBlank(name)) throw new CustomException(GlobalCode.NOT_EXIST_TOKEN);
+            if (name == null || name.isEmpty()) throw new CustomException(GlobalCode.NOT_EXIST_TOKEN);
             return name;
         } catch (Exception e) {
             throw new CustomException(GlobalCode.NOT_EXIST_TOKEN);
@@ -48,9 +48,7 @@ public class JwtTokenProvider {
 
 
     private static String parseJwt(String headerAuth) throws CustomException {
-        if (org.apache.commons.lang3.StringUtils.isNotBlank(headerAuth) &&
-                StringUtils.hasText(headerAuth) &&
-                headerAuth.startsWith("Bearer ")) {
+        if (headerAuth != null && headerAuth.startsWith("Bearer ")) {
             return headerAuth.substring(7);
         } else {
             throw new CustomException(GlobalCode.NOT_EXIST_TOKEN);

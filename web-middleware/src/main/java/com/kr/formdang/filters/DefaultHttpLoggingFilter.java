@@ -10,7 +10,6 @@ import com.kr.formdang.root.DefaultResponse;
 import com.kr.formdang.wrapper.RequestBodyWrapper;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.util.StopWatch;
 import org.springframework.web.filter.OncePerRequestFilter;
 import org.springframework.web.util.ContentCachingResponseWrapper;
@@ -52,7 +51,7 @@ public class DefaultHttpLoggingFilter extends OncePerRequestFilter {
     String clientIp = request.getRemoteAddr();
     String realClientIp = getRealClientIp(request);
 
-    if (StringUtils.equals(realClientIp, clientIp)) { // IP, 메소드, URL
+    if (clientIp != null && clientIp.equals(realClientIp)) { // IP, 메소드, URL
       log.info("Request: {} [{}] [{}]", realClientIp, request.getMethod(), request.getRequestURL());
     } else {
       log.info("Request: {} → {} [{}] [{}]", realClientIp, clientIp, request.getMethod(), request.getRequestURL());
@@ -115,7 +114,7 @@ public class DefaultHttpLoggingFilter extends OncePerRequestFilter {
    */
   private void printRequestBody(RequestBodyWrapper request) {
     String body = getRequestBody(request); // request stream to String
-    if (StringUtils.isNotBlank(body)) {
+    if (body != null && !body.isEmpty()) {
       try {
         log.info("Request body: {}", System.lineSeparator() + gson.toJson(gson.fromJson(body, JsonObject.class)));
       } catch (JsonSyntaxException e) {

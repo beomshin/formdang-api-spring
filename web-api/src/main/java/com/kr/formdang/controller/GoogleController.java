@@ -11,11 +11,14 @@ import com.kr.formdang.service.admin.AdminService;
 import com.kr.formdang.service.api.GoogleService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.view.RedirectView;
+
+import java.util.UUID;
 
 @RestController
 @RequiredArgsConstructor
@@ -71,8 +74,15 @@ public class GoogleController {
         RedirectView redirectView = new RedirectView();
         try {
             log.info("■ 1. 구글 로그인 콜백 요청 성공");
+            final String id = "G" + UUID.randomUUID().toString().substring(0, 31);
             GoogleLoginDto googleLoginDto = googleService.googleOAuth(new GoogleLoginRequestDto(googleProp.getGoogleClientId(), googleProp.getGoogleSecret(), googleProp.getGoogleRedirectUri(), code)); // 구글 로그인 정보 취득
-            AdminTbEntity adminTb = adminService.saveSnsAdmin(adminDataServiceImpl.getAdminData(new AdminDataDto(googleLoginDto, AdminTypeEnum.GOOGLE_TYPE.getCode()))); // 폼당폼당 로그인 및 가입
+            AdminTbEntity adminTb = adminService.saveSnsAdmin(adminDataServiceImpl.getAdminData(AdminDataDto.builder()
+                    .id(id)
+                    .pw(StringUtils.reverse(id))
+                    .type(AdminTypeEnum.GOOGLE_TYPE.getCode())
+                    .name(googleLoginDto.getName())
+                    .sub_id(googleLoginDto.getSub())
+                    .build())); // 폼당폼당 로그인 및 가입
             redirectView.setUrl(adminService.successLogin(adminTb)); // 폼당폼당 로그인 성공 페이지 세팅
             log.info("■ 6. 구글 로그인 콜백 리다이렉트 : {}", redirectView.getUrl());
             return redirectView;
@@ -89,8 +99,15 @@ public class GoogleController {
         RedirectView redirectView = new RedirectView();
         try {
             log.info("■ 1. 구글 페이퍼 로그인 콜백 요청 성공");
+            final String id = "G" + UUID.randomUUID().toString().substring(0, 31);
             GoogleLoginDto googleLoginDto = googleService.googleOAuth(new GoogleLoginRequestDto(googleProp.getGoogleClientId(), googleProp.getGoogleSecret(), googleProp.getGoogleRedirectPaperUri(), code)); // 구글 로그인 정보 취득
-            AdminTbEntity adminTb = adminService.saveSnsAdmin(adminDataServiceImpl.getAdminData(new AdminDataDto(googleLoginDto, AdminTypeEnum.GOOGLE_TYPE.getCode()))); // 폼당폼당 로그인 및 가입
+            AdminTbEntity adminTb = adminService.saveSnsAdmin(adminDataServiceImpl.getAdminData(AdminDataDto.builder()
+                    .id(id)
+                    .pw(StringUtils.reverse(id))
+                    .type(AdminTypeEnum.GOOGLE_TYPE.getCode())
+                    .name(googleLoginDto.getName())
+                    .sub_id(googleLoginDto.getSub())
+                    .build())); // 폼당폼당 로그인 및 가입
             redirectView.setUrl(adminService.successPaperLogin(adminTb)); // 폼당폼당 로그인 성공 페이지 세팅
             log.info("■ 6. 구글 페이퍼 로그인 콜백 리다이렉트 : {}", redirectView.getUrl());
             return redirectView;
