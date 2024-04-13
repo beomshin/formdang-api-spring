@@ -47,6 +47,13 @@
         </dependency>
 
         <dependency>
+            <groupId>com.kr.formdang</groupId>
+            <artifactId>web-model</artifactId>
+            <version>0.0.1</version>
+            <scope>compile</scope>
+        </dependency>
+
+        <dependency>
             <groupId>com.amazonaws</groupId>
             <artifactId>aws-java-sdk-s3</artifactId>
             <version>1.12.687</version>

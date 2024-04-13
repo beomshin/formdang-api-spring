@@ -34,13 +34,6 @@
   <dependencies>
 
     <dependency>
-      <groupId>com.kr.formdang</groupId>
-      <artifactId>web-model</artifactId>
-      <version>0.0.1</version>
-      <scope>compile</scope>
-    </dependency>
-
-    <dependency>
       <groupId>org.projectlombok</groupId>
       <artifactId>lombok</artifactId>
       <optional>true</optional>
