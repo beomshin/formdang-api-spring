@@ -1,5 +1,0 @@
-
-token:
-  access-expired-time: 3600
-  refresh-expired-time: 604800
-  jwt-key: LNS2CR13KJ7JYB03FNGX8TP73X9KYWOA

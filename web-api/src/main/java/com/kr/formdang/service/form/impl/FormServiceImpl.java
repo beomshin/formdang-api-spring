@@ -1,16 +1,18 @@
 package com.kr.formdang.service.form.impl;
 
+import com.kr.formdang.dao.FormTbDto;
+import com.kr.formdang.enums.PageEnum;
 import com.kr.formdang.entity.*;
-import com.kr.formdang.enums.*;
+
 import com.kr.formdang.exception.CustomException;
-import com.kr.formdang.jwt.JwtService;
+import com.kr.formdang.provider.JwtTokenProvider;
 import com.kr.formdang.mapper.FormMapper;
-import com.kr.formdang.model.common.GlobalCode;
-import com.kr.formdang.model.dao.form.FindFormDto;
-import com.kr.formdang.model.layer.FileDataDto;
-import com.kr.formdang.model.layer.FormDataDto;
-import com.kr.formdang.model.layer.FormFindDto;
-import com.kr.formdang.model.layer.QuestionDataDto;
+import com.kr.formdang.common.GlobalCode;
+import com.kr.formdang.dao.FindFormDto;
+import com.kr.formdang.layer.FileDataDto;
+import com.kr.formdang.layer.FormDataDto;
+import com.kr.formdang.layer.FormFindDto;
+import com.kr.formdang.layer.QuestionDataDto;
 import com.kr.formdang.repository.*;
 import com.kr.formdang.service.form.FormDataService;
 import com.kr.formdang.service.form.FormService;
@@ -41,7 +43,6 @@ public class FormServiceImpl implements FormService {
     private final FormDataService formDataService;
     private final FileUploadFailTbRepository fileUploadFailTbRepository;
     private final GroupFormTbRepository groupFormTbRepository;
-    private final JwtService jwtService;
     private final GroupMemberTbRepository groupMemberTbRepository;
     private final AnswerTbRepository answerTbRepository;
 
@@ -104,7 +105,7 @@ public class FormServiceImpl implements FormService {
      * @return
      */
     @Override
-    public Page findFormList(FormFindDto formFindDto) {
+    public Page<FormTbDto> findFormList(FormFindDto formFindDto) {
         PageRequest pageRequest = PageRequest.of(formFindDto.getPage(), PageEnum.PAGE_12.getNum());
         FindFormDto params = FindFormDto.builder() // 조회 파라미터 생성
                 .aid(formFindDto.getAid())
@@ -118,7 +119,7 @@ public class FormServiceImpl implements FormService {
                 .build();
 
         log.info("■ 2. 폼 리스트 조회 쿼리 시작");
-        return new PageImpl(formMapper.findForms(params), pageRequest, formMapper.findFormsCnt(params));
+        return new PageImpl<>(formMapper.findForms(params), pageRequest, formMapper.findFormsCnt(params));
     }
 
     /**
@@ -147,7 +148,7 @@ public class FormServiceImpl implements FormService {
     public List<QuestionTbEntity> findQuestions(Long fid) throws CustomException {
         log.info("■ 3. 폼 질문 리스트 조회 쿼리 시작");
         List<QuestionTbEntity> questionTbEntities = questionTbRepository.findByFid(fid);
-        if (questionTbEntities != null && questionTbEntities.size() > 0) {
+        if (questionTbEntities != null && !questionTbEntities.isEmpty()) {
             return questionTbEntities;
         } else {
             throw new CustomException(GlobalCode.NOT_FIND_QUESTIONS);
@@ -272,8 +273,8 @@ public class FormServiceImpl implements FormService {
     @Override
     public long validateLogin(String token) throws CustomException {
         log.info("■ 로그인 유저 검사");
-        if (!jwtService.validateToken(token)) throw new CustomException(GlobalCode.NOT_LOGIN_GROUP_FORM); // 그룹 폼은 로그인 권한 필요
-        return jwtService.getId(token);
+        if (!JwtTokenProvider.validateToken(token)) throw new CustomException(GlobalCode.NOT_LOGIN_GROUP_FORM); // 그룹 폼은 로그인 권한 필요
+        return JwtTokenProvider.getId(token);
     }
 
 }

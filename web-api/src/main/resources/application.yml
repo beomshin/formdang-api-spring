@@ -11,6 +11,7 @@ spring:
       - core
       - dao
       - middleware
+      - model
     group:
       local:
         - console-logging # 콘솔 로깅만 사용

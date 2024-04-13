@@ -1,7 +1,7 @@
 package com.kr.formdang.service.api.impl;
 
-import com.kr.formdang.model.external.auth.JwtTokenRequest;
-import com.kr.formdang.model.external.auth.JwtTokenResponse;
+import com.kr.formdang.external.auth.JwtTokenRequest;
+import com.kr.formdang.external.auth.JwtTokenResponse;
 import com.kr.formdang.service.api.TokenService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

@@ -1,6 +1,6 @@
 package com.kr.formdang.controller;
 
-import com.kr.formdang.model.root.DefaultResponse;
+import com.kr.formdang.root.DefaultResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;

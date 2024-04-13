@@ -1,23 +1,26 @@
 package com.kr.formdang.controller;
 
+import com.kr.formdang.dao.FormTbDto;
 import com.kr.formdang.entity.AdminSubTbEntity;
 import com.kr.formdang.entity.FormTbEntity;
 import com.kr.formdang.entity.QuestionTbEntity;
 import com.kr.formdang.exception.CustomException;
-import com.kr.formdang.jwt.JwtService;
-import com.kr.formdang.model.common.GlobalCode;
-import com.kr.formdang.model.layer.FormDataDto;
-import com.kr.formdang.model.layer.FormFindDto;
-import com.kr.formdang.model.layer.QuestionDataDto;
-import com.kr.formdang.model.net.request.FormSubmitRequest;
-import com.kr.formdang.model.net.request.FormUpdateRequest;
-import com.kr.formdang.model.net.response.*;
-import com.kr.formdang.model.root.DefaultResponse;
-import com.kr.formdang.model.root.RootResponse;
+import com.kr.formdang.provider.JwtTokenProvider;
+import com.kr.formdang.common.GlobalCode;
+import com.kr.formdang.layer.FormDataDto;
+import com.kr.formdang.layer.FormFindDto;
+import com.kr.formdang.layer.QuestionDataDto;
+import com.kr.formdang.net.req.FormSubmitRequest;
+import com.kr.formdang.net.req.FormUpdateRequest;
+import com.kr.formdang.net.res.*;
+import com.kr.formdang.root.DefaultResponse;
+import com.kr.formdang.root.RootResponse;
 import com.kr.formdang.service.form.FormDataService;
 import com.kr.formdang.service.form.FormService;
+import com.kr.formdang.utils.TimeUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -25,6 +28,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
+import java.sql.Timestamp;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -36,7 +40,6 @@ public class FormController {
 
     private final FormService formService;
     private final FormDataService formDataService;
-    private final JwtService jwtService;
 
 
     /**
@@ -57,9 +60,11 @@ public class FormController {
         try {
             log.info("■ 1. 폼 작성하기 요청 성공");
             final String pattern = "yyyyMMdd";
-            final Long aid = jwtService.getId(token); // 관리자 아이디 세팅
+            final Long aid = JwtTokenProvider.getId(token); // 관리자 아이디 세팅
+            final Timestamp beginDt = TimeUtils.getTimeStamp(request.getBeginDt(), pattern);
+            final Timestamp endDt = TimeUtils.getTimeStamp(request.getEndDt(), pattern);
 
-            FormTbEntity formTbEntity = formDataService.getFormData(new FormDataDto(request, aid, pattern)); // 폼 엔티티 생성
+            FormTbEntity formTbEntity = formDataService.getFormData(new FormDataDto(request, aid, beginDt, endDt)); // 폼 엔티티 생성
 
             List<QuestionTbEntity> questionTbEntities = request.getQuestion().stream()
                     .map(it -> formDataService.getQuestionData(new QuestionDataDto(it)))
@@ -104,11 +109,40 @@ public class FormController {
     {
         try {
             log.info("■ 1. 폼리스트 조회 요청 성공");
-            final Long aid = jwtService.getId(token); // 관리자 아이디 세팅
-            Page pages = formService.findFormList(new FormFindDto(page, type, aid, status, order)); // 폼 리스트 조회
+            final Long aid = JwtTokenProvider.getId(token); // 관리자 아이디 세팅
+            Page<FormTbDto> pages = formService.findFormList(new FormFindDto(page, type, aid, status, order)); // 폼 리스트 조회
             AdminSubTbEntity adminSubTb = formService.analyzeForm(aid); // 종합 정보 조회
             log.info("■ 4. 폼리스트 조회 응답 성공");
-            return ResponseEntity.ok().body(new FindFormListResponse(pages, adminSubTb));
+
+            FindFormListResponse.Analyze analyze = FindFormListResponse.Analyze
+                    .builder()
+                    .inspectionCnt(adminSubTb.getInspectionCnt())
+                    .quizCnt(adminSubTb.getQuizCnt())
+                    .inspectionRespondentCnt(adminSubTb.getInspectionRespondentCnt())
+                    .quizRespondentCnt(adminSubTb.getQuizRespondent_cnt())
+                    .build();
+
+            List<FindFormListResponse.Forms> forms = pages.getContent().stream()
+                    .map(it -> FindFormListResponse.Forms
+                            .builder()
+                            .fid(it.getFid())
+                            .type(it.getFormType())
+                            .title(it.getTitle())
+                            .logoUrl(it.getLogoUrl())
+                            .status(it.getStatus())
+                            .endFlag(it.getEndFlag())
+                            .delFlag(it.getDelFlag())
+                            .regDt(it.getRegDt())
+                            .build())
+                    .collect(Collectors.toList());
+
+            return ResponseEntity.ok().body(FindFormListResponse.builder()
+                    .list(forms)
+                    .totalElements(pages.getTotalElements())
+                    .totalPage(pages.getTotalPages())
+                    .curPage(pages.getNumber())
+                    .analyze(analyze)
+                    .build());
         } catch (CustomException e) {
             log.error("■ 4. 폼리스트 조회 응답 오류", e);
             return ResponseEntity.ok().body(new DefaultResponse(e.getCode()));
@@ -133,11 +167,17 @@ public class FormController {
     public ResponseEntity<RootResponse> analyzeForm(@RequestHeader("Authorization") String token) {
         try {
             log.info("■ 1. 종합 분석 조회 요청 성공");
-            final Long aid = jwtService.getId(token); // 관리자 아이디 세팅
+            final Long aid = JwtTokenProvider.getId(token); // 관리자 아이디 세팅
             log.info("■ 2. 종합 분석 로그 단게 맞추기");
             AdminSubTbEntity adminSubTb = formService.analyzeForm(aid); // 종합 정보 조회
             log.info("■ 4. 종합 분석 조회 응답 성공");
-            return ResponseEntity.ok().body(new AnalyzeFormResponse(adminSubTb));
+            return ResponseEntity.ok().body(AnalyzeFormResponse
+                    .builder()
+                            .inspectionCnt(adminSubTb.getInspectionCnt())
+                            .quizCnt(adminSubTb.getQuizCnt())
+                            .inspectionRespondentCnt(adminSubTb.getInspectionRespondentCnt())
+                            .quizRespondentCnt(adminSubTb.getQuizRespondent_cnt())
+                    .build());
         } catch (CustomException e) {
             log.error("■ 종합 분석 조회 응답 오류", e);
             return ResponseEntity.ok().body(new DefaultResponse(e.getCode()));
@@ -158,11 +198,44 @@ public class FormController {
     public ResponseEntity<RootResponse> findFormDetail(@RequestHeader("Authorization") String token, @PathVariable("fid") Long fid) {
         try {
             log.info("■ 1. 폼 상세 정보 조회 요청 성공");
-            final Long aid = jwtService.getId(token); // 관리자 아이디 세팅
+            final Long aid = JwtTokenProvider.getId(token); // 관리자 아이디 세팅
             FormTbEntity formTbEntity = formService.findForm(aid, fid); // 폼 상세 조회
             List<QuestionTbEntity> questionTbEntities = formService.findQuestions(fid); // 질문 리스트 조회
+            final String separator = "\\|";
+            List<FindFormDetailResponse.FormDetailQuestionResponse> question = questionTbEntities.stream()
+                    .map(it ->
+                            FindFormDetailResponse.FormDetailQuestionResponse
+                                    .builder()
+                                    .qid(it.getQid())
+                                    .type(it.getQuestionType())
+                                    .order(it.getOrder())
+                                    .title(it.getTitle())
+                                    .placeholder(it.getQuestionPlaceholder())
+                                    .imageUrl(it.getImageUrl())
+                                    .detail(StringUtils.isNotBlank(it.getQuestionDetail()) ? it.getQuestionDetail().split(separator) : null)
+                                    .exampleDetail(StringUtils.isNotBlank(it.getQuestionExampleDetail()) ? it.getQuestionExampleDetail().split(separator) : null)
+                                    .count(it.getCount())
+                                    .answer(StringUtils.isNotBlank(it.getQuizAnswer()) ? it.getQuizAnswer().split(separator) : null)
+                                    .build())
+                    .collect(Collectors.toList());
             log.info("■ 4. 폼 상세 정보 조회 응답 성공");
-            return ResponseEntity.ok().body(new FindFormDetailResponse(formTbEntity, questionTbEntities));
+            return ResponseEntity.ok().body(FindFormDetailResponse.builder()
+                    .fid(formTbEntity.getFid())
+                    .type(formTbEntity.getFormType())
+                    .title(formTbEntity.getTitle())
+                    .detail(formTbEntity.getFormDetail())
+                    .beginDt(formTbEntity.getBeginDt())
+                    .endDt(formTbEntity.getEndDt())
+                    .questionCount(formTbEntity.getQuestionCount())
+                    .status(formTbEntity.getStatus())
+                    .endFlag(formTbEntity.getEndFlag())
+                    .delFlag(formTbEntity.getDelFlag())
+                    .answerCount(formTbEntity.getAnswerCount())
+                    .maxRespondent(formTbEntity.getMaxRespondent())
+                    .logoUrl(formTbEntity.getLogoUrl())
+                    .themeUrl(formTbEntity.getThemeUrl())
+                    .question(question)
+                    .build());
         } catch (CustomException e) {
             log.error("■ 폼 상세 정보 조회 응답 오류", e);
             return ResponseEntity.ok().body(new DefaultResponse(e.getCode()));
@@ -179,8 +252,11 @@ public class FormController {
         try {
             final String pattern = "yyyyMMdd";
             log.info("■ 1. 폼 상세 정보 조회 요청 성공");
-            final Long aid = jwtService.getId(token); // 관리자 아이디 세팅
-            FormDataDto formDataDto = new FormDataDto(request, fid, aid, pattern); // 폼 데이터
+            final Long aid = JwtTokenProvider.getId(token); // 관리자 아이디 세팅
+            final Timestamp beginDt = TimeUtils.getTimeStamp(request.getBeginDt(), pattern);
+            final Timestamp endDt = TimeUtils.getTimeStamp(request.getEndDt(), pattern);
+
+            FormDataDto formDataDto = new FormDataDto(request, fid, aid, beginDt, endDt); // 폼 데이터
             List<QuestionDataDto> questionDataDtos = request.getQuestion().stream().map(it -> new QuestionDataDto(it)).sorted(Comparator.comparing(QuestionDataDto::getOrder)).collect(Collectors.toList()); // 질문 데이터 order 순 정렬
             formService.updateForm(formDataDto, questionDataDtos); // 업데이트 처리
             return ResponseEntity.ok().body(new DefaultResponse());
@@ -212,7 +288,36 @@ public class FormController {
             FormTbEntity formTbEntity = formService.findPaper(new FormDataDto(fid, type, key, aid)); // 폼 상세 조회
             List<QuestionTbEntity> questionTbEntities = formService.findQuestions(fid); // 질문 리스트 조회
             log.info("■ 4. 유저 화면 정보 조회 응답 성공");
-            return ResponseEntity.ok().body(new FindPaperResponse(aid, formTbEntity, questionTbEntities));
+            final String separator = "\\|";
+
+            List<FindPaperResponse.FormDetailQuestionResponse> question = questionTbEntities.stream()
+                    .map(it -> FindPaperResponse.FormDetailQuestionResponse
+                            .builder()
+                            .qid(it.getQid())
+                            .type(it.getQuestionType())
+                            .order(it.getOrder())
+                            .title(it.getTitle())
+                            .placeholder(it.getQuestionPlaceholder())
+                            .imageUrl(it.getImageUrl())
+                            .count(it.getCount())
+                            .detail(StringUtils.isNotBlank(it.getQuestionDetail()) ? it.getQuestionDetail().split(separator) : null)
+                            .exampleDetail(StringUtils.isNotBlank(it.getQuestionExampleDetail()) ? it.getQuestionExampleDetail().split(separator) : null)
+                            .answer(StringUtils.isNotBlank(it.getQuizAnswer()) ? it.getQuizAnswer().split(separator) : null)
+                            .build())
+
+                    .collect(Collectors.toList());;
+            return ResponseEntity.ok().body(FindPaperResponse
+                    .builder()
+                            .fid(formTbEntity.getFid())
+                            .type(formTbEntity.getFormType())
+                            .title(formTbEntity.getTitle())
+                            .detail(formTbEntity.getFormDetail())
+                            .maxRespondent(formTbEntity.getMaxRespondent())
+                            .logoUrl(formTbEntity.getLogoUrl())
+                            .themeUrl(formTbEntity.getThemeUrl())
+                            .question(question)
+                            .worker(aid == formTbEntity.getAid())
+                    .build());
         } catch (CustomException e) {
             log.error("■ 유저 화면 정보 조회 응답 오류, {}", e.getCode().getMsg());
             return ResponseEntity.ok().body(new DefaultResponse(e.getCode()));

@@ -2,8 +2,8 @@ package com.kr.formdang.service.form.impl;
 
 import com.kr.formdang.entity.FormTbEntity;
 import com.kr.formdang.entity.QuestionTbEntity;
-import com.kr.formdang.model.layer.FormDataDto;
-import com.kr.formdang.model.layer.QuestionDataDto;
+import com.kr.formdang.layer.FormDataDto;
+import com.kr.formdang.layer.QuestionDataDto;
 import com.kr.formdang.service.form.FormDataService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
