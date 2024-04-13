@@ -1,17 +1,15 @@
 package com.kr.formdang.controller;
 
 import com.kr.formdang.exception.CustomException;
-import com.kr.formdang.jwt.JwtService;
-import com.kr.formdang.model.common.GlobalCode;
-import com.kr.formdang.model.common.GlobalFile;
-import com.kr.formdang.model.external.auth.JwtTokenResponse;
-import com.kr.formdang.model.layer.FileDataDto;
-import com.kr.formdang.model.net.request.FileListRequest;
-import com.kr.formdang.model.net.request.FileProfileRequest;
-import com.kr.formdang.model.net.request.FileRequest;
-import com.kr.formdang.model.net.response.FileProfileResponse;
-import com.kr.formdang.model.net.response.FileResponse;
-import com.kr.formdang.model.root.DefaultResponse;
+import com.kr.formdang.provider.JwtTokenProvider;
+import com.kr.formdang.common.GlobalCode;
+import com.kr.formdang.common.GlobalFile;
+import com.kr.formdang.external.auth.JwtTokenResponse;
+import com.kr.formdang.layer.FileDataDto;
+import com.kr.formdang.net.req.FileListRequest;
+import com.kr.formdang.net.req.FileProfileRequest;
+import com.kr.formdang.net.res.FileProfileResponse;
+import com.kr.formdang.root.DefaultResponse;
 import com.kr.formdang.service.admin.AdminService;
 import com.kr.formdang.service.api.TokenService;
 import com.kr.formdang.service.file.FileService;
@@ -22,15 +20,11 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.StopWatch;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Future;
 import java.util.stream.Collectors;
 
 @RestController
@@ -40,7 +34,6 @@ public class FileController {
 
     private final FileService<GlobalFile> fileService;
     private final FormService formService;
-    private final JwtService jwtService;
     private final AdminService adminService;
     private final TokenService tokenService;
     @Value("${token.access-key}")
@@ -57,15 +50,15 @@ public class FileController {
     public ResponseEntity uploadFileProfile(@ModelAttribute @Valid FileProfileRequest fileRequest, @RequestHeader("Authorization") String token) {
         try {
             log.info("■ 1. 프로필 등록 요청 성공");
-            if (!jwtService.validateToken(token)) throw new CustomException(GlobalCode.FAIL_VALIDATE_TOKEN); // 토큰 검사
+            if (!JwtTokenProvider.validateToken(token)) throw new CustomException(GlobalCode.FAIL_VALIDATE_TOKEN); // 토큰 검사
 
-            final Long aid = jwtService.getId(token); // 관리자 아이디 세팅
+            final Long aid = JwtTokenProvider.getId(token); // 관리자 아이디 세팅
             GlobalFile profile = fileService.uploadSingle(fileRequest.getProfile()); // 파일 등록
             boolean result = adminService.updateProfile(aid, profile, fileRequest.getProfile()); // 프로필 정보 업데이트
 
             if (result) { // 프로필 등록 성공
                 log.debug("■ JWT 토큰 재발급 신청 [프로필 값 업데이트]");
-                JwtTokenResponse jwtTokenResponse = tokenService.getLoginToken(String.valueOf(aid), jwtService.getName(token), profile.getPath(), accessKey); // 폼당폼당 JWT 토큰 요청 (프로필 내용 변경)
+                JwtTokenResponse jwtTokenResponse = tokenService.getLoginToken(String.valueOf(aid), JwtTokenProvider.getName(token), profile.getPath(), accessKey); // 폼당폼당 JWT 토큰 요청 (프로필 내용 변경)
                 log.info("■ 3. 프로필 등록 응답 성공");
                 return ResponseEntity.ok().body(new FileProfileResponse(profile, jwtTokenResponse.getAccessToken()));
             } else { // 프로필 등록 실패
@@ -96,9 +89,9 @@ public class FileController {
     public ResponseEntity uploadFileList(@ModelAttribute @Valid FileListRequest fileListRequest, @RequestHeader("Authorization") String token, @PathVariable("fid") Long fid){
         try {
             log.info("■ 1. 이미지 리스트 등록 요청 성공 (fid: {})", fid);
-            if (!jwtService.validateToken(token)) throw new CustomException(GlobalCode.FAIL_VALIDATE_TOKEN);// 토큰 검사
+            if (!JwtTokenProvider.validateToken(token)) throw new CustomException(GlobalCode.FAIL_VALIDATE_TOKEN);// 토큰 검사
 
-            final Long aid = jwtService.getId(token); // 관리자 아이디 세팅
+            final Long aid = JwtTokenProvider.getId(token); // 관리자 아이디 세팅
             formService.findForm(aid, fid); // 유효한 폼 유효성 처리
 
             List<FileDataDto> fileDataDtos = new ArrayList<>();

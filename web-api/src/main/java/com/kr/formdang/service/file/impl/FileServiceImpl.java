@@ -1,9 +1,9 @@
 package com.kr.formdang.service.file.impl;
 
 import com.kr.formdang.exception.CustomException;
-import com.kr.formdang.model.common.GlobalCode;
-import com.kr.formdang.model.common.GlobalFile;
-import com.kr.formdang.model.layer.FileDataDto;
+import com.kr.formdang.common.GlobalCode;
+import com.kr.formdang.common.GlobalFile;
+import com.kr.formdang.layer.FileDataDto;
 import com.kr.formdang.service.file.FileService;
 import com.kr.formdang.utils.AwsS3Utils;
 import com.kr.formdang.utils.FileUtils;
@@ -15,7 +15,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.Future;
 
 @Service
 @Slf4j

@@ -1,6 +1,6 @@
 package com.kr.formdang.exception;
 
-import com.kr.formdang.model.common.GlobalCode;
+import com.kr.formdang.common.GlobalCode;
 import lombok.Getter;
 import lombok.ToString;
 

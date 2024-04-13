@@ -3,9 +3,6 @@ server:
   shutdown: graceful
   servlet:
     context-path: /api/sp
-    multipart:
-      max-file-size: 500MB
-      max-request-size: 500MB
 
 spring:
   profiles:
@@ -14,6 +11,7 @@ spring:
       - core
       - dao
       - middleware
+      - model
     group:
       local:
         - console-logging # 콘솔 로깅만 사용
@@ -43,3 +41,14 @@ file:
 
 token:
   access-key: r5ZW27aCNHCnabMd2sQ534mnuIrHAcnshjGXBadqQnpiKKfv2sdAsa7fx4hVSJU5
+
+cloud:
+  aws:
+    s3:
+      bucket: formmaster-s3
+    region:
+      static: ap-northeast-2
+      auto: false
+    stack:
+      auto: false
+    host: https://s3.ap-northeast-2.amazonaws.com/formmaster-s3/

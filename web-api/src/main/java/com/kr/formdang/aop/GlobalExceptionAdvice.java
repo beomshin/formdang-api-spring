@@ -1,8 +1,8 @@
 package com.kr.formdang.aop;
 
 import com.kr.formdang.exception.CustomException;
-import com.kr.formdang.model.common.GlobalCode;
-import com.kr.formdang.model.root.DefaultResponse;
+import com.kr.formdang.common.GlobalCode;
+import com.kr.formdang.root.DefaultResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;

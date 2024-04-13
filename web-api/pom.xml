@@ -5,12 +5,11 @@
     <packaging>jar</packaging>
 
     <parent>
-        <groupId>cm.kr.formdang</groupId>
+        <groupId>com.kr.formdang</groupId>
         <artifactId>formdang-sp-was</artifactId>
         <version>0.0.1</version>
     </parent>
 
-    <groupId>com.kr.formdang</groupId>
     <artifactId>web-api</artifactId>
     <version>0.0.1</version>
 
@@ -22,6 +21,11 @@
     </properties>
 
     <dependencies>
+
+        <dependency>
+          <groupId>org.springframework.boot</groupId>
+          <artifactId>spring-boot-starter-aop</artifactId>
+        </dependency>
 
         <dependency>
             <groupId>com.kr.formdang</groupId>
@@ -41,6 +45,13 @@
             <artifactId>web-middleware</artifactId>
             <version>0.0.1</version>
         </dependency>
+
+        <dependency>
+            <groupId>com.amazonaws</groupId>
+            <artifactId>aws-java-sdk-s3</artifactId>
+            <version>1.12.687</version>
+        </dependency>
+
 
     </dependencies>
 
