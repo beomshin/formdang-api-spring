@@ -1,4 +1,4 @@
-package com.kr.formdang.config.aws;
+package com.kr.formdang.config;
 
 import com.amazonaws.auth.AWSStaticCredentialsProvider;
 import com.amazonaws.auth.BasicAWSCredentials;
