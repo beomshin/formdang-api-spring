@@ -8,6 +8,7 @@
         <groupId>com.kr.formdang</groupId>
         <artifactId>formdang-sp-was</artifactId>
         <version>0.0.1</version>
+        <relativePath>../../pom.xml</relativePath>
     </parent>
 
     <artifactId>form-app-external-api</artifactId>
