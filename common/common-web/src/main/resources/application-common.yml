@@ -1,10 +1,3 @@
-# LOCAL
----
-spring:
-  config:
-    activate:
-      on-profile: local
-
 aws:
   s3:
     region: ENC(iF1dl+uXxelMbqT+8JmmE4BltPPLlRFEPDm9wOxgukyZx5KhSP793rQtBlEaI+b+)
@@ -12,6 +5,13 @@ aws:
     secret-key: ENC(zN7RFA2wnCIYvPfcz2SL5ZqgRrVFooTt9bNgbODFwiirtbcNYNG2/S+6fdSfxpeSPemKo+STljUxWHkSH9zISXVxJYJ1RjkWNESqa431wo0=)
     buket: ENC(JtR+UsfqIaEDX/M+OKRjBO/IrkL+LLulF1eQ45YVrEzL1JLay4wb93ivH4t3teJz)
     host: ENC(8TS6H/vrd+fLMN2PvaVgDnTE2OnioGJay/yxOIyqiLakTXO66AtToVFjX5YR+a3LsNJjwN8l6ow8ggpymRHSNEi71CKEM21mc5Ej4Db233H3oMtSN+V7CiHSzLcLYW7z)
+
+# LOCAL
+---
+spring:
+  config:
+    activate:
+      on-profile: local
 
 # TEST
 ---
