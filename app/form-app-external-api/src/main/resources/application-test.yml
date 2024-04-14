@@ -1,0 +1,34 @@
+formdang:
+  url:
+    fail-login: https://formdang.com/admin/login.html
+    success-login: https://formdang.com/admin/index.html
+    success-paper-login: https://formdang.com/web/paper.html
+    auth-issue: http://formdang-auth:22081/auth/sp/issue
+
+
+google:
+  auth:
+    url: https://oauth2.googleapis.com
+    scope: profile,email,openid
+
+  login:
+    url: https://accounts.google.com
+  redirect:
+    uri: http://formdang-api.com/api/sp/public/google/login/callback
+    paper_uri: http://formdang-api.com/api/sp/public/google/login/paper/callback
+  client:
+    id: 480280719023-pcds17du2k26mpsebqpcm6n6240j3vi2
+  secret: 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
+
+kakao:
+  auth:
+    url: https://kapi.kakao.com
+  login:
+    url: https://kauth.kakao.com
+  redirect:
+    login:
+      uri: http://formdang-api.com/api/sp/public/kakao/login/callback
+      paper_uri: http://formdang-api.com/api/sp/public/kakao/login/paper/callback
+  client:
+    id: 0a106f8a1ca7560173fcc5420818e404
+  secret: dI5BQb3Hpu9T8wq0tU1D29KiRME8AeY1

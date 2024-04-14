@@ -19,11 +19,11 @@
   <description>formdang-sp-was</description>
 
   <modules>
-    <module>web-api</module>
-    <module>web-core</module>
-    <module>web-dao</module>
-    <module>web-middleware</module>
-    <module>web-model</module>
+    <module>app/form-app-external-api</module>
+    <module>core/core-web</module>
+    <module>domain/domain-core</module>
+    <module>common/common-web</module>
+    <module>modules/web-model</module>
   </modules>
 
   <properties>
@@ -34,9 +34,8 @@
   <dependencies>
 
     <dependency>
-      <groupId>org.projectlombok</groupId>
-      <artifactId>lombok</artifactId>
-      <optional>true</optional>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-web</artifactId>
     </dependency>
 
     <dependency>
@@ -45,12 +44,10 @@
       <scope>test</scope>
     </dependency>
 
-    <!-- https://mvnrepository.com/artifact/org.mockito/mockito-all -->
     <dependency>
-      <groupId>org.mockito</groupId>
-      <artifactId>mockito-all</artifactId>
-      <version>1.10.19</version>
-      <scope>test</scope>
+      <groupId>org.projectlombok</groupId>
+      <artifactId>lombok</artifactId>
+      <optional>true</optional>
     </dependency>
 
   </dependencies>

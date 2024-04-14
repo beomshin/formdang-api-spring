@@ -1,6 +1,0 @@
-formdang:
-  url:
-    fail-login: https://formdang.com/admin/login.html
-    success-login: https://formdang.com/admin/index.html
-    success-paper-login: https://formdang.com/web/paper.html
-    auth-issue: http://127.0.0.1:22081/auth/sp/issue

@@ -1,0 +1,43 @@
+server:
+  port: 12001
+  shutdown: graceful
+  servlet:
+    context-path: /api/sp
+
+spring:
+  profiles:
+    active: local
+    include:
+      - common
+      - dao
+      - middleware
+      - model
+    group:
+      local:
+        - console-logging # 콘솔 로깅만 사용
+      test:
+        - console-logging
+        - file-logging # 파일 로깅 사용
+      prod:
+        - console-logging
+        - file-logging # 파일 로깅 사용
+  application:
+    name: web-api
+  jackson:
+    time-zone: Asia/Seoul
+  mvc:
+    throw-exception-if-no-handler-found: true
+  web:
+    resources:
+      add-mappings: false
+  servlet:
+    multipart:
+      max-file-size: 30MB
+      max-request-size:  30MB
+
+file:
+  size:
+    image: 3145728 # 3 * 1024 * 1024
+
+token:
+  access-key: r5ZW27aCNHCnabMd2sQ534mnuIrHAcnshjGXBadqQnpiKKfv2sdAsa7fx4hVSJU5

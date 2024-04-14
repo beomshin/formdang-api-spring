@@ -31,8 +31,4 @@ build/
 
 ### VS Code ###
 .vscode/
-!/pom.xml
-
-*.pem
-/logs
-/common/common-web/.mvn/
+/.mvn/
