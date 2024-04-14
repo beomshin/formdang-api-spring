@@ -1,6 +1,6 @@
 package com.kr.formdang.dto.res;
 
-import com.kr.formdang.common.GlobalFile;
+import com.kr.formdang.utils.file.dto.GlobalFile;
 import com.kr.formdang.root.DefaultResponse;
 import lombok.*;
 

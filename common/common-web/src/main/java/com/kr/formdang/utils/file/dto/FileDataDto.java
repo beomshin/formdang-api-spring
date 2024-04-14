@@ -1,6 +1,5 @@
-package com.kr.formdang.layer;
+package com.kr.formdang.utils.file.dto;
 
-import com.kr.formdang.common.GlobalFile;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

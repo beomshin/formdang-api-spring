@@ -1,10 +1,8 @@
-package com.kr.formdang.utils;
+package com.kr.formdang.utils.time;
 
-import java.sql.Date;
 import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.format.DateTimeFormatter;
 
 public class TimeUtils {
 

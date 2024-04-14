@@ -1,12 +1,16 @@
-package com.kr.formdang.utils;
+package com.kr.formdang.utils.file;
 
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class FileUtils {
 
-
-    public static String getAccessFileExtension(String fileName) {
+    /**
+     * 파일 확장자 가져오기
+     * @param fileName
+     * @return
+     */
+    public static String getFileExtension(String fileName) {
         try {
             return fileName.substring(fileName.lastIndexOf("."));
         } catch (StringIndexOutOfBoundsException e) {

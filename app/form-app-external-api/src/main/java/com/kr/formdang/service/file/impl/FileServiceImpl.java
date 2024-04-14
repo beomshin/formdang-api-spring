@@ -1,12 +1,12 @@
 package com.kr.formdang.service.file.impl;
 
+import com.kr.formdang.utils.file.AwsS3Utils;
 import com.kr.formdang.exception.CustomException;
 import com.kr.formdang.common.GlobalCode;
-import com.kr.formdang.common.GlobalFile;
-import com.kr.formdang.layer.FileDataDto;
+import com.kr.formdang.utils.file.dto.GlobalFile;
+import com.kr.formdang.utils.file.dto.FileDataDto;
 import com.kr.formdang.service.file.FileService;
-import com.kr.formdang.utils.AwsS3Utils;
-import com.kr.formdang.utils.FileUtils;
+import com.kr.formdang.utils.file.FileUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Async;
@@ -24,7 +24,6 @@ public class FileServiceImpl implements FileService<GlobalFile> {
     private int IMAGE_MAX_SIZE; // 30MB
 
     private final Set<String> accessFileExt;
-    private final AwsS3Utils awsS3Utils;
 
     /**
      * 확장자 제어 생성자
@@ -32,10 +31,8 @@ public class FileServiceImpl implements FileService<GlobalFile> {
      * 이미지: jpg, jpeg, png, gif, bmp
      * 영상: mp4, avi, wmv, mpg, mkv, webm
      *
-     * @param awsS3Utils
      */
-    public FileServiceImpl(AwsS3Utils awsS3Utils) {
-        this.awsS3Utils = awsS3Utils;
+    public FileServiceImpl() {
         this.accessFileExt = new HashSet<>(Arrays.asList(".jpg", ".jpeg", ".png", ".gif", ".bmp"));
     }
 
@@ -56,14 +53,15 @@ public class FileServiceImpl implements FileService<GlobalFile> {
     private GlobalFile upload(MultipartFile file, Integer maxSize, Set<String> accessSet) {
         try {
             if (file == null || file.isEmpty()) throw new CustomException(GlobalCode.NOT_EXIST_FILE); // 파일 누락
-            String ext = FileUtils.getAccessFileExtension(file.getOriginalFilename()); // 확장자 제어
-            log.info("[파일 업로드] 파일명 [{}], 사이즈 [{}], 최대 사이즈 [{}], 확장자 [{}]", file.getOriginalFilename(), file.getSize(), maxSize, ext);
+            String ext = FileUtils.getFileExtension(Objects.requireNonNull(file.getOriginalFilename())); // 확장자 제어
             if (file.getSize() >= maxSize || !accessSet.contains(ext)) throw new CustomException(GlobalCode.FAIL_FILE_CONDITION); // 파일 사이즈 제어
-            String path = awsS3Utils.fileUploadToS3(file, ext); // AWS S3 파일 업로드
+            log.info("[파일 업로드 요청] 파일명 [{}], 사이즈 [{}], 확장자 [{}]", file.getOriginalFilename(), file.getSize(), ext);
+            String path = AwsS3Utils.fileUploadToS3(file.getInputStream(), file.getSize(), file.getContentType(), ext);
+            log.debug("[파일 업로드 성공] 파일 URL: {}", path);
             return path != null ? new GlobalFile(file, path) : null;
         } catch (Exception e) {
             log.error("[파일 업로드 실패]======================>");
-            log.error("{}", e);
+            log.error("", e);
             return null;
         }
     }

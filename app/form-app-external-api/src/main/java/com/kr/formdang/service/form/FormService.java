@@ -5,7 +5,7 @@ import com.kr.formdang.entity.AdminSubTbEntity;
 import com.kr.formdang.entity.FormTbEntity;
 import com.kr.formdang.entity.QuestionTbEntity;
 import com.kr.formdang.exception.CustomException;
-import com.kr.formdang.layer.FileDataDto;
+import com.kr.formdang.utils.file.dto.FileDataDto;
 import com.kr.formdang.layer.FormDataDto;
 import com.kr.formdang.layer.FormFindDto;
 import com.kr.formdang.layer.QuestionDataDto;

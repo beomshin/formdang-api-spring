@@ -9,14 +9,14 @@ import com.kr.formdang.provider.JwtTokenProvider;
 import com.kr.formdang.mapper.FormMapper;
 import com.kr.formdang.common.GlobalCode;
 import com.kr.formdang.dao.FindFormDto;
-import com.kr.formdang.layer.FileDataDto;
+import com.kr.formdang.utils.file.dto.FileDataDto;
 import com.kr.formdang.layer.FormDataDto;
 import com.kr.formdang.layer.FormFindDto;
 import com.kr.formdang.layer.QuestionDataDto;
 import com.kr.formdang.repository.*;
 import com.kr.formdang.service.form.FormDataService;
 import com.kr.formdang.service.form.FormService;
-import com.kr.formdang.utils.FileUtils;
+import com.kr.formdang.utils.file.FileUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -213,7 +213,7 @@ public class FormServiceImpl implements FormService {
                 log.error("■ 이미지 업로드 실패 확인 필요");
                 fileUploadFailTbRepository.save(FileUploadFailTbEntity.builder()
                                 .oriName(fileDataDto.getFile().getOriginalFilename())
-                                .ext(FileUtils.getAccessFileExtension(fileDataDto.getFile().getOriginalFilename()))
+                                .ext(FileUtils.getFileExtension(fileDataDto.getFile().getOriginalFilename()))
                                 .size(String.valueOf(fileDataDto.getFile().getSize()))
                         .build());
             }

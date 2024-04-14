@@ -17,7 +17,7 @@ import com.kr.formdang.root.DefaultResponse;
 import com.kr.formdang.root.RootResponse;
 import com.kr.formdang.service.form.FormDataService;
 import com.kr.formdang.service.form.FormService;
-import com.kr.formdang.utils.TimeUtils;
+import com.kr.formdang.utils.time.TimeUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -66,7 +66,7 @@ public class FormController {
 
             FormTbEntity formTbEntity = formDataService.getFormData(FormDataDto.builder()
                     .type(request.getType())
-                    .token(request.getTitle())
+                    .title(request.getTitle())
                     .detail(request.getDetail())
                     .beginDt(beginDt)
                     .endDt(endDt)

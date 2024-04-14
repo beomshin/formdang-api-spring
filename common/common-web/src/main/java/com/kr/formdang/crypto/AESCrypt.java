@@ -1,14 +1,11 @@
 package com.kr.formdang.crypto;
 
-import lombok.extern.slf4j.Slf4j;
-
 import javax.crypto.Cipher;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 
-@Slf4j
 public class AESCrypt {
 
     private static final String AES_ALGORITHM = "AES/CBC/PKCS5Padding";

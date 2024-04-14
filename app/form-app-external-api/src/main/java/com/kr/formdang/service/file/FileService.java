@@ -1,6 +1,6 @@
 package com.kr.formdang.service.file;
 
-import com.kr.formdang.layer.FileDataDto;
+import com.kr.formdang.utils.file.dto.FileDataDto;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.concurrent.CompletableFuture;
