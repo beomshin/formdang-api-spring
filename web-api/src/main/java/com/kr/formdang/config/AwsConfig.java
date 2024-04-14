@@ -16,12 +16,12 @@ public class AwsConfig {
 
     @Value("${cloud.aws.region.static}")
     private String region;
-    private final String AWS_ACCESS_KEY = "aws_access_key";
-    private final String AWS_SECRET_KEY = "aws_secret_key";
-    private String accessKey;
-    private String secretKey;
+    private final String accessKey;
+    private final String secretKey;
 
     public AwsConfig(ConfigTbRepository configTbRepository) { // AWS 키 세팅
+        String AWS_ACCESS_KEY = "aws_access_key";
+        String AWS_SECRET_KEY = "aws_secret_key";
         accessKey = configTbRepository.findByKey(AWS_ACCESS_KEY).getValue();
         secretKey = configTbRepository.findByKey(AWS_SECRET_KEY).getValue();
     }

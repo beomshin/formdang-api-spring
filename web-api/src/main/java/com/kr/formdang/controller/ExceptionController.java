@@ -1,4 +1,4 @@
-package com.kr.formdang.aop;
+package com.kr.formdang.controller;
 
 import com.kr.formdang.exception.CustomException;
 import com.kr.formdang.common.GlobalCode;
@@ -23,7 +23,7 @@ import java.io.IOException;
 @RestControllerAdvice
 @RequiredArgsConstructor
 @Slf4j
-public class GlobalExceptionAdvice {
+public class ExceptionController {
 
     @ExceptionHandler
     public ResponseEntity<DefaultResponse> handle(MethodArgumentNotValidException e) { // 파라미터 오류 글로벌 처리
