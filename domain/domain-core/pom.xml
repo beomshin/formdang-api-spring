@@ -9,11 +9,11 @@
         <version>0.0.1</version>
     </parent>
 
-    <artifactId>web-dao</artifactId>
+    <artifactId>domain-core</artifactId>
     <version>0.0.1</version>
 
-    <name>web-dao</name>
-    <description>web-dao</description>
+    <name>domain-core</name>
+    <description>domain-core</description>
 
     <properties>
         <java.version>1.8</java.version>

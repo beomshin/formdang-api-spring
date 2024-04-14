@@ -10,11 +10,11 @@
         <version>0.0.1</version>
     </parent>
 
-    <artifactId>web-api</artifactId>
+    <artifactId>form-app-external-api</artifactId>
     <version>0.0.1</version>
 
-    <name>web-api</name>
-    <description>web-api</description>
+    <name>form-app-external-api</name>
+    <description>form-app-external-api</description>
 
     <properties>
         <java.version>1.8</java.version>
@@ -34,20 +34,20 @@
 
         <dependency>
             <groupId>com.kr.formdang</groupId>
-            <artifactId>web-core</artifactId>
+            <artifactId>common-web</artifactId>
             <version>0.0.1</version>
             <scope>compile</scope>
         </dependency>
 
         <dependency>
             <groupId>com.kr.formdang</groupId>
-            <artifactId>web-dao</artifactId>
+            <artifactId>domain-core</artifactId>
             <version>0.0.1</version>
         </dependency>
 
         <dependency>
             <groupId>com.kr.formdang</groupId>
-            <artifactId>web-middleware</artifactId>
+            <artifactId>core-web</artifactId>
             <version>0.0.1</version>
         </dependency>
 

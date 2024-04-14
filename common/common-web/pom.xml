@@ -10,10 +10,10 @@
         <version>0.0.1</version>
     </parent>
 
-    <artifactId>web-core</artifactId>
+    <artifactId>common-web</artifactId>
     <version>0.0.1</version>
-    <name>web-core</name>
-    <description>web-core</description>
+    <name>common-web</name>
+    <description>common-web</description>
 
     <dependencies>
 

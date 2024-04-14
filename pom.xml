@@ -19,11 +19,11 @@
   <description>formdang-sp-was</description>
 
   <modules>
-    <module>api/web-api</module>
-    <module>core/web-middleware</module>
-    <module>core/web-core</module>
-    <module>core/web-model</module>
-    <module>domain/web-dao</module>
+    <module>app/form-app-external-api</module>
+    <module>core/core-web</module>
+    <module>domain/domain-core</module>
+    <module>common/common-web</module>
+    <module>modules/web-model</module>
   </modules>
 
   <properties>
