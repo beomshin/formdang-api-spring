@@ -1,6 +1,6 @@
 package com.kr.formdang.service.file;
 
-import com.kr.formdang.utils.file.dto.FileDataDto;
+import com.kr.formdang.service.file.dto.FormFile;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.concurrent.CompletableFuture;
@@ -8,6 +8,6 @@ import java.util.concurrent.CompletableFuture;
 public interface FileService<T> {
 
     T uploadSingle(MultipartFile file);
-    CompletableFuture<FileDataDto> uploadSingle(FileDataDto fileDataDto);
+    CompletableFuture<T> uploadSingle(FormFile formFile);
 
 }

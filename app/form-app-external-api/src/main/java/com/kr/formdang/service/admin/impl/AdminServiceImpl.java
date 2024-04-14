@@ -5,7 +5,6 @@ import com.kr.formdang.entity.AdminTbEntity;
 import com.kr.formdang.entity.FileUploadFailTbEntity;
 import com.kr.formdang.exception.CustomException;
 import com.kr.formdang.common.GlobalCode;
-import com.kr.formdang.utils.file.dto.GlobalFile;
 import com.kr.formdang.external.auth.JwtTokenResponse;
 import com.kr.formdang.repository.AdminSubTbRepository;
 import com.kr.formdang.repository.AdminTbRepository;
@@ -13,6 +12,7 @@ import com.kr.formdang.repository.FileUploadFailTbRepository;
 import com.kr.formdang.service.admin.AdminService;
 import com.kr.formdang.service.api.TokenService;
 import com.kr.formdang.utils.file.FileUtils;
+import com.kr.formdang.service.file.dto.S3File;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -120,7 +120,7 @@ public class AdminServiceImpl implements AdminService {
 
     @Override
     @Transactional
-    public boolean updateProfile(Long aid, GlobalFile profile, MultipartFile file) {
+    public boolean updateProfile(Long aid, S3File profile, MultipartFile file) {
         if (profile == null) {
             log.error("■ 이미지 업로드 실패 확인 필요");
             fileUploadFailTbRepository.save(FileUploadFailTbEntity.builder()

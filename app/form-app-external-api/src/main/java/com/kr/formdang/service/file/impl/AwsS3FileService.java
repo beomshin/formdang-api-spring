@@ -3,11 +3,12 @@ package com.kr.formdang.service.file.impl;
 import com.kr.formdang.utils.file.AwsS3Utils;
 import com.kr.formdang.exception.CustomException;
 import com.kr.formdang.common.GlobalCode;
-import com.kr.formdang.utils.file.dto.GlobalFile;
-import com.kr.formdang.utils.file.dto.FileDataDto;
+import com.kr.formdang.service.file.dto.FormFile;
 import com.kr.formdang.service.file.FileService;
 import com.kr.formdang.utils.file.FileUtils;
+import com.kr.formdang.service.file.dto.S3File;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
@@ -18,7 +19,7 @@ import java.util.concurrent.CompletableFuture;
 
 @Service
 @Slf4j
-public class FileServiceImpl implements FileService<GlobalFile> {
+public class AwsS3FileService implements FileService<S3File> {
 
     @Value("${file.size.image}")
     private int IMAGE_MAX_SIZE; // 30MB
@@ -32,37 +33,38 @@ public class FileServiceImpl implements FileService<GlobalFile> {
      * 영상: mp4, avi, wmv, mpg, mkv, webm
      *
      */
-    public FileServiceImpl() {
+    public AwsS3FileService() {
         this.accessFileExt = new HashSet<>(Arrays.asList(".jpg", ".jpeg", ".png", ".gif", ".bmp"));
     }
 
     @Override
-    public GlobalFile uploadSingle(MultipartFile file) {
+    public S3File uploadSingle(MultipartFile file) {
         return this.upload(file, IMAGE_MAX_SIZE, accessFileExt); // 이미지 최대사이즈, 확장자 제어 결정 후 공통 함수 호출
     }
 
     @Override
     @Async
-    public CompletableFuture<FileDataDto> uploadSingle(FileDataDto fileDataDto) {
-        GlobalFile globalFile = this.upload(fileDataDto.getFile(), IMAGE_MAX_SIZE, accessFileExt);
-        fileDataDto.setAwsFile(globalFile);
-        return CompletableFuture.completedFuture(fileDataDto);
+    public CompletableFuture<S3File> uploadSingle(FormFile formFile) {
+        S3File s3File = this.upload(formFile.getFile(), IMAGE_MAX_SIZE, accessFileExt);
+        s3File.setOrder(formFile.getOrder());
+        s3File.setType(formFile.getType());
+        return CompletableFuture.completedFuture(this.upload(formFile.getFile(), IMAGE_MAX_SIZE, accessFileExt));
     }
 
 
-    private GlobalFile upload(MultipartFile file, Integer maxSize, Set<String> accessSet) {
+    private S3File upload(MultipartFile file, Integer maxSize, Set<String> accessSet) {
         try {
             if (file == null || file.isEmpty()) throw new CustomException(GlobalCode.NOT_EXIST_FILE); // 파일 누락
             String ext = FileUtils.getFileExtension(Objects.requireNonNull(file.getOriginalFilename())); // 확장자 제어
             if (file.getSize() >= maxSize || !accessSet.contains(ext)) throw new CustomException(GlobalCode.FAIL_FILE_CONDITION); // 파일 사이즈 제어
-            log.info("[파일 업로드 요청] 파일명 [{}], 사이즈 [{}], 확장자 [{}]", file.getOriginalFilename(), file.getSize(), ext);
+            log.info("[AWS S3 파일 업로드 요청] 파일명 [{}], 사이즈 [{}], 확장자 [{}]", file.getOriginalFilename(), file.getSize(), ext);
             String path = AwsS3Utils.fileUploadToS3(file.getInputStream(), file.getSize(), file.getContentType(), ext);
-            log.debug("[파일 업로드 성공] 파일 URL: {}", path);
-            return path != null ? new GlobalFile(file, path) : null;
+            log.debug("[AWS S3 파일 업로드 성공] 파일 URL: {}", path);
+            return new S3File(path, file.getSize(), file.getOriginalFilename(), StringUtils.isNoneBlank(path));
         } catch (Exception e) {
             log.error("[파일 업로드 실패]======================>");
             log.error("", e);
-            return null;
+            return new S3File();
         }
     }
 }

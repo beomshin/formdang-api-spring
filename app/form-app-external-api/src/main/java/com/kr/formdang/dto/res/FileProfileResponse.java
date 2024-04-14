@@ -1,7 +1,8 @@
 package com.kr.formdang.dto.res;
 
-import com.kr.formdang.utils.file.dto.GlobalFile;
+
 import com.kr.formdang.root.DefaultResponse;
+import com.kr.formdang.service.file.dto.S3File;
 import lombok.*;
 
 @Getter
@@ -11,7 +12,7 @@ import lombok.*;
 @AllArgsConstructor
 public class FileProfileResponse extends DefaultResponse {
 
-    private GlobalFile file;
+    private S3File file;
     private String accessToken;
 
 }

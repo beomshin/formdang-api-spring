@@ -5,10 +5,10 @@ import com.kr.formdang.entity.AdminSubTbEntity;
 import com.kr.formdang.entity.FormTbEntity;
 import com.kr.formdang.entity.QuestionTbEntity;
 import com.kr.formdang.exception.CustomException;
-import com.kr.formdang.utils.file.dto.FileDataDto;
 import com.kr.formdang.layer.FormDataDto;
 import com.kr.formdang.layer.FormFindDto;
 import com.kr.formdang.layer.QuestionDataDto;
+import com.kr.formdang.service.file.dto.S3File;
 import org.springframework.data.domain.Page;
 
 import java.util.List;
@@ -23,7 +23,7 @@ public interface FormService {
     FormTbEntity findForm(Long aid, Long fid) throws CustomException;
     List<QuestionTbEntity> findQuestions(Long fid) throws CustomException;
     void updateForm(FormDataDto formDataDto, List<QuestionDataDto> questionDataDtos) throws CustomException;
-    void updateImage(Long fid, List<FileDataDto> fileDataDtos);
+    void updateImage(Long fid, List<S3File> formFiles);
     FormTbEntity findPaper(FormDataDto formDataDto) throws CustomException;
     long validateLogin(String token) throws CustomException;
 }

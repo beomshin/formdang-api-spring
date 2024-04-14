@@ -58,6 +58,8 @@ public class FormController {
             @RequestHeader("Authorization") String token)
     {
         try {
+            if (!JwtTokenProvider.validateToken(token)) throw new CustomException(GlobalCode.FAIL_VALIDATE_TOKEN);// 토큰 검사
+
             log.info("■ 1. 폼 작성하기 요청 성공");
             final String pattern = "yyyyMMdd";
             final Long aid = JwtTokenProvider.getId(token); // 관리자 아이디 세팅

@@ -9,7 +9,6 @@ import com.kr.formdang.provider.JwtTokenProvider;
 import com.kr.formdang.mapper.FormMapper;
 import com.kr.formdang.common.GlobalCode;
 import com.kr.formdang.dao.FindFormDto;
-import com.kr.formdang.utils.file.dto.FileDataDto;
 import com.kr.formdang.layer.FormDataDto;
 import com.kr.formdang.layer.FormFindDto;
 import com.kr.formdang.layer.QuestionDataDto;
@@ -17,6 +16,7 @@ import com.kr.formdang.repository.*;
 import com.kr.formdang.service.form.FormDataService;
 import com.kr.formdang.service.form.FormService;
 import com.kr.formdang.utils.file.FileUtils;
+import com.kr.formdang.service.file.dto.S3File;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -200,22 +200,23 @@ public class FormServiceImpl implements FormService {
 
     @Override
     @Transactional
-    public void updateImage(Long fid, List<FileDataDto> fileDataDtos) {
+    public void updateImage(Long fid, List<S3File> formFiles) {
         log.info("■ 5. 이미지 URL 업데이트 쿼리 실행");
-        for (FileDataDto fileDataDto : fileDataDtos) {
-            if (fileDataDto.isUploadSuccess()) {
-                if (fileDataDto.isLogo()) {
-                    formTbRepository.updateLogoUrl(fid, fileDataDto.getAwsFile().getPath());
-                } else if (fileDataDto.isQuestion()) {
-                    questionTbRepository.updateImageUrl(fid, fileDataDto.getAwsFile().getPath(), fileDataDto.getOrder());
+        for (S3File formFile : formFiles) {
+            if (formFile.isUploadSuccess()) {
+                if (formFile.isLogo()) {
+                    formTbRepository.updateLogoUrl(fid, formFile.getPath());
+                } else if (formFile.isQuestion()) {
+                    questionTbRepository.updateImageUrl(fid, formFile.getPath(), formFile.getOrder());
                 }
             } else {
                 log.error("■ 이미지 업로드 실패 확인 필요");
-                fileUploadFailTbRepository.save(FileUploadFailTbEntity.builder()
-                                .oriName(fileDataDto.getFile().getOriginalFilename())
-                                .ext(FileUtils.getFileExtension(fileDataDto.getFile().getOriginalFilename()))
-                                .size(String.valueOf(fileDataDto.getFile().getSize()))
-                        .build());
+                FileUploadFailTbEntity failTbEntity = FileUploadFailTbEntity.builder()
+                        .oriName(formFile.getOriName())
+                        .ext(FileUtils.getFileExtension(formFile.getOriName()))
+                        .size(String.valueOf(formFile.getSize()))
+                        .build();
+                fileUploadFailTbRepository.save(failTbEntity);
             }
         }
     }
