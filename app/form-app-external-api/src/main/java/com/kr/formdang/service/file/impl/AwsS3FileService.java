@@ -48,7 +48,7 @@ public class AwsS3FileService implements FileService<S3File> {
         S3File s3File = this.upload(formFile.getFile(), IMAGE_MAX_SIZE, accessFileExt);
         s3File.setOrder(formFile.getOrder());
         s3File.setType(formFile.getType());
-        return CompletableFuture.completedFuture(this.upload(formFile.getFile(), IMAGE_MAX_SIZE, accessFileExt));
+        return CompletableFuture.completedFuture(s3File);
     }
 
 
@@ -57,9 +57,9 @@ public class AwsS3FileService implements FileService<S3File> {
             if (file == null || file.isEmpty()) throw new CustomException(GlobalCode.NOT_EXIST_FILE); // 파일 누락
             String ext = FileUtils.getFileExtension(Objects.requireNonNull(file.getOriginalFilename())); // 확장자 제어
             if (file.getSize() >= maxSize || !accessSet.contains(ext)) throw new CustomException(GlobalCode.FAIL_FILE_CONDITION); // 파일 사이즈 제어
-            log.info("[AWS S3 파일 업로드 요청] 파일명 [{}], 사이즈 [{}], 확장자 [{}]", file.getOriginalFilename(), file.getSize(), ext);
+            log.info("■ [AWS S3 파일 업로드 요청] 파일명 [{}], 사이즈 [{}], 확장자 [{}]", file.getOriginalFilename(), file.getSize(), ext);
             String path = AwsS3Utils.fileUploadToS3(file.getInputStream(), file.getSize(), file.getContentType(), ext);
-            log.debug("[AWS S3 파일 업로드 성공] 파일 URL: {}", path);
+            log.debug("■ [AWS S3 파일 업로드 성공] 파일 URL: {}", path);
             return new S3File(path, file.getSize(), file.getOriginalFilename(), StringUtils.isNoneBlank(path));
         } catch (Exception e) {
             log.error("[파일 업로드 실패]======================>");

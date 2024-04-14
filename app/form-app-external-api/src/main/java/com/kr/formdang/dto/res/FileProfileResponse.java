@@ -12,7 +12,7 @@ import lombok.*;
 @AllArgsConstructor
 public class FileProfileResponse extends DefaultResponse {
 
-    private S3File file;
     private String accessToken;
+    private String logoUrl;
 
 }

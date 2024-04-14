@@ -38,10 +38,10 @@ public class JwtTokenProvider {
         try {
             log.debug("■ JWT 토큰 유효성 검사");
             Jwts.parser().setSigningKey(JWT_KEY).parseClaimsJws(parseJwt(token));
-            return true;
+            return false;
         } catch (Exception e) {
             log.error("[토큰 인증 실패 에러] ==================> ");
-            return false;
+            return true;
         }
     }
 

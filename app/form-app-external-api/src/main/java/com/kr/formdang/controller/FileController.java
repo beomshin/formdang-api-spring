@@ -51,8 +51,6 @@ public class FileController {
     public ResponseEntity<RootResponse> uploadFileProfile(@ModelAttribute @Valid FileProfileRequest fileRequest, @RequestHeader("Authorization") String token) {
         try {
             log.info("■ 1. 프로필 등록 요청 성공");
-            if (!JwtTokenProvider.validateToken(token)) throw new CustomException(GlobalCode.FAIL_VALIDATE_TOKEN); // 토큰 검사
-
             final Long aid = JwtTokenProvider.getId(token); // 관리자 아이디 세팅
             S3File profile = awsS3FileService.uploadSingle(fileRequest.getProfile()); // 파일 등록
             boolean result = adminService.updateProfile(aid, profile, fileRequest.getProfile()); // 프로필 정보 업데이트
@@ -61,7 +59,7 @@ public class FileController {
                 log.debug("■ JWT 토큰 재발급 신청 [프로필 값 업데이트]");
                 JwtTokenResponse jwtTokenResponse = tokenService.getLoginToken(String.valueOf(aid), JwtTokenProvider.getName(token), profile.getPath(), accessKey); // 폼당폼당 JWT 토큰 요청 (프로필 내용 변경)
                 log.info("■ 3. 프로필 등록 응답 성공");
-                return ResponseEntity.ok().body(new FileProfileResponse(profile, jwtTokenResponse.getAccessToken()));
+                return ResponseEntity.ok().body(new FileProfileResponse(jwtTokenResponse.getAccessToken(), profile.getPath()));
             } else { // 프로필 등록 실패
                 log.error("■ 3. 프로필 등록 응답 실패");
                 return ResponseEntity.ok().body(new DefaultResponse(GlobalCode.FAIL_UPLOAD_PROFILE));
@@ -90,7 +88,6 @@ public class FileController {
     public ResponseEntity<RootResponse> uploadFileList(@ModelAttribute @Valid FileListRequest request, @RequestHeader("Authorization") String token, @PathVariable("fid") Long fid){
         try {
             log.info("■ 1. 이미지 리스트 등록 요청 성공 (fid: {})", fid);
-            if (!JwtTokenProvider.validateToken(token)) throw new CustomException(GlobalCode.FAIL_VALIDATE_TOKEN);// 토큰 검사
             final Long aid = JwtTokenProvider.getId(token); // 관리자 아이디 세팅
             formService.findForm(aid, fid); // 유효한 폼 유효성 처리
 

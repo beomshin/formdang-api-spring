@@ -58,7 +58,6 @@ public class FormController {
             @RequestHeader("Authorization") String token)
     {
         try {
-            if (!JwtTokenProvider.validateToken(token)) throw new CustomException(GlobalCode.FAIL_VALIDATE_TOKEN);// 토큰 검사
 
             log.info("■ 1. 폼 작성하기 요청 성공");
             final String pattern = "yyyyMMdd";
@@ -283,7 +282,7 @@ public class FormController {
             FormDataDto formDataDto = FormDataDto.builder()
                     .fid(fid)
                     .type(request.getType())
-                    .token(request.getTitle())
+                    .title(request.getTitle())
                     .detail(request.getDetail())
                     .beginDt(beginDt)
                     .endDt(endDt)
@@ -332,7 +331,8 @@ public class FormController {
                                                   @RequestParam @NotBlank String key) {
         try {
             log.info("■ 1. 유저 화면 정보 조회 요청 성공");
-            long aid = formService.validateLogin(token);
+            long aid = JwtTokenProvider.getId(token);
+
             FormTbEntity formTbEntity = formService.findPaper(FormDataDto.builder()
                             .fid(fid)
                             .type(type)

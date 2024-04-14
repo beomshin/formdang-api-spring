@@ -271,11 +271,4 @@ public class FormServiceImpl implements FormService {
         }
     }
 
-    @Override
-    public long validateLogin(String token) throws CustomException {
-        log.info("■ 로그인 유저 검사");
-        if (!JwtTokenProvider.validateToken(token)) throw new CustomException(GlobalCode.NOT_LOGIN_GROUP_FORM); // 그룹 폼은 로그인 권한 필요
-        return JwtTokenProvider.getId(token);
-    }
-
 }
