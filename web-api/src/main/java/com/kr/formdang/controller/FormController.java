@@ -1,6 +1,7 @@
 package com.kr.formdang.controller;
 
 import com.kr.formdang.dao.FormTbDto;
+import com.kr.formdang.dto.res.*;
 import com.kr.formdang.entity.AdminSubTbEntity;
 import com.kr.formdang.entity.FormTbEntity;
 import com.kr.formdang.entity.QuestionTbEntity;
@@ -10,9 +11,8 @@ import com.kr.formdang.common.GlobalCode;
 import com.kr.formdang.layer.FormDataDto;
 import com.kr.formdang.layer.FormFindDto;
 import com.kr.formdang.layer.QuestionDataDto;
-import com.kr.formdang.net.req.FormSubmitRequest;
-import com.kr.formdang.net.req.FormUpdateRequest;
-import com.kr.formdang.net.res.*;
+import com.kr.formdang.dto.req.FormSubmitRequest;
+import com.kr.formdang.dto.req.FormUpdateRequest;
 import com.kr.formdang.root.DefaultResponse;
 import com.kr.formdang.root.RootResponse;
 import com.kr.formdang.service.form.FormDataService;
@@ -64,10 +64,32 @@ public class FormController {
             final Timestamp beginDt = TimeUtils.getTimeStamp(request.getBeginDt(), pattern);
             final Timestamp endDt = TimeUtils.getTimeStamp(request.getEndDt(), pattern);
 
-            FormTbEntity formTbEntity = formDataService.getFormData(new FormDataDto(request, aid, beginDt, endDt)); // 폼 엔티티 생성
+            FormTbEntity formTbEntity = formDataService.getFormData(FormDataDto.builder()
+                    .type(request.getType())
+                    .token(request.getTitle())
+                    .detail(request.getDetail())
+                    .beginDt(beginDt)
+                    .endDt(endDt)
+                    .questionCount(request.getQuestionCount() == request.getQuestion().size() ? request.getQuestionCount() : request.getQuestion().size())
+                    .status(request.getStatus())
+                    .maxRespondent(request.getMaxRespondent())
+                    .logoUrl(request.getLogoUrl())
+                    .themeUrl(request.getThemeUrl())
+                    .aid(aid)
+                    .build()); // 폼 엔티티 생성
 
             List<QuestionTbEntity> questionTbEntities = request.getQuestion().stream()
-                    .map(it -> formDataService.getQuestionData(new QuestionDataDto(it)))
+                    .map(it -> formDataService.getQuestionData(QuestionDataDto.builder()
+                                    .type(it.getType())
+                                    .order(it.getOrder())
+                                    .title(it.getTitle())
+                                    .placeholder(it.getPlaceholder())
+                                    .imageUrl(it.getImageUrl())
+                                    .detail(it.getDetail())
+                                    .exampleDetail(it.getExampleDetail())
+                                    .count(it.getCount())
+                                    .answer(it.getAnswer())
+                            .build()))
                     .collect(Collectors.toList()); // 질문 엔티티 리스트 생성
 
             FormTbEntity formTb = formService.submitForm(formTbEntity, questionTbEntities); // 폼 저장
@@ -256,8 +278,32 @@ public class FormController {
             final Timestamp beginDt = TimeUtils.getTimeStamp(request.getBeginDt(), pattern);
             final Timestamp endDt = TimeUtils.getTimeStamp(request.getEndDt(), pattern);
 
-            FormDataDto formDataDto = new FormDataDto(request, fid, aid, beginDt, endDt); // 폼 데이터
-            List<QuestionDataDto> questionDataDtos = request.getQuestion().stream().map(it -> new QuestionDataDto(it)).sorted(Comparator.comparing(QuestionDataDto::getOrder)).collect(Collectors.toList()); // 질문 데이터 order 순 정렬
+            FormDataDto formDataDto = FormDataDto.builder()
+                    .fid(fid)
+                    .type(request.getType())
+                    .token(request.getTitle())
+                    .detail(request.getDetail())
+                    .beginDt(beginDt)
+                    .endDt(endDt)
+                    .questionCount(request.getQuestionCount() == request.getQuestion().size() ? request.getQuestionCount() : request.getQuestion().size())
+                    .status(request.getStatus())
+                    .maxRespondent(request.getMaxRespondent())
+                    .logoUrl(request.getLogoUrl())
+                    .themeUrl(request.getThemeUrl())
+                    .aid(aid)
+                    .build(); // 폼 데이터
+
+            List<QuestionDataDto> questionDataDtos = request.getQuestion().stream().map(it -> QuestionDataDto.builder()
+                    .type(it.getType())
+                    .order(it.getOrder())
+                    .title(it.getTitle())
+                    .placeholder(it.getPlaceholder())
+                    .imageUrl(it.getImageUrl())
+                    .detail(it.getDetail())
+                    .exampleDetail(it.getExampleDetail())
+                    .count(it.getCount())
+                    .answer(it.getAnswer())
+                    .build()).sorted(Comparator.comparing(QuestionDataDto::getOrder)).collect(Collectors.toList()); // 질문 데이터 order 순 정렬
             formService.updateForm(formDataDto, questionDataDtos); // 업데이트 처리
             return ResponseEntity.ok().body(new DefaultResponse());
         } catch (CustomException e) {
@@ -285,7 +331,12 @@ public class FormController {
         try {
             log.info("■ 1. 유저 화면 정보 조회 요청 성공");
             long aid = formService.validateLogin(token);
-            FormTbEntity formTbEntity = formService.findPaper(new FormDataDto(fid, type, key, aid)); // 폼 상세 조회
+            FormTbEntity formTbEntity = formService.findPaper(FormDataDto.builder()
+                            .fid(fid)
+                            .type(type)
+                            .key(key)
+                            .aid(aid)
+                    .build()); // 폼 상세 조회
             List<QuestionTbEntity> questionTbEntities = formService.findQuestions(fid); // 질문 리스트 조회
             log.info("■ 4. 유저 화면 정보 조회 응답 성공");
             final String separator = "\\|";

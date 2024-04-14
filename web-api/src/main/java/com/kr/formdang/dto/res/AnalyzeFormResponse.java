@@ -1,4 +1,4 @@
-package com.kr.formdang.net.res;
+package com.kr.formdang.dto.res;
 
 import com.kr.formdang.root.DefaultResponse;
 import lombok.*;

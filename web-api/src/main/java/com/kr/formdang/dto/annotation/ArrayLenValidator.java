@@ -1,4 +1,4 @@
-package com.kr.formdang.net.annotation;
+package com.kr.formdang.dto.annotation;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;

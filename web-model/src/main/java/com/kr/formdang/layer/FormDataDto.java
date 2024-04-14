@@ -1,16 +1,15 @@
 package com.kr.formdang.layer;
 
-import com.kr.formdang.net.req.FormSubmitRequest;
-import com.kr.formdang.net.req.FormUpdateRequest;
 import lombok.*;
 
 import java.sql.Timestamp;
-import java.text.ParseException;
 
+@AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
 @ToString
+@Builder
 public class FormDataDto {
 
     private Long fid;
@@ -28,39 +27,4 @@ public class FormDataDto {
     private String key; // 유저 화면 폼 키
     private String token; // 헤더 토큰
 
-    public FormDataDto(FormSubmitRequest request, Long aid, Timestamp beginDt, Timestamp endDt) throws ParseException {
-        this.type = request.getType();
-        this.title = request.getTitle();
-        this.detail = request.getDetail();
-        this.beginDt = beginDt;
-        this.endDt = endDt;
-        this.questionCount = request.getQuestionCount() == request.getQuestion().size() ? request.getQuestionCount() : request.getQuestion().size();
-        this.status = request.getStatus();
-        this.maxRespondent = request.getMaxRespondent();
-        this.logoUrl = request.getLogoUrl();
-        this.themeUrl = request.getThemeUrl();
-        this.aid = aid;
-    }
-
-    public FormDataDto(FormUpdateRequest request, Long fid, Long aid, Timestamp beginDt, Timestamp endDt) throws ParseException {
-        this.fid = fid;
-        this.type = request.getType();
-        this.title = request.getTitle();
-        this.detail = request.getDetail();
-        this.beginDt = beginDt;
-        this.endDt = endDt;
-        this.questionCount = request.getQuestionCount() == request.getQuestion().size() ? request.getQuestionCount() : request.getQuestion().size();
-        this.status = request.getStatus();
-        this.maxRespondent = request.getMaxRespondent();
-        this.logoUrl = request.getLogoUrl();
-        this.themeUrl = request.getThemeUrl();
-        this.aid = aid;
-    }
-
-    public FormDataDto(Long fid, Integer type, String key, Long aid) {
-        this.fid = fid;
-        this.type = type;
-        this.key = key;
-        this.aid = aid;
-    }
 }

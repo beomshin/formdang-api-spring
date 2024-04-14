@@ -1,4 +1,4 @@
-package com.kr.formdang.net.req;
+package com.kr.formdang.dto.req;
 
 import com.kr.formdang.root.DefaultRequest;
 import lombok.*;

@@ -1,26 +1,21 @@
 package com.kr.formdang.layer;
 
 import com.kr.formdang.common.GlobalFile;
-import com.kr.formdang.net.req.FileListRequest;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.web.multipart.MultipartFile;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class FileDataDto {
 
     private MultipartFile file;
     private Integer order;
     private Integer type;
     private GlobalFile awsFile;
-
-    public FileDataDto(FileListRequest fileListRequest, int idx) {
-        this.file = fileListRequest.getFiles().get(idx);
-        this.order = fileListRequest.getOrders().get(idx);
-        this.type = fileListRequest.getTypes().get(idx);
-    }
 
     public boolean isLogo() {
         return this.type == 0;

@@ -1,8 +1,8 @@
-package com.kr.formdang.net.req;
+package com.kr.formdang.dto.req;
 
-import com.kr.formdang.net.annotation.ArrayLenValid;
-import com.kr.formdang.net.annotation.BeforeDateValid;
-import com.kr.formdang.net.annotation.DateValid;
+import com.kr.formdang.dto.annotation.ArrayLenValid;
+import com.kr.formdang.dto.annotation.BeforeDateValid;
+import com.kr.formdang.dto.annotation.DateValid;
 import com.kr.formdang.root.DefaultRequest;
 import lombok.*;
 

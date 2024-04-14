@@ -6,9 +6,9 @@ import com.kr.formdang.common.GlobalCode;
 import com.kr.formdang.common.GlobalFile;
 import com.kr.formdang.external.auth.JwtTokenResponse;
 import com.kr.formdang.layer.FileDataDto;
-import com.kr.formdang.net.req.FileListRequest;
-import com.kr.formdang.net.req.FileProfileRequest;
-import com.kr.formdang.net.res.FileProfileResponse;
+import com.kr.formdang.dto.req.FileListRequest;
+import com.kr.formdang.dto.req.FileProfileRequest;
+import com.kr.formdang.dto.res.FileProfileResponse;
 import com.kr.formdang.root.DefaultResponse;
 import com.kr.formdang.service.admin.AdminService;
 import com.kr.formdang.service.api.TokenService;
@@ -96,8 +96,13 @@ public class FileController {
 
             List<FileDataDto> fileDataDtos = new ArrayList<>();
             for (int i=0; i < fileListRequest.getFiles().size(); i++) {
-                fileDataDtos.add(new FileDataDto(fileListRequest, i));
+                fileDataDtos.add(FileDataDto.builder()
+                        .file(fileListRequest.getFiles().get(i))
+                        .order(fileListRequest.getOrders().get(i))
+                        .type(fileListRequest.getTypes().get(i))
+                        .build());
             }
+
 
             StopWatch stopWatch = new StopWatch();
             log.info("■ 3. AWS 이미지 등록 비동기 처리 시작");

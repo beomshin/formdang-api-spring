@@ -1,4 +1,4 @@
-package com.kr.formdang.net.annotation;
+package com.kr.formdang.dto.annotation;
 
 import lombok.extern.slf4j.Slf4j;
 

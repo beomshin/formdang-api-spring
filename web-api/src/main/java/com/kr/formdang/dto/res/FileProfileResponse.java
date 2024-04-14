@@ -1,4 +1,4 @@
-package com.kr.formdang.net.res;
+package com.kr.formdang.dto.res;
 
 import com.kr.formdang.common.GlobalFile;
 import com.kr.formdang.root.DefaultResponse;
@@ -9,8 +9,9 @@ import lombok.*;
 @ToString(callSuper = true)
 @NoArgsConstructor
 @AllArgsConstructor
-public class FileResponse extends DefaultResponse {
+public class FileProfileResponse extends DefaultResponse {
 
     private GlobalFile file;
+    private String accessToken;
 
 }

@@ -1,14 +1,12 @@
 package com.kr.formdang.layer;
 
-import com.kr.formdang.net.req.FormSubmitRequest;
-import com.kr.formdang.net.req.FormUpdateRequest;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 
+@AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @ToString
+@Builder
 public class QuestionDataDto {
 
     private Integer type; // 질문 타입 ( 0: 주관식, 1: 객관식 )
@@ -21,27 +19,4 @@ public class QuestionDataDto {
     private String[] answer; // 질문 정답
     private String[] exampleDetail; // 질문 보기 상세 내용
 
-    public QuestionDataDto(FormSubmitRequest.FormSubmitQuestionRequest request) {
-        this.type = request.getType();
-        this.order = request.getOrder();
-        this.title = request.getTitle();
-        this.placeholder = request.getPlaceholder();
-        this.imageUrl = request.getImageUrl();
-        this.detail = request.getDetail();
-        this.exampleDetail = request.getExampleDetail();
-        this.count = request.getCount();
-        this.answer = request.getAnswer();
-    }
-
-    public QuestionDataDto(FormUpdateRequest.FormSubmitQuestionRequest request) {
-        this.type = request.getType();
-        this.order = request.getOrder();
-        this.title = request.getTitle();
-        this.placeholder = request.getPlaceholder();
-        this.imageUrl = request.getImageUrl();
-        this.detail = request.getDetail();
-        this.exampleDetail = request.getExampleDetail();
-        this.count = request.getCount();
-        this.answer = request.getAnswer();
-    }
 }
