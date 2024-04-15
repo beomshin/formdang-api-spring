@@ -13,6 +13,12 @@ import java.util.concurrent.Executor;
 @EnableAsync
 public class AsyncConfig extends AsyncConfigurerSupport {
 
+    /**
+     * 비동기 설정
+     *
+     * 비동기 처리 쓰레드 개수 설정 및 큐를 이용한 비동기 버퍼 개수 설정
+     * @return
+     */
     @Override
     public Executor getAsyncExecutor() {
         int queueCapacity = 50; // Queue 사이즈
@@ -23,7 +29,7 @@ public class AsyncConfig extends AsyncConfigurerSupport {
         executor.setCorePoolSize(corePoolSize);
         executor.setMaxPoolSize(maxPoolSize);
         executor.setQueueCapacity(queueCapacity);
-        executor.setThreadNamePrefix("formdang-");
+        executor.setThreadNamePrefix("form-async");
         executor.initialize();
         return executor;
     }

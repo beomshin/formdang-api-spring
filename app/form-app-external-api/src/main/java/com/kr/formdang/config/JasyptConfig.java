@@ -15,13 +15,17 @@ import org.springframework.context.annotation.Configuration;
 public class JasyptConfig {
 
     @Value("${encryptor.key}")
-    private String password;
+    private String password; // jvm option 을 통해 전달
 
     private final String ALGORITHM = "PBEWITHHMACSHA512ANDAES_256"; // HmacSHA512로 부터 생성된 키를 사용하여 데이터를 AES-256 알고리즘을 이용하여 암호화
     private final int SALT = 3308;
     private final int POOL_SIZE = 1;
     private final String ENCODING = "base64";
 
+    /**
+     * properties 중요 정보 암,복호화 모듈
+     * @return
+     */
     @Bean("jasyptStringEncryptor")
     public StringEncryptor stringEncryptor(){
 
