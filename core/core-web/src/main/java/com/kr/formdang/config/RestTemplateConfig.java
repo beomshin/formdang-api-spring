@@ -63,7 +63,7 @@ public class RestTemplateConfig {
         // 1. 타임아웃 설정시 HttpComponentsClientHttpRequestFactory 객체를 생성합니다.
         HttpComponentsClientHttpRequestFactory factory = new HttpComponentsClientHttpRequestFactory();
         factory.setConnectTimeout(Duration.ofSeconds(5).getNano()); // 타임아웃 설정 5초
-        factory.setReadTimeout(Duration.ofSeconds(15).getNano()); // 타임아웃 설정 5초
+        factory.setReadTimeout(Duration.ofSeconds(15).getNano()); // 타임아웃 설정 15초
 
         //Apache HttpComponents : 각 호스트(IP와 Port의 조합)당 커넥션 풀에 생성가능한 커넥션 수
         HttpClient httpClient = HttpClientBuilder.create()

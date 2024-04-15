@@ -18,8 +18,8 @@ public class ObjectMapperConfig {
     public ObjectMapper objectMapper() {
         log.info("[Bean][apiObjectMapper] 설정 ");
         ObjectMapper objectMapper = new ObjectMapper()
-                .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-        objectMapper.setPropertyNamingStrategy(PropertyNamingStrategy.SNAKE_CASE);
+                .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false); // unknown property 처리 방식 설정 ( false 를 통해 무시 처리)
+        objectMapper.setPropertyNamingStrategy(PropertyNamingStrategy.SNAKE_CASE); // 카카오, 구글 응답 값 SNAKE CASE로 해당 전략 사용
         objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL); // NULL이 아닌 값만 응답받기(NULL인 경우는 생략)
         return objectMapper;
     }

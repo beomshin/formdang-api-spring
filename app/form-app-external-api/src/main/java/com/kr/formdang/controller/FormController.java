@@ -1,12 +1,13 @@
 package com.kr.formdang.controller;
 
 import com.kr.formdang.dao.FormTbDto;
+import com.kr.formdang.dto.auth.AuthUser;
+import com.kr.formdang.dto.auth.JwtTokenAuthUser;
 import com.kr.formdang.dto.res.*;
 import com.kr.formdang.entity.AdminSubTbEntity;
 import com.kr.formdang.entity.FormTbEntity;
 import com.kr.formdang.entity.QuestionTbEntity;
 import com.kr.formdang.exception.CustomException;
-import com.kr.formdang.provider.JwtTokenProvider;
 import com.kr.formdang.common.GlobalCode;
 import com.kr.formdang.layer.FormDataDto;
 import com.kr.formdang.layer.FormFindDto;
@@ -61,7 +62,7 @@ public class FormController {
 
             log.info("■ 1. 폼 작성하기 요청 성공");
             final String pattern = "yyyyMMdd";
-            final Long aid = JwtTokenProvider.getId(token); // 관리자 아이디 세팅
+            AuthUser authUser = new JwtTokenAuthUser(token);
             final Timestamp beginDt = TimeUtils.getTimeStamp(request.getBeginDt(), pattern);
             final Timestamp endDt = TimeUtils.getTimeStamp(request.getEndDt(), pattern);
 
@@ -76,7 +77,7 @@ public class FormController {
                     .maxRespondent(request.getMaxRespondent())
                     .logoUrl(request.getLogoUrl())
                     .themeUrl(request.getThemeUrl())
-                    .aid(aid)
+                    .aid(authUser.getId())
                     .build()); // 폼 엔티티 생성
 
             List<QuestionTbEntity> questionTbEntities = request.getQuestion().stream()
@@ -99,9 +100,6 @@ public class FormController {
 
             log.info("■ 5. 폼 작성하기 응답 성공");
             return ResponseEntity.ok().body(new SubmitFormResponse(resCode, formTb != null ? formTb.getFid() : null));
-        } catch (CustomException e) {
-            log.error("■ 5. 폼 작성하기 응답 오류", e);
-            return ResponseEntity.ok().body(new DefaultResponse(e.getCode()));
         } catch (Exception e) {
             log.error("■ 5. 폼 작성하기 응답 오류", e);
             return ResponseEntity.ok().body(new DefaultResponse(GlobalCode.SYSTEM_ERROR));
@@ -132,9 +130,9 @@ public class FormController {
     {
         try {
             log.info("■ 1. 폼리스트 조회 요청 성공");
-            final Long aid = JwtTokenProvider.getId(token); // 관리자 아이디 세팅
-            Page<FormTbDto> pages = formService.findFormList(new FormFindDto(page, type, aid, status, order)); // 폼 리스트 조회
-            AdminSubTbEntity adminSubTb = formService.analyzeForm(aid); // 종합 정보 조회
+            AuthUser authUser = new JwtTokenAuthUser(token);
+            Page<FormTbDto> pages = formService.findFormList(new FormFindDto(page, type, authUser.getId(), status, order)); // 폼 리스트 조회
+            AdminSubTbEntity adminSubTb = formService.analyzeForm(authUser.getId()); // 종합 정보 조회
             log.info("■ 4. 폼리스트 조회 응답 성공");
 
             FindFormListResponse.Analyze analyze = FindFormListResponse.Analyze
@@ -166,9 +164,6 @@ public class FormController {
                     .curPage(pages.getNumber())
                     .analyze(analyze)
                     .build());
-        } catch (CustomException e) {
-            log.error("■ 4. 폼리스트 조회 응답 오류", e);
-            return ResponseEntity.ok().body(new DefaultResponse(e.getCode()));
         } catch (Exception e) {
             log.error("■ 4. 폼리스트 조회 응답 오류", e);
             return ResponseEntity.ok().body(new DefaultResponse(GlobalCode.SYSTEM_ERROR));
@@ -190,9 +185,9 @@ public class FormController {
     public ResponseEntity<RootResponse> analyzeForm(@RequestHeader("Authorization") String token) {
         try {
             log.info("■ 1. 종합 분석 조회 요청 성공");
-            final Long aid = JwtTokenProvider.getId(token); // 관리자 아이디 세팅
+            AuthUser authUser = new JwtTokenAuthUser(token);
             log.info("■ 2. 종합 분석 로그 단게 맞추기");
-            AdminSubTbEntity adminSubTb = formService.analyzeForm(aid); // 종합 정보 조회
+            AdminSubTbEntity adminSubTb = formService.analyzeForm(authUser.getId()); // 종합 정보 조회
             log.info("■ 4. 종합 분석 조회 응답 성공");
             return ResponseEntity.ok().body(AnalyzeFormResponse
                     .builder()
@@ -201,9 +196,6 @@ public class FormController {
                             .inspectionRespondentCnt(adminSubTb.getInspectionRespondentCnt())
                             .quizRespondentCnt(adminSubTb.getQuizRespondent_cnt())
                     .build());
-        } catch (CustomException e) {
-            log.error("■ 종합 분석 조회 응답 오류", e);
-            return ResponseEntity.ok().body(new DefaultResponse(e.getCode()));
         } catch (Exception e) {
             log.error("■ 종합 분석 조회 응답 오류", e);
             return ResponseEntity.ok().body(new DefaultResponse(GlobalCode.SYSTEM_ERROR));
@@ -221,8 +213,8 @@ public class FormController {
     public ResponseEntity<RootResponse> findFormDetail(@RequestHeader("Authorization") String token, @PathVariable("fid") Long fid) {
         try {
             log.info("■ 1. 폼 상세 정보 조회 요청 성공");
-            final Long aid = JwtTokenProvider.getId(token); // 관리자 아이디 세팅
-            FormTbEntity formTbEntity = formService.findForm(aid, fid); // 폼 상세 조회
+            AuthUser authUser = new JwtTokenAuthUser(token);
+            FormTbEntity formTbEntity = formService.findForm(authUser.getId(), fid); // 폼 상세 조회
             List<QuestionTbEntity> questionTbEntities = formService.findQuestions(fid); // 질문 리스트 조회
             final String separator = "\\|";
             List<FindFormDetailResponse.FormDetailQuestionResponse> question = questionTbEntities.stream()
@@ -275,7 +267,7 @@ public class FormController {
         try {
             final String pattern = "yyyyMMdd";
             log.info("■ 1. 폼 상세 정보 조회 요청 성공");
-            final Long aid = JwtTokenProvider.getId(token); // 관리자 아이디 세팅
+            AuthUser authUser = new JwtTokenAuthUser(token);
             final Timestamp beginDt = TimeUtils.getTimeStamp(request.getBeginDt(), pattern);
             final Timestamp endDt = TimeUtils.getTimeStamp(request.getEndDt(), pattern);
 
@@ -291,7 +283,7 @@ public class FormController {
                     .maxRespondent(request.getMaxRespondent())
                     .logoUrl(request.getLogoUrl())
                     .themeUrl(request.getThemeUrl())
-                    .aid(aid)
+                    .aid(authUser.getId())
                     .build(); // 폼 데이터
 
             List<QuestionDataDto> questionDataDtos = request.getQuestion().stream().map(it -> QuestionDataDto.builder()
@@ -324,20 +316,20 @@ public class FormController {
      * @param fid
      * @return
      */
-    @GetMapping(value = "/public/form/paper")
+    @GetMapping(value = "/form/paper")
     public ResponseEntity<RootResponse> findPaper(@RequestHeader(value = "Authorization", required = false) String token,
                                                   @RequestParam @NotBlank @Min(0) Integer type,
                                                   @RequestParam @NotBlank @Min(0) Long fid,
                                                   @RequestParam @NotBlank String key) {
         try {
             log.info("■ 1. 유저 화면 정보 조회 요청 성공");
-            long aid = JwtTokenProvider.getId(token);
+            AuthUser authUser = new JwtTokenAuthUser(token);
 
             FormTbEntity formTbEntity = formService.findPaper(FormDataDto.builder()
                             .fid(fid)
                             .type(type)
                             .key(key)
-                            .aid(aid)
+                            .aid(authUser.getId())
                     .build()); // 폼 상세 조회
             List<QuestionTbEntity> questionTbEntities = formService.findQuestions(fid); // 질문 리스트 조회
             log.info("■ 4. 유저 화면 정보 조회 응답 성공");
@@ -369,7 +361,7 @@ public class FormController {
                             .logoUrl(formTbEntity.getLogoUrl())
                             .themeUrl(formTbEntity.getThemeUrl())
                             .question(question)
-                            .worker(aid == formTbEntity.getAid())
+                            .worker(authUser.getId() == formTbEntity.getAid())
                     .build());
         } catch (CustomException e) {
             log.error("■ 유저 화면 정보 조회 응답 오류, {}", e.getCode().getMsg());

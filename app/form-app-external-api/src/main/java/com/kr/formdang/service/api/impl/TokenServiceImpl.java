@@ -31,7 +31,7 @@ public class TokenServiceImpl implements TokenService {
             log.info("■ 폼당폼당 인증서버 토큰 응답 정보: [{}]", response);
             return response.getBody();
         } catch (Exception e) {
-            log.error("{}", e);
+            log.error("", e);
             return null;
         }
     }
