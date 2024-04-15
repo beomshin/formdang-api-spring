@@ -48,7 +48,7 @@ public class FileController {
      * @param token
      * @return
      */
-    @PostMapping("/file/upload/profile")
+    @PostMapping("/public/file/upload/profile")
     public ResponseEntity<RootResponse> uploadFileProfile(@ModelAttribute @Valid FileProfileRequest fileRequest, @RequestHeader("Authorization") String token) {
         try {
             log.info("■ 1. 프로필 등록 요청 성공");
@@ -82,7 +82,7 @@ public class FileController {
      * @param fid
      * @return
      */
-    @PostMapping("/file/list/upload/{fid}")
+    @PostMapping("/public/file/list/upload/{fid}")
     public ResponseEntity<RootResponse> uploadFileList(@ModelAttribute @Valid FileListRequest request, @RequestHeader("Authorization") String token, @PathVariable("fid") Long fid){
         try {
             log.info("■ 1. 이미지 리스트 등록 요청 성공 (fid: {})", fid);

@@ -31,4 +31,12 @@ public class JwtTokenProvider {
         }
     }
 
+    public static boolean validateToken(String token) {
+        try {
+            Jwts.parser().setSigningKey(key).parseClaimsJws(parseJwt(token));
+            return false;
+        } catch (Exception e) {
+            return true;
+        }
+    }
 }
