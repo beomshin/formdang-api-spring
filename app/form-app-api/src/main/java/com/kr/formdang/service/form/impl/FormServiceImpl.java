@@ -15,7 +15,7 @@ import com.kr.formdang.repository.*;
 import com.kr.formdang.service.form.FormDataService;
 import com.kr.formdang.service.form.FormService;
 import com.kr.formdang.utils.file.FileUtils;
-import com.kr.formdang.service.file.dto.S3File;
+import com.kr.formdang.file.dto.S3File;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;

@@ -68,7 +68,7 @@ public class RestTemplateConfig {
         //Apache HttpComponents : 각 호스트(IP와 Port의 조합)당 커넥션 풀에 생성가능한 커넥션 수
         HttpClient httpClient = HttpClientBuilder.create()
                 .setMaxConnTotal(50)//최대 커넥션 수
-                .setMaxConnPerRoute(20) //IP, 포트 1쌍에 대해 수행할 커넥션 수, 특정 경로당 최대 숫자
+                .setMaxConnPerRoute(25) //IP, 포트 1쌍에 대해 수행할 커넥션 수, 특정 경로당 최대 숫자
                 .build();
 
         factory.setHttpClient(httpClient);

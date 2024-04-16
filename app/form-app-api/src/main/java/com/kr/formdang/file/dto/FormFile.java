@@ -1,4 +1,4 @@
-package com.kr.formdang.service.file.dto;
+package com.kr.formdang.file.dto;
 
 import lombok.Builder;
 import lombok.Data;

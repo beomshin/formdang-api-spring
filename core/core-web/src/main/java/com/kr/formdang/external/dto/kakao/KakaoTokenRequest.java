@@ -1,9 +1,12 @@
-package com.kr.formdang.external.google;
+package com.kr.formdang.external.dto.kakao;
 
+import com.kr.formdang.external.dto.RequestClient;
 import lombok.Data;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 
 @Data
-public class GoogleLoginRequestDto {
+public class KakaoTokenRequest implements RequestClient {
 
     private String clientId;    // 애플리케이션의 클라이언트 ID
     private String redirectUri; // Google 로그인 후 redirect 위치
@@ -18,11 +21,22 @@ public class GoogleLoginRequestDto {
     private String loginHint;   // 애플리케이션이 인증하려는 사용자를 알고 있는 경우 이 매개변수를 사용하여 Google 인증 서버에 힌트를 제공
     private String prompt;  // default: 처음으로 액세스를 요청할 때만 사용자에게 메시지가 표시
 
-    public GoogleLoginRequestDto(String clientId, String clientSecret, String uri, String authCode) {
+    public KakaoTokenRequest(String clientId, String clientSecret, String uri, String authCode) {
         this.clientId = clientId;
         this.clientSecret = clientSecret;
         this.code = authCode;
         this.redirectUri = uri;
         this.grantType = "authorization_code";
     }
+
+    public MultiValueMap<String, String> build() {
+        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
+        params.add("client_id", this.clientId);
+        params.add("client_secret", this.clientSecret);
+        params.add("grant_type", this.grantType);
+        params.add("redirect_uri", this.redirectUri);
+        params.add("code", this.code);
+        return params;
+    }
+
 }

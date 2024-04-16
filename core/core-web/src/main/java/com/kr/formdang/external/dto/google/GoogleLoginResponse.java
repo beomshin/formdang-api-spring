@@ -1,11 +1,12 @@
-package com.kr.formdang.external.google;
+package com.kr.formdang.external.dto.google;
 
+import com.kr.formdang.external.dto.ResponseClient;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
-public class GoogleLoginDto {
+public class GoogleLoginResponse implements ResponseClient {
     private String iss;
     private String azp;
     private String aud;

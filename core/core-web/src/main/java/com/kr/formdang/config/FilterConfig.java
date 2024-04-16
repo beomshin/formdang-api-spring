@@ -1,5 +1,7 @@
-package com.kr.formdang.filters;
+package com.kr.formdang.config;
 
+import com.kr.formdang.filters.DefaultHttpLoggingFilter;
+import com.kr.formdang.filters.DefaultMDCLoggingFilter;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

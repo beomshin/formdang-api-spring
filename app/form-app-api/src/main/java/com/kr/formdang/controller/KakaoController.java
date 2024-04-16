@@ -1,14 +1,14 @@
 package com.kr.formdang.controller;
 
 import com.kr.formdang.entity.AdminTbEntity;
-import com.kr.formdang.external.kakao.KakaoLoginDto;
-import com.kr.formdang.external.kakao.KakaoLoginRequestDto;
+import com.kr.formdang.external.dto.kakao.KakaoLoginResponse;
+import com.kr.formdang.external.dto.kakao.KakaoTokenRequest;
 import com.kr.formdang.enums.AdminTypeEnum;
 import com.kr.formdang.prop.KakaoProp;
 import com.kr.formdang.layer.AdminDataDto;
 import com.kr.formdang.service.admin.AdminDataService;
 import com.kr.formdang.service.admin.AdminService;
-import com.kr.formdang.service.api.KakaoService;
+import com.kr.formdang.client.KakaoService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -80,13 +80,13 @@ public class KakaoController {
         try {
             log.info("■ 1. 카카오 로그인 콜백 요청 성공");
             final String id = "K" + UUID.randomUUID().toString().substring(0, 31);
-            KakaoLoginDto kakaoLoginDto = kakaoService.kakaoOAuth(new KakaoLoginRequestDto(kakaoProp.getKakaoClientId(), kakaoProp.getKakaoSecret(), kakaoProp.getKakaoRedirectLoginUri(), code)); // 카카오 로그인 정보 취득
+            KakaoLoginResponse kakaoLoginResponse = kakaoService.kakaoOAuth(new KakaoTokenRequest(kakaoProp.getKakaoClientId(), kakaoProp.getKakaoSecret(), kakaoProp.getKakaoRedirectLoginUri(), code)); // 카카오 로그인 정보 취득
             AdminTbEntity adminTb = adminService.saveSnsAdmin(adminDataServiceImpl.getAdminData(AdminDataDto.builder()
                     .id(id)
                     .pw(StringUtils.reverse(id))
                     .type(AdminTypeEnum.KAKAO_TYPE.getCode())
-                    .name(kakaoLoginDto.getProperties().getNickname())
-                    .sub_id(kakaoLoginDto.getId())
+                    .name(kakaoLoginResponse.getProperties().getNickname())
+                    .sub_id(kakaoLoginResponse.getId())
                     .build()));  // 폼당폼당 로그인 및 가입
             redirectView.setUrl(adminService.successLogin(adminTb)); // 폼당폼당 로그인 성공 페이지 세팅
             log.info("■ 8. 카카오 로그인 콜백 리다이렉트 : {}", redirectView.getUrl());
@@ -105,13 +105,13 @@ public class KakaoController {
         try {
             log.info("■ 1. 카카오 페이퍼 로그인 콜백 요청 성공");
             final String id = "K" + UUID.randomUUID().toString().substring(0, 31);
-            KakaoLoginDto kakaoLoginDto = kakaoService.kakaoOAuth(new KakaoLoginRequestDto(kakaoProp.getKakaoClientId(), kakaoProp.getKakaoSecret(), kakaoProp.getKakaoRedirectLoginPaperUri(), code)); // 카카오 로그인 정보 취득
+            KakaoLoginResponse kakaoLoginResponse = kakaoService.kakaoOAuth(new KakaoTokenRequest(kakaoProp.getKakaoClientId(), kakaoProp.getKakaoSecret(), kakaoProp.getKakaoRedirectLoginPaperUri(), code)); // 카카오 로그인 정보 취득
             AdminTbEntity adminTb = adminService.saveSnsAdmin(adminDataServiceImpl.getAdminData(AdminDataDto.builder()
                     .id(id)
                     .pw(StringUtils.reverse(id))
                     .type(AdminTypeEnum.KAKAO_TYPE.getCode())
-                    .name(kakaoLoginDto.getProperties().getNickname())
-                    .sub_id(kakaoLoginDto.getId())
+                    .name(kakaoLoginResponse.getProperties().getNickname())
+                    .sub_id(kakaoLoginResponse.getId())
                     .build()));  // 폼당폼당 로그인 및 가입
             redirectView.setUrl(adminService.successPaperLogin(adminTb)); // 폼당폼당 유저화면 로그인 성공 페이지 세팅
             log.info("■ 8. 카카오 페이퍼 로그인 콜백 리다이렉트 : {}", redirectView.getUrl());

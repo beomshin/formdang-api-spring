@@ -8,7 +8,7 @@ import com.kr.formdang.exception.CustomException;
 import com.kr.formdang.layer.FormDataDto;
 import com.kr.formdang.layer.FormFindDto;
 import com.kr.formdang.layer.QuestionDataDto;
-import com.kr.formdang.service.file.dto.S3File;
+import com.kr.formdang.file.dto.S3File;
 import org.springframework.data.domain.Page;
 
 import java.util.List;

@@ -1,3 +1,22 @@
+google:
+  auth:
+    url: https://oauth2.googleapis.com
+    scope: profile,email,openid
+  login:
+    url: https://accounts.google.com
+  client:
+    id: ENC(2PcEUWW+zVuotleTkk2sPWBU3PiDKChw6pclPAJZiJkiiHGIMnkTJaP2IiafOGIVTTAaND7Bts5thDBeB0ZaoWj2pYa57ae/Hvt0Qsd3YPc=)
+  secret: ENC(kV1a9mkN5FuK3/ecNmAhBVmH5dHQ6LVxvNn3Xamqy0GOonCODfeh+zZ5SpnsmmRrfzQuiinKkvASst72iGQTE+W53JecZpqiZm7Fxm36bgA=)
+
+kakao:
+  auth:
+    url: https://kapi.kakao.com
+  login:
+    url: https://kauth.kakao.com
+  client:
+    id: ENC(3honbmeuFerE4FqbWv7yEEn8Mi4DdS5EQthLoAnwW+xvYwWiB1J2ooDXI+vf/8xcM8kqJZuH2nAQbv2LplaAVkV1oUbRCZbEdOFgAoGy0yM=)
+  secret: ENC(v5lcLr9aytE1xqbkdKYO2tW3EGN1dAG0Z/2j+B1q/AfkDb2CiwGLkCDwa21Q6ZgueOP2m3SFDSGEOzJ9ENGsQANI4C+zGUUONiUJwHVMwVk=)
+
 # LOCAL
 ---
 spring:
@@ -6,8 +25,19 @@ spring:
       on-profile: local
 
 formdang:
-  url:
-    auth-issue: http://localhost:22081/auth/sp/issue
+  auth-issue:
+    url: http://localhost:22081/auth/sp/issue
+
+google:
+  redirect:
+    uri: http://localhost:12001/api/sp/public/google/login/callback
+    paper_uri: http://localhost:12001/api/sp/public/google/login/paper/callback
+
+kakao:
+  redirect:
+    login:
+      uri: http://localhost:12001/api/sp/public/kakao/login/callback
+      paper_uri: http://localhost:12001/api/sp/public/kakao/login/paper/callback
 
 # TEST
 ---
@@ -17,8 +47,19 @@ spring:
       on-profile: test
 
 formdang:
-  url:
-    auth-issue: http://formdang-auth:22081/auth/sp/issue
+  auth-issue:
+    url: http://formdang-auth:22081/auth/sp/issue
+
+google:
+  redirect:
+    uri: http://formdang-api.com/api/sp/public/google/login/callback
+    paper_uri: http://formdang-api.com/api/sp/public/google/login/paper/callback
+
+kakao:
+  redirect:
+    login:
+      uri: http://formdang-api.com/api/sp/public/kakao/login/callback
+      paper_uri: http://formdang-api.com/api/sp/public/kakao/login/paper/callback
 
 # PROD
 ---
@@ -28,5 +69,16 @@ spring:
       on-profile: prod
 
 formdang:
-  url:
-    auth-issue: http://127.0.0.1:22081/auth/sp/issue
+  auth-issue:
+    url: http://formdang-auth:22081/auth/sp/issue
+
+google:
+  redirect:
+    uri: http://formdang-api.com/api/sp/public/google/login/callback
+    paper_uri: http://formdang-api.com/api/sp/public/google/login/paper/callback
+
+kakao:
+  redirect:
+    login:
+      uri: http://formdang-api.com/api/sp/public/kakao/login/callback
+      paper_uri: http://formdang-api.com/api/sp/public/kakao/login/paper/callback

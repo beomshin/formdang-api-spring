@@ -1,6 +1,5 @@
 package com.kr.formdang.controller;
 
-import com.amazonaws.ResetException;
 import com.kr.formdang.dto.auth.AuthUser;
 import com.kr.formdang.dto.auth.JwtTokenAuthUser;
 import com.kr.formdang.exception.CustomException;
@@ -9,22 +8,21 @@ import com.kr.formdang.external.AuthClient;
 import com.kr.formdang.external.dto.auth.JwtTokenRequest;
 import com.kr.formdang.root.RootResponse;
 import com.kr.formdang.external.dto.auth.JwtTokenResponse;
-import com.kr.formdang.service.file.dto.FormFile;
+import com.kr.formdang.file.dto.FormFile;
 import com.kr.formdang.dto.req.FileListRequest;
 import com.kr.formdang.dto.req.FileProfileRequest;
 import com.kr.formdang.dto.res.FileProfileResponse;
 import com.kr.formdang.root.DefaultResponse;
 import com.kr.formdang.service.admin.AdminService;
-import com.kr.formdang.service.file.FileService;
+import com.kr.formdang.file.FileService;
 import com.kr.formdang.service.form.FormService;
-import com.kr.formdang.service.file.dto.S3File;
+import com.kr.formdang.file.dto.S3File;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.StopWatch;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.client.RestClientException;
 
 import javax.validation.Valid;
 import java.util.ArrayList;
@@ -63,7 +61,7 @@ public class FileController {
         if (result) { // 프로필 등록 성공
             log.debug("■ JWT 토큰 재발급 신청 [프로필 값 업데이트]");
             JwtTokenRequest jwtTokenRequest = new JwtTokenRequest(String.valueOf(authUser.getId()), accessKey, authUser.getName(), profile.getPath());
-            JwtTokenResponse jwtTokenResponse = (JwtTokenResponse) authClient.requestJwtToken(jwtTokenRequest); // 폼당폼당 JWT 토큰 요청 (프로필 내용 변경)
+            JwtTokenResponse jwtTokenResponse = (JwtTokenResponse) authClient.requestToken(jwtTokenRequest); // 폼당폼당 JWT 토큰 요청 (프로필 내용 변경)
             log.info("■ 3. 프로필 등록 응답 성공");
             return ResponseEntity.ok().body(new FileProfileResponse(jwtTokenResponse.getAccessToken(), profile.getPath()));
         } else { // 프로필 등록 실패

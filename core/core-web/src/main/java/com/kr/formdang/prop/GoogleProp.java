@@ -14,6 +14,8 @@ public class GoogleProp {
 
     @Value("${google.auth.url}")
     private String googleAuthUrl;
+    @Value("${google.auth.scope}")
+    private String scopes;
     @Value("${google.login.url}")
     private String googleLoginUrl;
     @Value("${google.redirect.uri}")
@@ -24,8 +26,7 @@ public class GoogleProp {
     private String googleClientId;
     @Value("${google.secret}")
     private String googleSecret;
-    @Value("${google.auth.scope}")
-    private String scopes;
+
 
 
     // Google 로그인 URL 생성 로직

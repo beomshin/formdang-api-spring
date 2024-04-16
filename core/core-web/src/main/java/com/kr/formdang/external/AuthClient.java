@@ -14,8 +14,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
-import java.io.IOException;
-
 @Slf4j
 @Component
 @RequiredArgsConstructor
@@ -23,10 +21,10 @@ public class AuthClient {
 
     private final RestTemplate commonRestTemplate;
 
-    @Value("${formdang.url.auth-issue}")
+    @Value("${formdang.auth-issue.url}")
     private String formdang_auth_issue;
 
-    public ResponseClient requestJwtToken(RequestClient requestClient) {
+    public ResponseClient requestToken(RequestClient requestClient) {
         try {
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_JSON);
