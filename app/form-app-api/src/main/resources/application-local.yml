@@ -3,7 +3,6 @@ formdang:
     fail-login: http://localhost:63342/formdang-publishing/admin/login.html
     success-login: http://localhost:63342/formdang-publishing/admin/index.html
     success-paper-login: http://localhost:63342/formdang-publishing/web/paper.html
-    auth-issue: http://localhost:22081/auth/sp/issue
 
 google:
   auth:

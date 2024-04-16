@@ -134,7 +134,6 @@ public class FormServiceImpl implements FormService {
 
     @Override
     public FormTbEntity findForm(Long aid, Long fid) throws CustomException {
-        log.info("■ 2. 폼 상세 정보 조회 쿼리 시작");
         Optional<FormTbEntity> formTb = formTbRepository.findByAidAndFid(aid, fid);
         if (formTb.isPresent()) {
             return formTb.get();

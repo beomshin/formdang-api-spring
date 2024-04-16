@@ -15,6 +15,7 @@ import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.client.RestClientException;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.servlet.NoHandlerFoundException;
 
@@ -73,13 +74,19 @@ public class ExceptionController {
 
     @ExceptionHandler
     public ResponseEntity<DefaultResponse> handle(IOException e) { // IO Exception 글로벌 처리
-        log.error("[IOException]: {}", e);
+        log.error("[IOException]: ", e);
         return ResponseEntity.ok().body(new DefaultResponse(GlobalCode.IO_EXCEPTION));
+    }
+
+    @ExceptionHandler
+    public ResponseEntity<DefaultResponse> handle(RestClientException e) { // RestClientException 글로벌 처리
+        log.error("[RestClientException]: ", e);
+        return ResponseEntity.ok().body(new DefaultResponse(GlobalCode.NETWORK_ERROR));
     }
 
     @ExceptionHandler(value = CustomException.class)
     public ResponseEntity<DefaultResponse> handle(CustomException e) { // 커스텀 오류 글로벌 처리
-        log.error("[CustomException]");
+        log.error("[CustomException]: {}", e.getMessage());
         return ResponseEntity.ok().body(new DefaultResponse(e.getCode()));
     }
 

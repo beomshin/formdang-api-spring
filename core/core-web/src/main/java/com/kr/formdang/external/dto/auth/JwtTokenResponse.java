@@ -1,5 +1,6 @@
-package com.kr.formdang.external.auth;
+package com.kr.formdang.external.dto.auth;
 
+import com.kr.formdang.external.dto.ResponseClient;
 import lombok.*;
 
 @Getter
@@ -7,7 +8,7 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-public class JwtTokenResponse {
+public class JwtTokenResponse implements ResponseClient {
 
     private String time; // 날짜
     public String resultCode;

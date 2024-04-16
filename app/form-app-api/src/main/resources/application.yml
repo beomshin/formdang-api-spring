@@ -10,7 +10,7 @@ spring:
     include:
       - common
       - dao
-      - middleware
+      - core
       - model
     group:
       local:

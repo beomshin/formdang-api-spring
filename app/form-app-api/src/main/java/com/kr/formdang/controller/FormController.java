@@ -214,6 +214,8 @@ public class FormController {
         try {
             log.info("■ 1. 폼 상세 정보 조회 요청 성공");
             AuthUser authUser = new JwtTokenAuthUser(token);
+
+            log.info("■ 2. 폼 상세 정보 조회 쿼리 시작");
             FormTbEntity formTbEntity = formService.findForm(authUser.getId(), fid); // 폼 상세 조회
             List<QuestionTbEntity> questionTbEntities = formService.findQuestions(fid); // 질문 리스트 조회
             final String separator = "\\|";

@@ -29,6 +29,7 @@ public enum GlobalCode {
     IS_MAX_RESPONSE("30017", "설문 최대 응답자 수 초과"),
     IS_NOT_RIGHT_DATE("30018", "설문 가능한 날짜가 아닙니다."),
     IS_SUBMIT("30019", "이미 설문을 제출하셨습니다."),
+    NETWORK_ERROR("9990", "네트워크 통신 장애"),
     NOT_EXIST_PARAM("9991", "파라미터 누락 오류"),
     NOT_EXIST_HEADER("9992", "헤더 누락 오류"),
     NOT_EXIST_TOKEN("9993", "토큰 누락 오류"),

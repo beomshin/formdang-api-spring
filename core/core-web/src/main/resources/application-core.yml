@@ -1,0 +1,32 @@
+# LOCAL
+---
+spring:
+  config:
+    activate:
+      on-profile: local
+
+formdang:
+  url:
+    auth-issue: http://localhost:22081/auth/sp/issue
+
+# TEST
+---
+spring:
+  config:
+    activate:
+      on-profile: test
+
+formdang:
+  url:
+    auth-issue: http://formdang-auth:22081/auth/sp/issue
+
+# PROD
+---
+spring:
+  config:
+    activate:
+      on-profile: prod
+
+formdang:
+  url:
+    auth-issue: http://127.0.0.1:22081/auth/sp/issue
