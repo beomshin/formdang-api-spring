@@ -11,7 +11,7 @@
         <relativePath>../../pom.xml</relativePath>
     </parent>
 
-    <artifactId>form-app-external-api</artifactId>
+    <artifactId>form-app-api</artifactId>
     <version>0.0.1</version>
 
     <name>form-app-external-api</name>

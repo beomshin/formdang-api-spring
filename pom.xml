@@ -19,7 +19,7 @@
   <description>formdang-sp-was</description>
 
   <modules>
-    <module>app/form-app-external-api</module>
+    <module>app/form-app-api</module>
     <module>core/core-web</module>
     <module>domain/domain-core</module>
     <module>common/common-web</module>
