@@ -2,7 +2,7 @@ FROM openjdk:8-alpine
 
 WORKDIR /app
 
-ARG JAR_FILE_PATH=/app/form-app-external-api/target/*.jar
+ARG JAR_FILE_PATH=/app/form-app-api/target/*.jar
 ARG DATASOURCE_KEY
 ARG DATASOURCE_URL
 ARG DATASOURCE_USERNAME
