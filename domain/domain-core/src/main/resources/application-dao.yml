@@ -18,3 +18,43 @@ spring:
 mybatis:
   type-aliases-package: com.kr.formdang.mapper
   mapper-locations: classpath:mapper/*.xml
+
+
+# LOCAL
+---
+spring:
+  config:
+    activate:
+      on-profile: local
+
+formdang:
+  url:
+    fail-login: http://localhost:63342/formdang-publishing/admin/login.html
+    success-login: http://localhost:63342/formdang-publishing/admin/index.html
+    success-paper-login: http://localhost:63342/formdang-publishing/web/paper.html
+
+# TEST
+---
+spring:
+  config:
+    activate:
+      on-profile: test
+
+formdang:
+  url:
+    fail-login: https://formdang.com/admin/login.html
+    success-login: https://formdang.com/admin/index.html
+    success-paper-login: https://formdang.com/web/paper.html
+
+# PROD
+---
+spring:
+  config:
+    activate:
+      on-profile: prod
+
+formdang:
+  url:
+    fail-login: https://formdang.com/admin/login.html
+    success-login: https://formdang.com/admin/index.html
+    success-paper-login: https://formdang.com/web/paper.html

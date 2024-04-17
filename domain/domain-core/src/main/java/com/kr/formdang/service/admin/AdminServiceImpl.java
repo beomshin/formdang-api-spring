@@ -5,13 +5,9 @@ import com.kr.formdang.entity.AdminTbEntity;
 import com.kr.formdang.entity.FileUploadFailTbEntity;
 import com.kr.formdang.exception.FormException;
 import com.kr.formdang.constant.ResultCode;
-import com.kr.formdang.external.AuthClient;
-import com.kr.formdang.external.dto.auth.JwtTokenRequest;
-import com.kr.formdang.external.dto.auth.JwtTokenResponse;
 import com.kr.formdang.repository.AdminSubTbRepository;
 import com.kr.formdang.repository.AdminTbRepository;
 import com.kr.formdang.repository.FileUploadFailTbRepository;
-import com.kr.formdang.service.admin.AdminService;
 import com.kr.formdang.utils.file.FileUtils;
 import com.kr.formdang.utils.file.dto.S3File;
 import lombok.RequiredArgsConstructor;
@@ -41,16 +37,11 @@ public class AdminServiceImpl implements AdminService {
     @Value("${formdang.url.success-paper-login}")
     private String formdang_success_paper_login;
 
-    @Value("${token.access-key}")
-    private String accessKey;
-
     private final AdminTbRepository adminTbRepository;
 
     private final AdminSubTbRepository adminSubTbRepository;
 
     private final FileUploadFailTbRepository fileUploadFailTbRepository;
-
-    private final AuthClient authClient;
 
     @Override
     @Transactional
@@ -82,16 +73,13 @@ public class AdminServiceImpl implements AdminService {
     }
 
     @Override
-    public String successLogin(AdminTbEntity adminTb)  {
+    public String successLogin(String accessToken, String refreshToken)  {
 
         log.info("■ 4. 폼당폼당 로그인 토큰 생성");
 
-        JwtTokenRequest jwtTokenRequest = new JwtTokenRequest(String.valueOf(adminTb.getAid()), accessKey, adminTb.getName(), adminTb.getProfile());
-        JwtTokenResponse jwtTokenResponse = (JwtTokenResponse) authClient.requestToken(jwtTokenRequest); // 폼당폼당 JWT 토큰 요청
-
         Map<String, Object> params = new HashMap<>();
-        params.put("accessToken", jwtTokenResponse.getAccessToken());
-        params.put("refreshToken", jwtTokenResponse.getRefreshToken());
+        params.put("accessToken", accessToken);
+        params.put("refreshToken", refreshToken);
 
         String paramStr = params.entrySet().stream()
                 .map(param -> param.getKey() + "=" + param.getValue())
@@ -104,15 +92,12 @@ public class AdminServiceImpl implements AdminService {
     }
 
     @Override
-    public String successPaperLogin(AdminTbEntity adminTb) {
+    public String successPaperLogin(String accessToken, String refreshToken) {
         log.info("■ 4. 폼당폼당 로그인 토큰 생성");
 
-        JwtTokenRequest jwtTokenRequest = new JwtTokenRequest(String.valueOf(adminTb.getAid()), accessKey, adminTb.getName(), adminTb.getProfile());
-        JwtTokenResponse jwtTokenResponse = (JwtTokenResponse) authClient.requestToken(jwtTokenRequest); // 폼당폼당 JWT 토큰 요청
-
         Map<String, Object> params = new HashMap<>();
-        params.put("accessToken", jwtTokenResponse.getAccessToken());
-        params.put("refreshToken", jwtTokenResponse.getRefreshToken());
+        params.put("accessToken", accessToken);
+        params.put("refreshToken", refreshToken);
 
         String paramStr = params.entrySet().stream()
                 .map(param -> param.getKey() + "=" + param.getValue())

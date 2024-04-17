@@ -1,6 +1,9 @@
 package com.kr.formdang.controller;
 
 import com.kr.formdang.entity.AdminTbEntity;
+import com.kr.formdang.external.AuthClient;
+import com.kr.formdang.external.dto.auth.JwtTokenRequest;
+import com.kr.formdang.external.dto.auth.JwtTokenResponse;
 import com.kr.formdang.external.dto.kakao.KakaoLoginResponse;
 import com.kr.formdang.external.dto.kakao.KakaoTokenRequest;
 import com.kr.formdang.enums.AdminTypeEnum;
@@ -12,6 +15,7 @@ import com.kr.formdang.service.client.KakaoService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -25,10 +29,14 @@ import java.util.UUID;
 @Slf4j
 public class KakaoController {
 
+    @Value("${token.access-key}")
+    private String accessKey;
+
     private final KakaoProp kakaoProp;
     private final KakaoService kakaoService;
     private final AdminService adminService;
     private final AdminDataService adminDataServiceImpl;
+    private final AuthClient authClient;
 
     /**
      * 카카오 로그인 페이지 이동 API
@@ -88,7 +96,9 @@ public class KakaoController {
                     .name(kakaoLoginResponse.getProperties().getNickname())
                     .sub_id(kakaoLoginResponse.getId())
                     .build()));  // 폼당폼당 로그인 및 가입
-            redirectView.setUrl(adminService.successLogin(adminTb)); // 폼당폼당 로그인 성공 페이지 세팅
+            JwtTokenRequest jwtTokenRequest = new JwtTokenRequest(String.valueOf(adminTb.getAid()), accessKey, adminTb.getName(), adminTb.getProfile());
+            JwtTokenResponse jwtTokenResponse = (JwtTokenResponse) authClient.requestToken(jwtTokenRequest); // 폼당폼당 JWT 토큰 요청
+            redirectView.setUrl(adminService.successLogin(jwtTokenResponse.getAccessToken(), jwtTokenResponse.getAccessToken())); // 폼당폼당 로그인 성공 페이지 세팅
             log.info("■ 8. 카카오 로그인 콜백 리다이렉트 : {}", redirectView.getUrl());
             return redirectView;
         } catch (Exception e) {
@@ -113,7 +123,10 @@ public class KakaoController {
                     .name(kakaoLoginResponse.getProperties().getNickname())
                     .sub_id(kakaoLoginResponse.getId())
                     .build()));  // 폼당폼당 로그인 및 가입
-            redirectView.setUrl(adminService.successPaperLogin(adminTb)); // 폼당폼당 유저화면 로그인 성공 페이지 세팅
+            JwtTokenRequest jwtTokenRequest = new JwtTokenRequest(String.valueOf(adminTb.getAid()), accessKey, adminTb.getName(), adminTb.getProfile());
+            JwtTokenResponse jwtTokenResponse = (JwtTokenResponse) authClient.requestToken(jwtTokenRequest); // 폼당폼당 JWT 토큰 요청
+
+            redirectView.setUrl(adminService.successPaperLogin(jwtTokenResponse.getAccessToken(), jwtTokenResponse.getRefreshToken())); // 폼당폼당 유저화면 로그인 성공 페이지 세팅
             log.info("■ 8. 카카오 페이퍼 로그인 콜백 리다이렉트 : {}", redirectView.getUrl());
             return redirectView;
         } catch (Exception e) {
