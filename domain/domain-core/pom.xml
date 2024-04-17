@@ -44,9 +44,15 @@
 
         <dependency>
             <groupId>com.kr.formdang</groupId>
-            <artifactId>web-model</artifactId>
+            <artifactId>common-web</artifactId>
             <version>0.0.1</version>
             <scope>compile</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>com.kr.formdang</groupId>
+            <artifactId>core-web</artifactId>
+            <version>0.0.1</version>
         </dependency>
 
 

@@ -1,7 +1,7 @@
 package com.kr.formdang.aop;
 
-import com.kr.formdang.common.constant.ResultCode;
-import com.kr.formdang.common.exception.FormException;
+import com.kr.formdang.constant.ResultCode;
+import com.kr.formdang.exception.FormException;
 import com.kr.formdang.provider.JwtTokenProvider;
 import com.kr.formdang.dto.DefaultResponse;
 import lombok.extern.slf4j.Slf4j;

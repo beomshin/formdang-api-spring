@@ -1,6 +1,6 @@
 package com.kr.formdang.entity;
 
-import com.kr.formdang.layer.FormDataDto;
+import com.kr.formdang.dto.FormDataDto;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

@@ -1,6 +1,6 @@
 package com.kr.formdang.dto.res;
 
-import com.kr.formdang.common.constant.ResultCode;
+import com.kr.formdang.constant.ResultCode;
 import com.kr.formdang.dto.DefaultResponse;
 import lombok.*;
 

@@ -1,7 +1,7 @@
 package com.kr.formdang.controller;
 
-import com.kr.formdang.common.exception.FormException;
-import com.kr.formdang.common.constant.ResultCode;
+import com.kr.formdang.exception.FormException;
+import com.kr.formdang.constant.ResultCode;
 import com.kr.formdang.dto.DefaultResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

@@ -1,6 +1,6 @@
 package com.kr.formdang.service.file;
 
-import com.kr.formdang.service.file.dto.FormFile;
+import com.kr.formdang.utils.file.dto.FormFile;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.concurrent.CompletableFuture;

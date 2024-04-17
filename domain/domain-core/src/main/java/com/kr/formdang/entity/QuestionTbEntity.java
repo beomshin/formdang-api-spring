@@ -1,6 +1,6 @@
 package com.kr.formdang.entity;
 
-import com.kr.formdang.layer.QuestionDataDto;
+import com.kr.formdang.dto.QuestionDataDto;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.DynamicInsert;

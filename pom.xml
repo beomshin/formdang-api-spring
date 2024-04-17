@@ -23,7 +23,6 @@
     <module>core/core-web</module>
     <module>domain/domain-core</module>
     <module>common/common-web</module>
-    <module>modules/web-model</module>
   </modules>
 
   <properties>

@@ -1,11 +1,11 @@
 package com.kr.formdang.service.file.impl;
 
 import com.kr.formdang.service.file.FileService;
-import com.kr.formdang.service.file.dto.FormFile;
-import com.kr.formdang.service.file.dto.S3File;
+import com.kr.formdang.utils.file.dto.FormFile;
+import com.kr.formdang.utils.file.dto.S3File;
 import com.kr.formdang.utils.file.AwsS3Utils;
-import com.kr.formdang.common.exception.FormException;
-import com.kr.formdang.common.constant.ResultCode;
+import com.kr.formdang.exception.FormException;
+import com.kr.formdang.constant.ResultCode;
 import com.kr.formdang.utils.file.FileUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
