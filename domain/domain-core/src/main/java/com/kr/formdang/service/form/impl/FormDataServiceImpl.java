@@ -1,9 +1,10 @@
-package com.kr.formdang.service.form;
+package com.kr.formdang.service.form.impl;
 
 import com.kr.formdang.entity.FormTbEntity;
 import com.kr.formdang.entity.QuestionTbEntity;
 import com.kr.formdang.dto.FormDataDto;
 import com.kr.formdang.dto.QuestionDataDto;
+import com.kr.formdang.service.form.FormDataService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

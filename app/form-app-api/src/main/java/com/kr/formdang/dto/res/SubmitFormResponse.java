@@ -13,9 +13,4 @@ public class SubmitFormResponse extends DefaultResponse {
 
     private Long fid;
 
-    public SubmitFormResponse(ResultCode code, Long fid) {
-        super(code);
-        this.fid = fid;
-    }
-
 }

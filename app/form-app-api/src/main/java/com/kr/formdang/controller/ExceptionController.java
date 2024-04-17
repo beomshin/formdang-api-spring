@@ -28,7 +28,7 @@ public class ExceptionController {
 
     @ExceptionHandler(value = MethodArgumentNotValidException.class)
     public ResponseEntity<DefaultResponse> handle(MethodArgumentNotValidException e) { // 파라미터 오류 글로벌 처리
-        log.error("[MethodArgumentNotValidException]");
+        log.error("■ 응답 오류 [MethodArgumentNotValidException]");
         DefaultResponse response = new DefaultResponse(ResultCode.PARAMETER_ERROR);
         response.setErrorMsg(e.getBindingResult()
                 .getAllErrors()
@@ -39,7 +39,7 @@ public class ExceptionController {
 
     @ExceptionHandler(value = BindException.class)
     public ResponseEntity<DefaultResponse> handle(BindException e) { // 파라미터 바인딩 오류 글로벌 처리
-        log.error("[BindException]");
+        log.error("■ 응답 오류 [BindException]");
         DefaultResponse response = new DefaultResponse(ResultCode.BIND_ERROR);
         response.setErrorMsg(e.getBindingResult()
                 .getAllErrors()
@@ -50,49 +50,55 @@ public class ExceptionController {
 
     @ExceptionHandler(value = HttpMessageNotReadableException.class)
     public ResponseEntity<DefaultResponse> handle(HttpMessageNotReadableException e) { // 자료형 오류 글로벌 처리
-        log.error("[HttpMessageNotReadableException]", e);
+        log.error("■ 응답 오류 [HttpMessageNotReadableException]", e);
         return ResponseEntity.ok().body(new DefaultResponse(ResultCode.HTTP_MESSAGE_NOT_READABLE_ERROR));
     }
 
     @ExceptionHandler(value = MissingRequestHeaderException.class)
     public ResponseEntity<DefaultResponse> handle(MissingRequestHeaderException e) { // 헤더 누락 오류 글로벌 처리
-        log.error("[MissingRequestHeaderException]");
+        log.error("■ 응답 오류 [MissingRequestHeaderException]");
         return ResponseEntity.ok().body(new DefaultResponse(ResultCode.NOT_EXIST_HEADER));
     }
 
     @ExceptionHandler(value = MissingServletRequestParameterException.class)
     public ResponseEntity<DefaultResponse> handle(MissingServletRequestParameterException e) { // 파라미터 누락 오류 글로벌 처리
-        log.error("[MissingServletRequestParameterException]");
+        log.error("■ 응답 오류 [MissingServletRequestParameterException]");
         return ResponseEntity.ok().body(new DefaultResponse(ResultCode.NOT_EXIST_PARAM));
     }
 
     @ExceptionHandler(value = MethodArgumentTypeMismatchException.class)
     public ResponseEntity<DefaultResponse> handle(MethodArgumentTypeMismatchException e) { // 파라미터 검증 오류 글로벌 처리
-        log.error("[MethodArgumentTypeMismatchException]");
+        log.error("■ 응답 오류 [MethodArgumentTypeMismatchException]");
         return ResponseEntity.ok().body(new DefaultResponse(ResultCode.BIND_ERROR));
     }
 
     @ExceptionHandler(value = IOException.class)
     public ResponseEntity<DefaultResponse> handle(IOException e) { // IO Exception 글로벌 처리
-        log.error("[IOException]: ", e);
+        log.error("■ 응답 오류 [IOException]: ", e);
         return ResponseEntity.ok().body(new DefaultResponse(ResultCode.IO_EXCEPTION));
     }
 
     @ExceptionHandler(value = RestClientException.class)
     public ResponseEntity<DefaultResponse> handle(RestClientException e) { // RestClientException 글로벌 처리
-        log.error("[RestClientException]: ", e);
+        log.error("■ 응답 오류 [RestClientException]: ", e);
         return ResponseEntity.ok().body(new DefaultResponse(ResultCode.NETWORK_ERROR));
     }
 
     @ExceptionHandler(value = FormException.class)
     public ResponseEntity<DefaultResponse> handle(FormException e) { // 커스텀 오류 글로벌 처리
-        log.error("[CustomException]: {}", e.getMessage());
+        log.error("■ 응답 오류 [CustomException]: {}", e.getMessage());
         return ResponseEntity.ok().body(new DefaultResponse(e.getCode()));
+    }
+
+    @ExceptionHandler(value = Exception.class)
+    public ResponseEntity<DefaultResponse> handle(Exception e) {
+        log.error("■ 응답 오류 [Exception]", e);
+        return ResponseEntity.ok().body(new DefaultResponse(ResultCode.SYSTEM_ERROR));
     }
 
     @ExceptionHandler(value = RuntimeException.class)
     public ResponseEntity<DefaultResponse> handle(RuntimeException e) { // 런타임 오류 글로벌 처리
-        log.error("[RuntimeException]", e);
+        log.error("■ 응답 오류 [RuntimeException]", e);
         return ResponseEntity.ok().body(new DefaultResponse(ResultCode.SYSTEM_ERROR));
     }
 

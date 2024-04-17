@@ -27,4 +27,5 @@ public class FormDataDto {
     private String key; // 유저 화면 폼 키
     private String token; // 헤더 토큰
 
+
 }

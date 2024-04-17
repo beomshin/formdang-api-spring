@@ -29,41 +29,48 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
-
-@RestController
 @Slf4j
+@RestController
 @RequiredArgsConstructor
 public class FileController {
 
     @Value("${token.access-key}")
-    private String accessKey;
+    private String accessKey; // 인증 서버 접근 키
     private final AuthClient authClient; // 인증 서버 http client
     private final FileService<S3File> awsS3FileService; // 파일 등록 서비스
-
-    private final FormService formService;
-
-    private final AdminService adminService;
+    private final FormService formService; // 폼 서비스
+    private final AdminService adminService; // 어드민 서비스
 
     /**
-     * 프로필 이미지 변경
-     * @param fileRequest
-     * @param token
-     * @return
+     * 프로필 이미지 변경 API
      */
     @PostMapping("/public/file/upload/profile")
-    public ResponseEntity<RootResponse> uploadFileProfile(@ModelAttribute @Valid FileProfileRequest fileRequest, @RequestHeader("Authorization") String token) {
+    public ResponseEntity<RootResponse> uploadFileProfile(
+            @ModelAttribute @Valid FileProfileRequest fileRequest,
+            @RequestHeader("Authorization") String token
+    ) {
+
         log.info("■ 1. 프로필 등록 요청 성공");
-        AuthUser authUser = new JwtTokenAuthUser(token);
-        S3File profile = awsS3FileService.uploadSingle(fileRequest.getProfile()); // 파일 등록
-        boolean result = adminService.updateProfile(authUser.getId(), profile, fileRequest.getProfile()); // 프로필 정보 업데이트
+
+        AuthUser authUser = new JwtTokenAuthUser(token); // 토큰 정보 객체 생성
+
+        S3File profile = awsS3FileService.uploadSingle(fileRequest.getProfile()); // AWS S3 파일 등록
+
+        boolean result = adminService.updateProfile(authUser.getId(), profile, fileRequest.getProfile()); // 프로필 정보 업데이트 처리
+
         if (result) { // 프로필 등록 성공
+
             log.debug("■ JWT 토큰 재발급 신청 [프로필 값 업데이트]");
-            JwtTokenRequest jwtTokenRequest = new JwtTokenRequest(String.valueOf(authUser.getId()), accessKey, authUser.getName(), profile.getPath());
-            JwtTokenResponse jwtTokenResponse = (JwtTokenResponse) authClient.requestToken(jwtTokenRequest); // 폼당폼당 JWT 토큰 요청 (프로필 내용 변경)
+            JwtTokenResponse jwtTokenResponse =
+                    (JwtTokenResponse) authClient.requestToken(
+                            new JwtTokenRequest(String.valueOf(authUser.getId()), accessKey, authUser.getName(), profile.getPath())
+                    ); // 폼당폼당 JWT 토큰 재요청 (토큰 내 프로필 변경 정보 변경을 위해 재요청 후 client 에서 토큰 변경 처리)
+
             log.info("■ 3. 프로필 등록 응답 성공");
-            return ResponseEntity.ok().body(new FileProfileResponse(jwtTokenResponse.getAccessToken(), profile.getPath()));
+            return ResponseEntity.ok().body(new FileProfileResponse(jwtTokenResponse.getAccessToken(), profile.getPath())); // 파일 등록 성공 응답
+
         } else { // 프로필 등록 실패
-            log.error("■ 3. 프로필 등록 응답 실패");
+            log.info("■ 3. 프로필 등록 응답 실패");
             return ResponseEntity.ok().body(new DefaultResponse(ResultCode.FAIL_UPLOAD_PROFILE));
         }
     }
@@ -74,19 +81,21 @@ public class FileController {
      *
      * 비동기 블로킹 방식으로 다량의 파일 AWS 업로드 처리
      * 업로드 완료후 이미지 정보 업데이트 처리
-     * @param request
-     * @param token
-     * @param fid
-     * @return
      */
     @PostMapping("/public/file/list/upload/{fid}")
-    public ResponseEntity<RootResponse> uploadFileList(@ModelAttribute @Valid FileListRequest request, @RequestHeader("Authorization") String token, @PathVariable("fid") Long fid) throws FormException {
+    public ResponseEntity<RootResponse> uploadFileList(
+            @ModelAttribute @Valid FileListRequest request,
+            @RequestHeader("Authorization") String token,
+            @PathVariable("fid") Long fid
+    ) throws FormException {
+
         log.info("■ 1. 이미지 리스트 등록 요청 성공 (fid: {})", fid);
-        AuthUser authUser = new JwtTokenAuthUser(token);
+        AuthUser authUser = new JwtTokenAuthUser(token); // 토큰 정보 객체 생성
 
         log.info("■ 2. 폼 상세 정보 조회 쿼리 시작");
         formService.findForm(authUser.getId(), fid); // 유효한 폼 유효성 처리
 
+        // 파일, 순번, 타입 객체 생성 (요청에서 해당 순서 맞춰서 보내줌 multipart 처리를 위해 개별 처리)
         List<FormFile> formFiles = new ArrayList<>();
         for (int i=0; i < request.getFiles().size(); i++) {
             formFiles.add(new FormFile(request.getFiles().get(i), request.getOrders().get(i), request.getTypes().get(i))); // 요청값 파일 리스트로 담기
@@ -95,14 +104,14 @@ public class FileController {
         log.info("■ 3. AWS 이미지 등록 비동기 처리 시작");
         StopWatch stopWatch = new StopWatch();
         stopWatch.start();
-        List<CompletableFuture<S3File>> futures = formFiles.stream().map(awsS3FileService::uploadSingle).collect(Collectors.toList());
-        List<S3File> files = futures.stream().map(CompletableFuture::join).collect(Collectors.toList());
+        List<CompletableFuture<S3File>> futures = formFiles.stream().map(awsS3FileService::uploadSingle).collect(Collectors.toList()); // 비동기 블록 방식으로 S3 파일 등록
+        List<S3File> files = futures.stream().map(CompletableFuture::join).collect(Collectors.toList()); // 비동기 요청된 모든 S3 파일 등록이 완료되면 블록 해제
         stopWatch.stop();
 
         log.info("■ 4. AWS 이미지 등록 비동기 처리 종료 (걸린 시간: {}ms)", stopWatch.getTotalTimeMillis());
-        formService.updateImage(fid, files);
+        formService.updateImage(fid, files); // 등록된 S3 파일 폼 정보 업데이트 (로고 또는 문항 순번을 식별로 업데이트)
 
-        return ResponseEntity.ok().body(new DefaultResponse());
+        return ResponseEntity.ok().body(new DefaultResponse()); // 파일 등록 성공 응답
     }
 
 }

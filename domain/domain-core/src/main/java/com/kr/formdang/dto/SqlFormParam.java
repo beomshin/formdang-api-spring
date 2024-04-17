@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
-public class FindFormDto {
+public class SqlFormParam {
 
     private Long offset;
     private Integer pageSize;

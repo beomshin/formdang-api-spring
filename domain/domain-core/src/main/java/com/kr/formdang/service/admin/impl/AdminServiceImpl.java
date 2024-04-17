@@ -1,4 +1,4 @@
-package com.kr.formdang.service.admin;
+package com.kr.formdang.service.admin.impl;
 
 import com.kr.formdang.entity.AdminSubTbEntity;
 import com.kr.formdang.entity.AdminTbEntity;
@@ -9,6 +9,7 @@ import com.kr.formdang.repository.AdminSubTbRepository;
 import com.kr.formdang.repository.AdminTbRepository;
 import com.kr.formdang.repository.FileUploadFailTbRepository;
 import com.kr.formdang.dto.S3File;
+import com.kr.formdang.service.admin.AdminService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -116,7 +117,7 @@ public class AdminServiceImpl implements AdminService {
     @Override
     @Transactional
     public boolean updateProfile(Long aid, S3File profile, MultipartFile file) {
-        if (profile == null) {
+        if (profile == null || !profile.isUploadFlag()) {
             log.error("■ 이미지 업로드 실패 확인 필요");
             fileUploadFailTbRepository.save(FileUploadFailTbEntity.builder()
                     .oriName(file.getOriginalFilename())
@@ -126,7 +127,7 @@ public class AdminServiceImpl implements AdminService {
             return false;
         } else {
             log.info("■ 2. 프로필 업데이트 쿼리 시작");
-            return adminTbRepository.updateProfile(aid, profile.getPath()) > 0 ? true : false;
+            return adminTbRepository.updateProfile(aid, profile.getPath()) > 0;
         }
     }
 

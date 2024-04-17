@@ -2,17 +2,16 @@ server:
   port: 12001
   shutdown: graceful
   servlet:
-    context-path: /api/sp
+    context-path: /api/sp # nginx prefix location으로 잡혀있음
 
 spring:
   profiles:
     active: local
-    include:
-      - common
-      - dao
-      - core
-      - model
-    group:
+    include: # 다른 모듈 yml 사용을 위해 적용
+      - common # common-web
+      - dao # core-web
+      - core # domain-core
+    group: # active 레벨에 따른 로깅 레벨 설정
       local:
         - console-logging # 콘솔 로깅만 사용
       test:
@@ -38,6 +37,3 @@ spring:
 file:
   size:
     image: 3145728 # 3 * 1024 * 1024
-
-token:
-  access-key: ENC(+vT6/Edj0qUG0eVWSFX8KgPhVHcDSMdmsTqv86f55LUa/qD1ZVUIV+cucA2ofkcAtMjixtg5j0v8tgWEs0JQva3G2O33vRYeIPhg08cVsyjlf4Sq0+039RITwiuYgd649IN/CGjJ9LiXVpRtF7hu4Q==)

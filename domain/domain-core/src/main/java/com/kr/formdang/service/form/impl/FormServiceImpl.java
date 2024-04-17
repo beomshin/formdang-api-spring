@@ -1,4 +1,4 @@
-package com.kr.formdang.service.form;
+package com.kr.formdang.service.form.impl;
 
 import com.kr.formdang.dto.FormTbDto;
 import com.kr.formdang.entity.*;
@@ -6,12 +6,13 @@ import com.kr.formdang.entity.*;
 import com.kr.formdang.exception.FormException;
 import com.kr.formdang.mapper.FormMapper;
 import com.kr.formdang.exception.ResultCode;
-import com.kr.formdang.dto.FindFormDto;
+import com.kr.formdang.dto.SqlFormParam;
 import com.kr.formdang.dto.FormDataDto;
-import com.kr.formdang.dto.FormFindDto;
 import com.kr.formdang.dto.QuestionDataDto;
 import com.kr.formdang.repository.*;
 import com.kr.formdang.dto.S3File;
+import com.kr.formdang.service.form.FormDataService;
+import com.kr.formdang.service.form.FormService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -95,26 +96,10 @@ public class FormServiceImpl implements FormService {
      * 타입 처리 - 전체, 설문, 퀴즈
      * 상태 처리 - 전체, 진행, 종료, 임시
      * 정렬 처리 - 최순, 답변, 마감
-     *
-     * @param formFindDto
-     * @return
      */
     @Override
-    public Page<FormTbDto> findFormList(FormFindDto formFindDto) {
-        PageRequest pageRequest = PageRequest.of(formFindDto.getPage(), 12);
-        FindFormDto params = FindFormDto.builder() // 조회 파라미터 생성
-                .aid(formFindDto.getAid())
-                .offset(pageRequest.getOffset())
-                .pageSize(pageRequest.getPageSize())
-                .type(formFindDto.getType())
-                .delFlag(formFindDto.getDelFlag())
-                .endFlag(formFindDto.getEndFlag())
-                .status(formFindDto.getStatus())
-                .order(formFindDto.getOrder())
-                .build();
-
-        log.info("■ 2. 폼 리스트 조회 쿼리 시작");
-        return new PageImpl<>(formMapper.findForms(params), pageRequest, formMapper.findFormsCnt(params));
+    public Page<FormTbDto> findFormList(SqlFormParam sqlFormParam, PageRequest pageRequest) {
+        return new PageImpl<>(formMapper.findForms(sqlFormParam), pageRequest, formMapper.findFormsCnt(sqlFormParam));
     }
 
     /**
@@ -124,7 +109,6 @@ public class FormServiceImpl implements FormService {
      */
     @Override
     public AdminSubTbEntity analyzeForm(Long aid) {
-        log.info("■ 3. 종합 분석 정보 조회 쿼리 시작");
         return adminSubTbRepository.findByAid(aid);
     }
 

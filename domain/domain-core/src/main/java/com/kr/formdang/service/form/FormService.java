@@ -1,15 +1,12 @@
 package com.kr.formdang.service.form;
 
-import com.kr.formdang.dto.FormTbDto;
+import com.kr.formdang.dto.*;
 import com.kr.formdang.entity.AdminSubTbEntity;
 import com.kr.formdang.entity.FormTbEntity;
 import com.kr.formdang.entity.QuestionTbEntity;
 import com.kr.formdang.exception.FormException;
-import com.kr.formdang.dto.FormDataDto;
-import com.kr.formdang.dto.FormFindDto;
-import com.kr.formdang.dto.QuestionDataDto;
-import com.kr.formdang.dto.S3File;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 
 import java.util.List;
 
@@ -18,7 +15,7 @@ import java.util.List;
  */
 public interface FormService {
     FormTbEntity submitForm(FormTbEntity formTbEntity, List<QuestionTbEntity> questionTbEntities); // 폼 생성 서비스
-    Page<FormTbDto> findFormList(FormFindDto formFindDto); // 폼 리스트 조회 서비스
+    Page<FormTbDto> findFormList(SqlFormParam sqlFormParam, PageRequest pageRequest); // 폼 리스트 조회 서비스
     AdminSubTbEntity analyzeForm(Long aid); // 종합분석 조회 서비스
     FormTbEntity findForm(Long aid, Long fid) throws FormException;
     List<QuestionTbEntity> findQuestions(Long fid) throws FormException;
