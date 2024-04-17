@@ -8,7 +8,7 @@ import com.kr.formdang.entity.AdminSubTbEntity;
 import com.kr.formdang.entity.FormTbEntity;
 import com.kr.formdang.entity.QuestionTbEntity;
 import com.kr.formdang.exception.FormException;
-import com.kr.formdang.constant.ResultCode;
+import com.kr.formdang.exception.ResultCode;
 import com.kr.formdang.dto.FormDataDto;
 import com.kr.formdang.dto.FormFindDto;
 import com.kr.formdang.dto.QuestionDataDto;

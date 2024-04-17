@@ -1,5 +1,6 @@
 package com.kr.formdang.controller;
 
+import com.kr.formdang.crypto.HashNMacUtil;
 import com.kr.formdang.entity.AdminTbEntity;
 import com.kr.formdang.external.AuthClient;
 import com.kr.formdang.external.dto.auth.JwtTokenRequest;
@@ -91,7 +92,7 @@ public class KakaoController {
             KakaoLoginResponse kakaoLoginResponse = kakaoService.kakaoOAuth(new KakaoTokenRequest(kakaoProp.getKakaoClientId(), kakaoProp.getKakaoSecret(), kakaoProp.getKakaoRedirectLoginUri(), code)); // 카카오 로그인 정보 취득
             AdminTbEntity adminTb = adminService.saveSnsAdmin(adminDataServiceImpl.getAdminData(AdminDataDto.builder()
                     .id(id)
-                    .pw(StringUtils.reverse(id))
+                    .pw(HashNMacUtil.getHashSHA256(StringUtils.reverse(id)))
                     .type(AdminTypeEnum.KAKAO_TYPE.getCode())
                     .name(kakaoLoginResponse.getProperties().getNickname())
                     .sub_id(kakaoLoginResponse.getId())
@@ -118,7 +119,7 @@ public class KakaoController {
             KakaoLoginResponse kakaoLoginResponse = kakaoService.kakaoOAuth(new KakaoTokenRequest(kakaoProp.getKakaoClientId(), kakaoProp.getKakaoSecret(), kakaoProp.getKakaoRedirectLoginPaperUri(), code)); // 카카오 로그인 정보 취득
             AdminTbEntity adminTb = adminService.saveSnsAdmin(adminDataServiceImpl.getAdminData(AdminDataDto.builder()
                     .id(id)
-                    .pw(StringUtils.reverse(id))
+                    .pw(HashNMacUtil.getHashSHA256(StringUtils.reverse(id)))
                     .type(AdminTypeEnum.KAKAO_TYPE.getCode())
                     .name(kakaoLoginResponse.getProperties().getNickname())
                     .sub_id(kakaoLoginResponse.getId())

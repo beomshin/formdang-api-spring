@@ -4,12 +4,11 @@ import com.kr.formdang.entity.AdminSubTbEntity;
 import com.kr.formdang.entity.AdminTbEntity;
 import com.kr.formdang.entity.FileUploadFailTbEntity;
 import com.kr.formdang.exception.FormException;
-import com.kr.formdang.constant.ResultCode;
+import com.kr.formdang.exception.ResultCode;
 import com.kr.formdang.repository.AdminSubTbRepository;
 import com.kr.formdang.repository.AdminTbRepository;
 import com.kr.formdang.repository.FileUploadFailTbRepository;
-import com.kr.formdang.utils.file.FileUtils;
-import com.kr.formdang.utils.file.dto.S3File;
+import com.kr.formdang.dto.S3File;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -121,7 +120,7 @@ public class AdminServiceImpl implements AdminService {
             log.error("■ 이미지 업로드 실패 확인 필요");
             fileUploadFailTbRepository.save(FileUploadFailTbEntity.builder()
                     .oriName(file.getOriginalFilename())
-                    .ext(FileUtils.getFileExtension(file.getOriginalFilename()))
+                    .ext(file.getOriginalFilename().substring(file.getOriginalFilename().lastIndexOf(".")))
                     .size(String.valueOf(file.getSize()))
                     .build());
             return false;

@@ -1,4 +1,4 @@
-package com.kr.formdang.utils.file.dto;
+package com.kr.formdang.dto;
 
 import lombok.*;
 import org.springframework.web.multipart.MultipartFile;

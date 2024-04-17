@@ -1,6 +1,6 @@
 package com.kr.formdang.aop;
 
-import com.kr.formdang.constant.ResultCode;
+import com.kr.formdang.exception.ResultCode;
 import com.kr.formdang.exception.FormException;
 import com.kr.formdang.provider.JwtTokenProvider;
 import com.kr.formdang.dto.DefaultResponse;

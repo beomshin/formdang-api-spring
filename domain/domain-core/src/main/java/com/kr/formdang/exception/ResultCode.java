@@ -1,4 +1,4 @@
-package com.kr.formdang.constant;
+package com.kr.formdang.exception;
 
 
 import lombok.AllArgsConstructor;

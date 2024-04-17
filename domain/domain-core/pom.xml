@@ -42,12 +42,12 @@
             <version>2.2.2</version>
         </dependency>
 
-        <dependency>
-            <groupId>com.kr.formdang</groupId>
-            <artifactId>common-web</artifactId>
-            <version>0.0.1</version>
-            <scope>compile</scope>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>com.kr.formdang</groupId>-->
+<!--            <artifactId>common-web</artifactId>-->
+<!--            <version>0.0.1</version>-->
+<!--            <scope>compile</scope>-->
+<!--        </dependency>-->
 
     </dependencies>
 

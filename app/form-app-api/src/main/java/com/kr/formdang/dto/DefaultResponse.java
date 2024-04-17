@@ -1,7 +1,7 @@
 package com.kr.formdang.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.kr.formdang.constant.ResultCode;
+import com.kr.formdang.exception.ResultCode;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 

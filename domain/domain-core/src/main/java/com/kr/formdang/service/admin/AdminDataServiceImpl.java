@@ -1,6 +1,5 @@
 package com.kr.formdang.service.admin;
 
-import com.kr.formdang.crypto.HashNMacUtil;
 import com.kr.formdang.entity.AdminTbEntity;
 import com.kr.formdang.dto.AdminDataDto;
 import lombok.RequiredArgsConstructor;
@@ -20,7 +19,7 @@ public class AdminDataServiceImpl implements AdminDataService {
         return AdminTbEntity.builder()
                 .id(adminDataDto.getId())
                 .subId(adminDataDto.getSub_id())
-                .pw(HashNMacUtil.getHashSHA256(adminDataDto.getPw()))
+                .pw(adminDataDto.getPw())
                 .name(adminDataDto.getName())
                 .type(adminDataDto.getType())
                 .build();

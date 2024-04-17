@@ -1,19 +1,17 @@
 package com.kr.formdang.service.form;
 
 import com.kr.formdang.dto.FormTbDto;
-import com.kr.formdang.enums.PageEnum;
 import com.kr.formdang.entity.*;
 
 import com.kr.formdang.exception.FormException;
 import com.kr.formdang.mapper.FormMapper;
-import com.kr.formdang.constant.ResultCode;
+import com.kr.formdang.exception.ResultCode;
 import com.kr.formdang.dto.FindFormDto;
 import com.kr.formdang.dto.FormDataDto;
 import com.kr.formdang.dto.FormFindDto;
 import com.kr.formdang.dto.QuestionDataDto;
 import com.kr.formdang.repository.*;
-import com.kr.formdang.utils.file.FileUtils;
-import com.kr.formdang.utils.file.dto.S3File;
+import com.kr.formdang.dto.S3File;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -103,7 +101,7 @@ public class FormServiceImpl implements FormService {
      */
     @Override
     public Page<FormTbDto> findFormList(FormFindDto formFindDto) {
-        PageRequest pageRequest = PageRequest.of(formFindDto.getPage(), PageEnum.PAGE_12.getNum());
+        PageRequest pageRequest = PageRequest.of(formFindDto.getPage(), 12);
         FindFormDto params = FindFormDto.builder() // 조회 파라미터 생성
                 .aid(formFindDto.getAid())
                 .offset(pageRequest.getOffset())
@@ -209,7 +207,7 @@ public class FormServiceImpl implements FormService {
                 log.error("■ 이미지 업로드 실패 확인 필요");
                 FileUploadFailTbEntity failTbEntity = FileUploadFailTbEntity.builder()
                         .oriName(formFile.getOriName())
-                        .ext(FileUtils.getFileExtension(formFile.getOriName()))
+                        .ext(formFile.getOriName().substring(formFile.getOriName().lastIndexOf(".")))
                         .size(String.valueOf(formFile.getSize()))
                         .build();
                 fileUploadFailTbRepository.save(failTbEntity);

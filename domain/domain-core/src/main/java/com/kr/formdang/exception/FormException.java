@@ -1,6 +1,5 @@
 package com.kr.formdang.exception;
 
-import com.kr.formdang.constant.ResultCode;
 import lombok.Getter;
 import lombok.ToString;
 

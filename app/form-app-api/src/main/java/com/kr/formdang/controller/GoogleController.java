@@ -1,5 +1,6 @@
 package com.kr.formdang.controller;
 
+import com.kr.formdang.crypto.HashNMacUtil;
 import com.kr.formdang.entity.AdminTbEntity;
 import com.kr.formdang.external.AuthClient;
 import com.kr.formdang.external.dto.auth.JwtTokenRequest;
@@ -86,7 +87,7 @@ public class GoogleController {
             GoogleLoginResponse googleLoginResponse = googleService.googleOAuth(new GoogleTokenRequest(googleProp.getGoogleClientId(), googleProp.getGoogleSecret(), googleProp.getGoogleRedirectUri(), code)); // 구글 로그인 정보 취득
             AdminTbEntity adminTb = adminService.saveSnsAdmin(adminDataServiceImpl.getAdminData(AdminDataDto.builder()
                     .id(id)
-                    .pw(StringUtils.reverse(id))
+                    .pw(HashNMacUtil.getHashSHA256(StringUtils.reverse(id)))
                     .type(AdminTypeEnum.GOOGLE_TYPE.getCode())
                     .name(googleLoginResponse.getName())
                     .sub_id(googleLoginResponse.getSub())
@@ -114,7 +115,7 @@ public class GoogleController {
             GoogleLoginResponse googleLoginResponse = googleService.googleOAuth(new GoogleTokenRequest(googleProp.getGoogleClientId(), googleProp.getGoogleSecret(), googleProp.getGoogleRedirectPaperUri(), code)); // 구글 로그인 정보 취득
             AdminTbEntity adminTb = adminService.saveSnsAdmin(adminDataServiceImpl.getAdminData(AdminDataDto.builder()
                     .id(id)
-                    .pw(StringUtils.reverse(id))
+                    .pw(HashNMacUtil.getHashSHA256(StringUtils.reverse(id)))
                     .type(AdminTypeEnum.GOOGLE_TYPE.getCode())
                     .name(googleLoginResponse.getName())
                     .sub_id(googleLoginResponse.getSub())
