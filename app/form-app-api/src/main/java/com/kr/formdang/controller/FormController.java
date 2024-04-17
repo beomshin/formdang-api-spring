@@ -7,8 +7,8 @@ import com.kr.formdang.dto.res.*;
 import com.kr.formdang.entity.AdminSubTbEntity;
 import com.kr.formdang.entity.FormTbEntity;
 import com.kr.formdang.entity.QuestionTbEntity;
-import com.kr.formdang.exception.CustomException;
-import com.kr.formdang.dto.GlobalCode;
+import com.kr.formdang.common.exception.FormException;
+import com.kr.formdang.common.constant.ResultCode;
 import com.kr.formdang.layer.FormDataDto;
 import com.kr.formdang.layer.FormFindDto;
 import com.kr.formdang.layer.QuestionDataDto;
@@ -96,13 +96,13 @@ public class FormController {
 
             FormTbEntity formTb = formService.submitForm(formTbEntity, questionTbEntities); // 폼 저장
 
-            GlobalCode resCode = formTb != null && formTb.getFid() != null ? GlobalCode.SUCCESS :  GlobalCode.FAIL_SUBMIT_FORM; // 폼 성공 여부 코드 저장
+            ResultCode resCode = formTb != null && formTb.getFid() != null ? ResultCode.SUCCESS :  ResultCode.FAIL_SUBMIT_FORM; // 폼 성공 여부 코드 저장
 
             log.info("■ 5. 폼 작성하기 응답 성공");
             return ResponseEntity.ok().body(new SubmitFormResponse(resCode, formTb != null ? formTb.getFid() : null));
         } catch (Exception e) {
             log.error("■ 5. 폼 작성하기 응답 오류", e);
-            return ResponseEntity.ok().body(new DefaultResponse(GlobalCode.SYSTEM_ERROR));
+            return ResponseEntity.ok().body(new DefaultResponse(ResultCode.SYSTEM_ERROR));
         }
     }
 
@@ -166,7 +166,7 @@ public class FormController {
                     .build());
         } catch (Exception e) {
             log.error("■ 4. 폼리스트 조회 응답 오류", e);
-            return ResponseEntity.ok().body(new DefaultResponse(GlobalCode.SYSTEM_ERROR));
+            return ResponseEntity.ok().body(new DefaultResponse(ResultCode.SYSTEM_ERROR));
         }
     }
 
@@ -198,7 +198,7 @@ public class FormController {
                     .build());
         } catch (Exception e) {
             log.error("■ 종합 분석 조회 응답 오류", e);
-            return ResponseEntity.ok().body(new DefaultResponse(GlobalCode.SYSTEM_ERROR));
+            return ResponseEntity.ok().body(new DefaultResponse(ResultCode.SYSTEM_ERROR));
         }
     }
 
@@ -253,12 +253,12 @@ public class FormController {
                     .themeUrl(formTbEntity.getThemeUrl())
                     .question(question)
                     .build());
-        } catch (CustomException e) {
+        } catch (FormException e) {
             log.error("■ 폼 상세 정보 조회 응답 오류", e);
             return ResponseEntity.ok().body(new DefaultResponse(e.getCode()));
         } catch (Exception e) {
             log.error("■ 폼 상세 정보 조회 응답 오류", e);
-            return ResponseEntity.ok().body(new DefaultResponse(GlobalCode.SYSTEM_ERROR));
+            return ResponseEntity.ok().body(new DefaultResponse(ResultCode.SYSTEM_ERROR));
         }
     }
 
@@ -301,12 +301,12 @@ public class FormController {
                     .build()).sorted(Comparator.comparing(QuestionDataDto::getOrder)).collect(Collectors.toList()); // 질문 데이터 order 순 정렬
             formService.updateForm(formDataDto, questionDataDtos); // 업데이트 처리
             return ResponseEntity.ok().body(new DefaultResponse());
-        } catch (CustomException e) {
+        } catch (FormException e) {
             log.error("■ 폼 상세 정보 조회 응답 오류", e);
             return ResponseEntity.ok().body(new DefaultResponse(e.getCode()));
         } catch (Exception e) {
             log.error("■ 폼 상세 정보 조회 응답 오류", e);
-            return ResponseEntity.ok().body(new DefaultResponse(GlobalCode.SYSTEM_ERROR));
+            return ResponseEntity.ok().body(new DefaultResponse(ResultCode.SYSTEM_ERROR));
         }
     }
 
@@ -365,12 +365,12 @@ public class FormController {
                             .question(question)
                             .worker(authUser.getId() == formTbEntity.getAid())
                     .build());
-        } catch (CustomException e) {
+        } catch (FormException e) {
             log.error("■ 유저 화면 정보 조회 응답 오류, {}", e.getCode().getMsg());
             return ResponseEntity.ok().body(new DefaultResponse(e.getCode()));
         } catch (Exception e) {
             log.error("■ 유저 화면 정보 조회 응답 오류", e);
-            return ResponseEntity.ok().body(new DefaultResponse(GlobalCode.SYSTEM_ERROR));
+            return ResponseEntity.ok().body(new DefaultResponse(ResultCode.SYSTEM_ERROR));
         }
     }
 

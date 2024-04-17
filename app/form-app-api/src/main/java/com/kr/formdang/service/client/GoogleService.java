@@ -1,4 +1,4 @@
-package com.kr.formdang.client;
+package com.kr.formdang.service.client;
 
 import com.kr.formdang.external.dto.google.GoogleLoginResponse;
 import com.kr.formdang.external.dto.google.GoogleTokenRequest;

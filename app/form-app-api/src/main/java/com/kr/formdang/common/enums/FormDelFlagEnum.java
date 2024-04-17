@@ -1,4 +1,4 @@
-package com.kr.formdang.enums;
+package com.kr.formdang.common.enums;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

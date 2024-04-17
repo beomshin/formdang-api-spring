@@ -1,10 +1,10 @@
-package com.kr.formdang.client.impl;
+package com.kr.formdang.service.client.impl;
 
 import com.kr.formdang.external.KakaoClient;
 import com.kr.formdang.external.dto.kakao.KakaoLoginResponse;
 import com.kr.formdang.external.dto.kakao.KakaoTokenRequest;
 import com.kr.formdang.external.dto.kakao.KakaoTokenResponse;
-import com.kr.formdang.client.KakaoService;
+import com.kr.formdang.service.client.KakaoService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

@@ -1,12 +1,12 @@
 package com.kr.formdang.service.form.impl;
 
 import com.kr.formdang.dto.FormTbDto;
-import com.kr.formdang.enums.PageEnum;
+import com.kr.formdang.common.enums.PageEnum;
 import com.kr.formdang.entity.*;
 
-import com.kr.formdang.exception.CustomException;
+import com.kr.formdang.common.exception.FormException;
 import com.kr.formdang.mapper.FormMapper;
-import com.kr.formdang.dto.GlobalCode;
+import com.kr.formdang.common.constant.ResultCode;
 import com.kr.formdang.dto.FindFormDto;
 import com.kr.formdang.layer.FormDataDto;
 import com.kr.formdang.layer.FormFindDto;
@@ -15,7 +15,7 @@ import com.kr.formdang.repository.*;
 import com.kr.formdang.service.form.FormDataService;
 import com.kr.formdang.service.form.FormService;
 import com.kr.formdang.utils.file.FileUtils;
-import com.kr.formdang.file.dto.S3File;
+import com.kr.formdang.service.file.dto.S3File;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -133,35 +133,35 @@ public class FormServiceImpl implements FormService {
     }
 
     @Override
-    public FormTbEntity findForm(Long aid, Long fid) throws CustomException {
+    public FormTbEntity findForm(Long aid, Long fid) throws FormException {
         Optional<FormTbEntity> formTb = formTbRepository.findByAidAndFid(aid, fid);
         if (formTb.isPresent()) {
             return formTb.get();
         } else {
-            throw new CustomException(GlobalCode.NOT_FIND_FORM);
+            throw new FormException(ResultCode.NOT_FIND_FORM);
         }
     }
 
     @Override
-    public List<QuestionTbEntity> findQuestions(Long fid) throws CustomException {
+    public List<QuestionTbEntity> findQuestions(Long fid) throws FormException {
         log.info("■ 3. 폼 질문 리스트 조회 쿼리 시작");
         List<QuestionTbEntity> questionTbEntities = questionTbRepository.findByFid(fid);
         if (questionTbEntities != null && !questionTbEntities.isEmpty()) {
             return questionTbEntities;
         } else {
-            throw new CustomException(GlobalCode.NOT_FIND_QUESTIONS);
+            throw new FormException(ResultCode.NOT_FIND_QUESTIONS);
         }
     }
 
     @Override
     @Transactional
-    public void updateForm(FormDataDto formDataDto, List<QuestionDataDto> questionDataDtos) throws CustomException {
+    public void updateForm(FormDataDto formDataDto, List<QuestionDataDto> questionDataDtos) throws FormException {
         log.info("■ 2. 폼 상세 정보 조회 쿼리 시작");
         Optional<FormTbEntity> formTb = formTbRepository.findByAidAndFid(formDataDto.getAid(), formDataDto.getFid());
-        if (!formTb.isPresent()) throw new CustomException(GlobalCode.NOT_FIND_FORM);
-        else if (formTb.get().getAnswerCount() > 0) throw new CustomException(GlobalCode.REFUSE_ALREADY_START_FORM);
-        else if (formTb.get().getDelFlag() == 1) throw new CustomException(GlobalCode.REFUSE_ALREADY_DELETE_FORM);
-        else if (formTb.get().getEndFlag() == 1) throw new CustomException(GlobalCode.REFUSE_ALREADY_END_FORM);
+        if (!formTb.isPresent()) throw new FormException(ResultCode.NOT_FIND_FORM);
+        else if (formTb.get().getAnswerCount() > 0) throw new FormException(ResultCode.REFUSE_ALREADY_START_FORM);
+        else if (formTb.get().getDelFlag() == 1) throw new FormException(ResultCode.REFUSE_ALREADY_DELETE_FORM);
+        else if (formTb.get().getEndFlag() == 1) throw new FormException(ResultCode.REFUSE_ALREADY_END_FORM);
 
         List<QuestionTbEntity> questionTbEntities = questionTbRepository.findByFidOrderByOrderAsc(formTb.get().getFid());
         log.info("■ 3. 폼 수정 데이터 엔티티 적용");
@@ -221,7 +221,7 @@ public class FormServiceImpl implements FormService {
 
     @Override
     @Transactional
-    public FormTbEntity findPaper(FormDataDto formDataDto) throws CustomException {
+    public FormTbEntity findPaper(FormDataDto formDataDto) throws FormException {
         log.info("■ 2. 폼 상세 정보 조회 쿼리 시작");
         Optional<FormSubTbEntity> formSubTb = formSubTbRepository.findByFormTbAndFormUrlKey(FormTbEntity.builder().fid(formDataDto.getFid()).build(), formDataDto.getKey());
         if (formSubTb.isPresent()) {
@@ -233,21 +233,21 @@ public class FormServiceImpl implements FormService {
                 log.info("■ 작성자 페이지 접근");
                 return formTb;
             } else if (formTb.getDelFlag() == 1) {
-                throw new CustomException(GlobalCode.DELETE_FORM);
+                throw new FormException(ResultCode.DELETE_FORM);
             } else if (formTb.getEndFlag() == 1) {
-                throw new CustomException(GlobalCode.END_FORM);
+                throw new FormException(ResultCode.END_FORM);
             } else if (formTb.getStatus() != 1) {
-                throw new CustomException(GlobalCode.NOT_START_FORM);
+                throw new FormException(ResultCode.NOT_START_FORM);
             } else if (formTb.getMaxRespondent() !=  0 && formTb.getAnswerCount() >= formTb.getMaxRespondent()) {
-                throw new CustomException(GlobalCode.IS_MAX_RESPONSE);
+                throw new FormException(ResultCode.IS_MAX_RESPONSE);
             } else if (!(now.compareTo(formTb.getBeginDt()) >= 0 && now.compareTo(formTb.getEndDt()) <= 0)) {
-                throw new CustomException(GlobalCode.IS_NOT_RIGHT_DATE);
+                throw new FormException(ResultCode.IS_NOT_RIGHT_DATE);
             }
 
             log.info("■ 제출 여부 확인 조회 쿼리 시작");
             int isSubmit = answerTbRepository.countByFidAndAid(formTb.getFid(), formDataDto.getAid());
             if (isSubmit > 0) {
-                throw new CustomException(GlobalCode.IS_SUBMIT);
+                throw new FormException(ResultCode.IS_SUBMIT);
             }
 
             log.info("■ 그룹 폼 조회 쿼리 시작");
@@ -258,14 +258,14 @@ public class FormServiceImpl implements FormService {
                 log.info("■ 그룹 권한 유저 조회 쿼리 시작");
                 List<GroupMemberTbEntity> groupMemberTbEntity = groupMemberTbRepository.findByAidAndGroupTbIn(formDataDto.getAid(), groupFormTbEntity.stream().map(it -> new GroupTbEntity(it.getGid())).collect(Collectors.toList()));
                 if (groupMemberTbEntity.isEmpty()) {
-                    throw new CustomException(GlobalCode.IS_NOT_GROUP_FORM_USER); // 그룹 폼 권한 미유저
+                    throw new FormException(ResultCode.IS_NOT_GROUP_FORM_USER); // 그룹 폼 권한 미유저
                 }
                 log.info("■ 그룹 폼 권한 검사 통과");
             }
 
             return formTb;
         } else {
-            throw new CustomException(GlobalCode.NOT_FIND_FORM);
+            throw new FormException(ResultCode.NOT_FIND_FORM);
         }
     }
 

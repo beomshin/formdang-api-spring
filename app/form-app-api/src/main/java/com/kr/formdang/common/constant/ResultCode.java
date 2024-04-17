@@ -1,4 +1,4 @@
-package com.kr.formdang.dto;
+package com.kr.formdang.common.constant;
 
 
 import lombok.AllArgsConstructor;
@@ -6,7 +6,7 @@ import lombok.Getter;
 
 @AllArgsConstructor
 @Getter
-public enum GlobalCode {
+public enum ResultCode {
 
     SUCCESS("0", "성공"),
     FAIL_VALIDATE_TOKEN("17002", "토큰 인증 실패"),

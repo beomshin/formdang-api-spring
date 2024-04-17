@@ -1,15 +1,14 @@
-package com.kr.formdang.enums;
+package com.kr.formdang.common.enums;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public enum FormTypeEnum {
+public enum FormStatusEnum {
 
-    SURVEY_TYPE(0),
-    QUIZ_TYPE(1),
-    ALL(99)
+    TEMP_STATUS(0),
+    NORMAL_STATUS(1),
 
     ;
 

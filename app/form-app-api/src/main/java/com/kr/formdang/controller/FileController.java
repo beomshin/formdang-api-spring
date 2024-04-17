@@ -2,21 +2,21 @@ package com.kr.formdang.controller;
 
 import com.kr.formdang.dto.auth.AuthUser;
 import com.kr.formdang.dto.auth.JwtTokenAuthUser;
-import com.kr.formdang.exception.CustomException;
-import com.kr.formdang.dto.GlobalCode;
+import com.kr.formdang.common.exception.FormException;
+import com.kr.formdang.common.constant.ResultCode;
 import com.kr.formdang.external.AuthClient;
 import com.kr.formdang.external.dto.auth.JwtTokenRequest;
 import com.kr.formdang.dto.RootResponse;
 import com.kr.formdang.external.dto.auth.JwtTokenResponse;
-import com.kr.formdang.file.dto.FormFile;
+import com.kr.formdang.service.file.dto.FormFile;
 import com.kr.formdang.dto.req.FileListRequest;
 import com.kr.formdang.dto.req.FileProfileRequest;
 import com.kr.formdang.dto.res.FileProfileResponse;
 import com.kr.formdang.dto.DefaultResponse;
 import com.kr.formdang.service.admin.AdminService;
-import com.kr.formdang.file.FileService;
+import com.kr.formdang.service.file.FileService;
 import com.kr.formdang.service.form.FormService;
-import com.kr.formdang.file.dto.S3File;
+import com.kr.formdang.service.file.dto.S3File;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -64,7 +64,7 @@ public class FileController {
             return ResponseEntity.ok().body(new FileProfileResponse(jwtTokenResponse.getAccessToken(), profile.getPath()));
         } else { // 프로필 등록 실패
             log.error("■ 3. 프로필 등록 응답 실패");
-            return ResponseEntity.ok().body(new DefaultResponse(GlobalCode.FAIL_UPLOAD_PROFILE));
+            return ResponseEntity.ok().body(new DefaultResponse(ResultCode.FAIL_UPLOAD_PROFILE));
         }
     }
 
@@ -80,7 +80,7 @@ public class FileController {
      * @return
      */
     @PostMapping("/public/file/list/upload/{fid}")
-    public ResponseEntity<RootResponse> uploadFileList(@ModelAttribute @Valid FileListRequest request, @RequestHeader("Authorization") String token, @PathVariable("fid") Long fid) throws CustomException {
+    public ResponseEntity<RootResponse> uploadFileList(@ModelAttribute @Valid FileListRequest request, @RequestHeader("Authorization") String token, @PathVariable("fid") Long fid) throws FormException {
         log.info("■ 1. 이미지 리스트 등록 요청 성공 (fid: {})", fid);
         AuthUser authUser = new JwtTokenAuthUser(token);
 

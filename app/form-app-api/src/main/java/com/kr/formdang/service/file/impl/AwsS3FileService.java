@@ -1,11 +1,11 @@
-package com.kr.formdang.file.impl;
+package com.kr.formdang.service.file.impl;
 
-import com.kr.formdang.file.FileService;
-import com.kr.formdang.file.dto.FormFile;
-import com.kr.formdang.file.dto.S3File;
+import com.kr.formdang.service.file.FileService;
+import com.kr.formdang.service.file.dto.FormFile;
+import com.kr.formdang.service.file.dto.S3File;
 import com.kr.formdang.utils.file.AwsS3Utils;
-import com.kr.formdang.exception.CustomException;
-import com.kr.formdang.dto.GlobalCode;
+import com.kr.formdang.common.exception.FormException;
+import com.kr.formdang.common.constant.ResultCode;
 import com.kr.formdang.utils.file.FileUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -54,9 +54,9 @@ public class AwsS3FileService implements FileService<S3File> {
 
     private S3File upload(MultipartFile file, Integer maxSize, Set<String> accessSet) {
         try {
-            if (file == null || file.isEmpty()) throw new CustomException(GlobalCode.NOT_EXIST_FILE); // 파일 누락
+            if (file == null || file.isEmpty()) throw new FormException(ResultCode.NOT_EXIST_FILE); // 파일 누락
             String ext = FileUtils.getFileExtension(Objects.requireNonNull(file.getOriginalFilename())); // 확장자 제어
-            if (file.getSize() >= maxSize || !accessSet.contains(ext)) throw new CustomException(GlobalCode.FAIL_FILE_CONDITION); // 파일 사이즈 제어
+            if (file.getSize() >= maxSize || !accessSet.contains(ext)) throw new FormException(ResultCode.FAIL_FILE_CONDITION); // 파일 사이즈 제어
             log.info("■ [AWS S3 파일 업로드 요청] 파일명 [{}], 사이즈 [{}], 확장자 [{}]", file.getOriginalFilename(), file.getSize(), ext);
             String path = AwsS3Utils.fileUploadToS3(file.getInputStream(), file.getSize(), file.getContentType(), ext);
             log.debug("■ [AWS S3 파일 업로드 성공] 파일 URL: {}", path);

@@ -3,8 +3,8 @@ package com.kr.formdang.service.admin.impl;
 import com.kr.formdang.entity.AdminSubTbEntity;
 import com.kr.formdang.entity.AdminTbEntity;
 import com.kr.formdang.entity.FileUploadFailTbEntity;
-import com.kr.formdang.exception.CustomException;
-import com.kr.formdang.dto.GlobalCode;
+import com.kr.formdang.common.exception.FormException;
+import com.kr.formdang.common.constant.ResultCode;
 import com.kr.formdang.external.AuthClient;
 import com.kr.formdang.external.dto.auth.JwtTokenRequest;
 import com.kr.formdang.external.dto.auth.JwtTokenResponse;
@@ -13,7 +13,7 @@ import com.kr.formdang.repository.AdminTbRepository;
 import com.kr.formdang.repository.FileUploadFailTbRepository;
 import com.kr.formdang.service.admin.AdminService;
 import com.kr.formdang.utils.file.FileUtils;
-import com.kr.formdang.file.dto.S3File;
+import com.kr.formdang.service.file.dto.S3File;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -54,7 +54,7 @@ public class AdminServiceImpl implements AdminService {
 
     @Override
     @Transactional
-    public AdminTbEntity saveSnsAdmin(AdminTbEntity adminTbEntity) throws CustomException {
+    public AdminTbEntity saveSnsAdmin(AdminTbEntity adminTbEntity) throws FormException {
         log.info("■ 폼당폼당 어드민 테이블 조회");
         Optional<AdminTbEntity> adminTb = adminTbRepository.findBySubId(adminTbEntity.getSubId());
         if (adminTb.isPresent()) {
@@ -63,21 +63,21 @@ public class AdminServiceImpl implements AdminService {
         }
 
         try {
-            if (adminTbEntity == null) throw new CustomException(GlobalCode.FAIL_SAVE_ADMIN);
+            if (adminTbEntity == null) throw new FormException(ResultCode.FAIL_SAVE_ADMIN);
             log.info("■ 폼당폼당 어드민 테이블 둥록");
             AdminTbEntity admin = adminTbRepository.save(adminTbEntity);
             log.info("■ 폼당폼당 어드민 서브 테이블 둥록");
             adminSubTbRepository.save(AdminSubTbEntity.builder().aid(admin.getAid()).build());
             return admin;
-        } catch (CustomException e) {
+        } catch (FormException e) {
             log.error("■ 어드민 계정 정보 누락 오류 [{}]", e.getCode());
             throw e;
         } catch (DataIntegrityViolationException e) {
             log.error("■ 어드민 계정 유니크 오류");
-            throw new CustomException(GlobalCode.NOT_UNIQUE_ADMIN);
+            throw new FormException(ResultCode.NOT_UNIQUE_ADMIN);
         } catch (Exception e) {
             log.error("■ 어드민 계정 저장 실패");
-            throw new CustomException(GlobalCode.FAIL_SAVE_ADMIN);
+            throw new FormException(ResultCode.FAIL_SAVE_ADMIN);
         }
     }
 
