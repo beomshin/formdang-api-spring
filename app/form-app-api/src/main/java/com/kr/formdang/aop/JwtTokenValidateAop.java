@@ -1,9 +1,9 @@
 package com.kr.formdang.aop;
 
-import com.kr.formdang.common.GlobalCode;
+import com.kr.formdang.dto.GlobalCode;
 import com.kr.formdang.exception.CustomException;
 import com.kr.formdang.provider.JwtTokenProvider;
-import com.kr.formdang.root.DefaultResponse;
+import com.kr.formdang.dto.DefaultResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.aspectj.lang.ProceedingJoinPoint;

@@ -1,7 +1,6 @@
-package com.kr.formdang.root;
+package com.kr.formdang.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.kr.formdang.common.GlobalCode;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 

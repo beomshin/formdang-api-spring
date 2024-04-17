@@ -5,7 +5,7 @@ import com.kr.formdang.file.dto.FormFile;
 import com.kr.formdang.file.dto.S3File;
 import com.kr.formdang.utils.file.AwsS3Utils;
 import com.kr.formdang.exception.CustomException;
-import com.kr.formdang.common.GlobalCode;
+import com.kr.formdang.dto.GlobalCode;
 import com.kr.formdang.utils.file.FileUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;

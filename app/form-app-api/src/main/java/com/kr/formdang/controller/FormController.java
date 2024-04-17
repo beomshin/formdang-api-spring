@@ -1,6 +1,6 @@
 package com.kr.formdang.controller;
 
-import com.kr.formdang.dao.FormTbDto;
+import com.kr.formdang.dto.FormTbDto;
 import com.kr.formdang.dto.auth.AuthUser;
 import com.kr.formdang.dto.auth.JwtTokenAuthUser;
 import com.kr.formdang.dto.res.*;
@@ -8,14 +8,14 @@ import com.kr.formdang.entity.AdminSubTbEntity;
 import com.kr.formdang.entity.FormTbEntity;
 import com.kr.formdang.entity.QuestionTbEntity;
 import com.kr.formdang.exception.CustomException;
-import com.kr.formdang.common.GlobalCode;
+import com.kr.formdang.dto.GlobalCode;
 import com.kr.formdang.layer.FormDataDto;
 import com.kr.formdang.layer.FormFindDto;
 import com.kr.formdang.layer.QuestionDataDto;
 import com.kr.formdang.dto.req.FormSubmitRequest;
 import com.kr.formdang.dto.req.FormUpdateRequest;
-import com.kr.formdang.root.DefaultResponse;
-import com.kr.formdang.root.RootResponse;
+import com.kr.formdang.dto.DefaultResponse;
+import com.kr.formdang.dto.RootResponse;
 import com.kr.formdang.service.form.FormDataService;
 import com.kr.formdang.service.form.FormService;
 import com.kr.formdang.utils.time.TimeUtils;

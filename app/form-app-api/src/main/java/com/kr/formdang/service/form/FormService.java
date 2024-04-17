@@ -1,6 +1,6 @@
 package com.kr.formdang.service.form;
 
-import com.kr.formdang.dao.FormTbDto;
+import com.kr.formdang.dto.FormTbDto;
 import com.kr.formdang.entity.AdminSubTbEntity;
 import com.kr.formdang.entity.FormTbEntity;
 import com.kr.formdang.entity.QuestionTbEntity;

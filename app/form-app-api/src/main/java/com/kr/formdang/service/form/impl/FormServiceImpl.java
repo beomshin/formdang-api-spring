@@ -1,13 +1,13 @@
 package com.kr.formdang.service.form.impl;
 
-import com.kr.formdang.dao.FormTbDto;
+import com.kr.formdang.dto.FormTbDto;
 import com.kr.formdang.enums.PageEnum;
 import com.kr.formdang.entity.*;
 
 import com.kr.formdang.exception.CustomException;
 import com.kr.formdang.mapper.FormMapper;
-import com.kr.formdang.common.GlobalCode;
-import com.kr.formdang.dao.FindFormDto;
+import com.kr.formdang.dto.GlobalCode;
+import com.kr.formdang.dto.FindFormDto;
 import com.kr.formdang.layer.FormDataDto;
 import com.kr.formdang.layer.FormFindDto;
 import com.kr.formdang.layer.QuestionDataDto;

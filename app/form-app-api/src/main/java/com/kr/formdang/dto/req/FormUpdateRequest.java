@@ -3,7 +3,7 @@ package com.kr.formdang.dto.req;
 import com.kr.formdang.dto.annotation.ArrayLenValid;
 import com.kr.formdang.dto.annotation.BeforeDateValid;
 import com.kr.formdang.dto.annotation.DateValid;
-import com.kr.formdang.root.DefaultRequest;
+import com.kr.formdang.dto.DefaultRequest;
 import lombok.*;
 
 import javax.validation.Valid;

@@ -1,7 +1,7 @@
 package com.kr.formdang.mapper;
 
-import com.kr.formdang.dao.FormTbDto;
-import com.kr.formdang.dao.FindFormDto;
+import com.kr.formdang.dto.FormTbDto;
+import com.kr.formdang.dto.FindFormDto;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;

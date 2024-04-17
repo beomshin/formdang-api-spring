@@ -3,16 +3,16 @@ package com.kr.formdang.controller;
 import com.kr.formdang.dto.auth.AuthUser;
 import com.kr.formdang.dto.auth.JwtTokenAuthUser;
 import com.kr.formdang.exception.CustomException;
-import com.kr.formdang.common.GlobalCode;
+import com.kr.formdang.dto.GlobalCode;
 import com.kr.formdang.external.AuthClient;
 import com.kr.formdang.external.dto.auth.JwtTokenRequest;
-import com.kr.formdang.root.RootResponse;
+import com.kr.formdang.dto.RootResponse;
 import com.kr.formdang.external.dto.auth.JwtTokenResponse;
 import com.kr.formdang.file.dto.FormFile;
 import com.kr.formdang.dto.req.FileListRequest;
 import com.kr.formdang.dto.req.FileProfileRequest;
 import com.kr.formdang.dto.res.FileProfileResponse;
-import com.kr.formdang.root.DefaultResponse;
+import com.kr.formdang.dto.DefaultResponse;
 import com.kr.formdang.service.admin.AdminService;
 import com.kr.formdang.file.FileService;
 import com.kr.formdang.service.form.FormService;
@@ -37,14 +37,12 @@ public class FileController {
 
     @Value("${token.access-key}")
     private String accessKey;
-
-    private final FileService<S3File> awsS3FileService;
+    private final AuthClient authClient; // 인증 서버 http client
+    private final FileService<S3File> awsS3FileService; // 파일 등록 서비스
 
     private final FormService formService;
 
     private final AdminService adminService;
-
-    private final AuthClient authClient;
 
     /**
      * 프로필 이미지 변경

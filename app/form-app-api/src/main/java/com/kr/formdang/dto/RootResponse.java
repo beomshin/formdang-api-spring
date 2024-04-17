@@ -1,4 +1,4 @@
-package com.kr.formdang.root;
+package com.kr.formdang.dto;
 
 public interface RootResponse {
 }

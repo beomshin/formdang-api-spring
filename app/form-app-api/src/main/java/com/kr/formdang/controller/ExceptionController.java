@@ -1,8 +1,8 @@
 package com.kr.formdang.controller;
 
 import com.kr.formdang.exception.CustomException;
-import com.kr.formdang.common.GlobalCode;
-import com.kr.formdang.root.DefaultResponse;
+import com.kr.formdang.dto.GlobalCode;
+import com.kr.formdang.dto.DefaultResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -26,7 +26,7 @@ import java.io.IOException;
 @Slf4j
 public class ExceptionController {
 
-    @ExceptionHandler
+    @ExceptionHandler(value = MethodArgumentNotValidException.class)
     public ResponseEntity<DefaultResponse> handle(MethodArgumentNotValidException e) { // 파라미터 오류 글로벌 처리
         log.error("[MethodArgumentNotValidException]");
         DefaultResponse response = new DefaultResponse(GlobalCode.PARAMETER_ERROR);
@@ -37,7 +37,7 @@ public class ExceptionController {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
     }
 
-    @ExceptionHandler
+    @ExceptionHandler(value = BindException.class)
     public ResponseEntity<DefaultResponse> handle(BindException e) { // 파라미터 바인딩 오류 글로벌 처리
         log.error("[BindException]");
         DefaultResponse response = new DefaultResponse(GlobalCode.BIND_ERROR);
@@ -48,37 +48,37 @@ public class ExceptionController {
         return ResponseEntity.ok().body(response);
     }
 
-    @ExceptionHandler
+    @ExceptionHandler(value = HttpMessageNotReadableException.class)
     public ResponseEntity<DefaultResponse> handle(HttpMessageNotReadableException e) { // 자료형 오류 글로벌 처리
         log.error("[HttpMessageNotReadableException]", e);
         return ResponseEntity.ok().body(new DefaultResponse(GlobalCode.HTTP_MESSAGE_NOT_READABLE_ERROR));
     }
 
-    @ExceptionHandler
+    @ExceptionHandler(value = MissingRequestHeaderException.class)
     public ResponseEntity<DefaultResponse> handle(MissingRequestHeaderException e) { // 헤더 누락 오류 글로벌 처리
         log.error("[MissingRequestHeaderException]");
         return ResponseEntity.ok().body(new DefaultResponse(GlobalCode.NOT_EXIST_HEADER));
     }
 
-    @ExceptionHandler
+    @ExceptionHandler(value = MissingServletRequestParameterException.class)
     public ResponseEntity<DefaultResponse> handle(MissingServletRequestParameterException e) { // 파라미터 누락 오류 글로벌 처리
         log.error("[MissingServletRequestParameterException]");
         return ResponseEntity.ok().body(new DefaultResponse(GlobalCode.NOT_EXIST_PARAM));
     }
 
-    @ExceptionHandler
+    @ExceptionHandler(value = MethodArgumentTypeMismatchException.class)
     public ResponseEntity<DefaultResponse> handle(MethodArgumentTypeMismatchException e) { // 파라미터 검증 오류 글로벌 처리
         log.error("[MethodArgumentTypeMismatchException]");
         return ResponseEntity.ok().body(new DefaultResponse(GlobalCode.BIND_ERROR));
     }
 
-    @ExceptionHandler
+    @ExceptionHandler(value = IOException.class)
     public ResponseEntity<DefaultResponse> handle(IOException e) { // IO Exception 글로벌 처리
         log.error("[IOException]: ", e);
         return ResponseEntity.ok().body(new DefaultResponse(GlobalCode.IO_EXCEPTION));
     }
 
-    @ExceptionHandler
+    @ExceptionHandler(value = RestClientException.class)
     public ResponseEntity<DefaultResponse> handle(RestClientException e) { // RestClientException 글로벌 처리
         log.error("[RestClientException]: ", e);
         return ResponseEntity.ok().body(new DefaultResponse(GlobalCode.NETWORK_ERROR));
@@ -90,7 +90,7 @@ public class ExceptionController {
         return ResponseEntity.ok().body(new DefaultResponse(e.getCode()));
     }
 
-    @ExceptionHandler
+    @ExceptionHandler(value = RuntimeException.class)
     public ResponseEntity<DefaultResponse> handle(RuntimeException e) { // 런타임 오류 글로벌 처리
         log.error("[RuntimeException]", e);
         return ResponseEntity.ok().body(new DefaultResponse(GlobalCode.SYSTEM_ERROR));

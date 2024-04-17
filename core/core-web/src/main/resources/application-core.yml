@@ -26,18 +26,18 @@ spring:
 
 formdang:
   auth-issue:
-    url: http://localhost:22081/auth/sp/issue
+    url: http://localhost:22081/auth/sp/issue # app 인증 서버 토큰 발급 요청 URL
 
 google:
   redirect:
-    uri: http://localhost:12001/api/sp/public/google/login/callback
-    paper_uri: http://localhost:12001/api/sp/public/google/login/paper/callback
+    uri: http://localhost:12001/api/sp/public/google/login/callback # 구글 일반 로그인 콜백 URL
+    paper_uri: http://localhost:12001/api/sp/public/google/login/paper/callback # 구글 유저 작성 Form 화면 로그인 콜백 URL
 
 kakao:
   redirect:
     login:
-      uri: http://localhost:12001/api/sp/public/kakao/login/callback
-      paper_uri: http://localhost:12001/api/sp/public/kakao/login/paper/callback
+      uri: http://localhost:12001/api/sp/public/kakao/login/callback # 카카오 일반 로그인 콜백 URL
+      paper_uri: http://localhost:12001/api/sp/public/kakao/login/paper/callback # 카카오 유저 작성 Form 화면 로그인 콜백 URL
 
 # TEST
 ---
@@ -48,18 +48,18 @@ spring:
 
 formdang:
   auth-issue:
-    url: http://formdang-auth:22081/auth/sp/issue
+    url: http://formdang-auth:22081/auth/sp/issue # app 인증 서버 토큰 발급 요청 URL (docker network)
 
 google:
   redirect:
-    uri: http://formdang-api.com/api/sp/public/google/login/callback
-    paper_uri: http://formdang-api.com/api/sp/public/google/login/paper/callback
+    uri: http://formdang-api.com/api/sp/public/google/login/callback # 구글 일반 로그인 콜백 URL
+    paper_uri: http://formdang-api.com/api/sp/public/google/login/paper/callback # 구글 유저 작설 Form 화면 로그인 콜백 URL
 
 kakao:
   redirect:
     login:
-      uri: http://formdang-api.com/api/sp/public/kakao/login/callback
-      paper_uri: http://formdang-api.com/api/sp/public/kakao/login/paper/callback
+      uri: http://formdang-api.com/api/sp/public/kakao/login/callback # 카카오 일반 로그인 콜백 URL
+      paper_uri: http://formdang-api.com/api/sp/public/kakao/login/paper/callback # 카카오 유저 작성 Form 화면 로그인 콜백 URL
 
 # PROD
 ---
@@ -70,15 +70,15 @@ spring:
 
 formdang:
   auth-issue:
-    url: http://formdang-auth:22081/auth/sp/issue
+    url: http://formdang-auth:22081/auth/sp/issue # app 인증 서버 토큰 발급 요청 URL (docker network)
 
 google:
   redirect:
-    uri: http://formdang-api.com/api/sp/public/google/login/callback
-    paper_uri: http://formdang-api.com/api/sp/public/google/login/paper/callback
+    uri: http://formdang-api.com/api/sp/public/google/login/callback # 구글 일반 로그인 콜백 URL
+    paper_uri: http://formdang-api.com/api/sp/public/google/login/paper/callback # 구글 유저 작설 Form 화면 로그인 콜백 URL
 
 kakao:
   redirect:
     login:
-      uri: http://formdang-api.com/api/sp/public/kakao/login/callback
-      paper_uri: http://formdang-api.com/api/sp/public/kakao/login/paper/callback
+      uri: http://formdang-api.com/api/sp/public/kakao/login/callback # 카카오 일반 로그인 콜백 URL
+      paper_uri: http://formdang-api.com/api/sp/public/kakao/login/paper/callback # 카카오 유저 작성 Form 화면 로그인 콜백 URL

@@ -1,7 +1,7 @@
 package com.kr.formdang.dto.res;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.kr.formdang.root.DefaultResponse;
+import com.kr.formdang.dto.DefaultResponse;
 import lombok.*;
 
 import java.sql.Timestamp;

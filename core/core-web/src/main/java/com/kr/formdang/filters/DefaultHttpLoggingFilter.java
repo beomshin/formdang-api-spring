@@ -1,12 +1,9 @@
 package com.kr.formdang.filters;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
-import com.kr.formdang.common.GlobalCode;
-import com.kr.formdang.root.DefaultResponse;
 import com.kr.formdang.wrapper.RequestBodyWrapper;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.IOUtils;
@@ -62,25 +59,20 @@ public class DefaultHttpLoggingFilter extends OncePerRequestFilter {
       printHeader(request);
     }
 
-    try {
-      printParameter(request); // 요청 파라미터 로깅
+    printParameter(request); // 요청 파라미터 로깅
 
-      RequestBodyWrapper wrappedRequest = new RequestBodyWrapper(request);
-      ContentCachingResponseWrapper wrappedResponse = new ContentCachingResponseWrapper(response);
+    RequestBodyWrapper wrappedRequest = new RequestBodyWrapper(request);
+    ContentCachingResponseWrapper wrappedResponse = new ContentCachingResponseWrapper(response);
 
-      printRequestBody(wrappedRequest); // 요청 body 로깅
+    printRequestBody(wrappedRequest); // 요청 body 로깅
 
-      stopWatch.start(); // watch start
-      filterChain.doFilter(wrappedRequest, wrappedResponse); // 비지니스 로직
-      stopWatch.stop(); // watch stop
+    stopWatch.start(); // watch start
+    filterChain.doFilter(wrappedRequest, wrappedResponse); // 비지니스 로직
+    stopWatch.stop(); // watch stop
 
-      log.info("Returned status=[{}] in [{}]ms, charset=[{}]", response.getStatus(), stopWatch.getTotalTimeMillis(), response.getCharacterEncoding());
-      printResponseBody(wrappedResponse); // JSON 응답 로깅
-      wrappedResponse.copyBodyToResponse();
-    } catch (Throwable e) {
-      log.error("{}", e);
-      new ObjectMapper().writeValue(response.getOutputStream(), new DefaultResponse(GlobalCode.SYSTEM_ERROR));
-    }
+    log.info("Returned status=[{}] in [{}]ms, charset=[{}]", response.getStatus(), stopWatch.getTotalTimeMillis(), response.getCharacterEncoding());
+    printResponseBody(wrappedResponse); // JSON 응답 로깅
+    wrappedResponse.copyBodyToResponse();
   }
 
   /**

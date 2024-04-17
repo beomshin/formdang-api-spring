@@ -1,6 +1,7 @@
 package com.kr.formdang.controller;
 
-import com.kr.formdang.root.DefaultResponse;
+import com.kr.formdang.dto.DefaultResponse;
+import com.kr.formdang.dto.RootResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -15,12 +16,12 @@ public class AuthController {
 
     /**
      * 토큰 검증 API
-     *
-     * 로그인 후 페이지 별로 해당 API를 통해 토큰 유효성 검증
+     * 토큰 유횽성 검사를 API
+     * 본 서버에서는 NGINX를 통해 인증서버를 통해 인증 후 넘어온다.
      * @return
      */
     @GetMapping("/admin/validate")
-    public ResponseEntity health() {
+    public ResponseEntity<RootResponse> health() {
         return ResponseEntity.ok().body(new DefaultResponse());
     }
 

@@ -1,4 +1,4 @@
-package com.kr.formdang.common;
+package com.kr.formdang.dto;
 
 
 import lombok.AllArgsConstructor;

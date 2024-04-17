@@ -1,4 +1,4 @@
-package com.kr.formdang.dao;
+package com.kr.formdang.dto;
 
 import lombok.*;
 

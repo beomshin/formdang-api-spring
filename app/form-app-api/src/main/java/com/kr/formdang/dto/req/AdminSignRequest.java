@@ -1,6 +1,6 @@
 package com.kr.formdang.dto.req;
 
-import com.kr.formdang.root.DefaultRequest;
+import com.kr.formdang.dto.DefaultRequest;
 import lombok.*;
 
 import javax.validation.constraints.NotBlank;
