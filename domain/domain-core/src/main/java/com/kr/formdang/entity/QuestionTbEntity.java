@@ -1,13 +1,10 @@
 package com.kr.formdang.entity;
 
-import com.kr.formdang.dto.QuestionDataDto;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.DynamicInsert;
 
 import javax.persistence.*;
-import java.util.Arrays;
-import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "question_tb", schema = "form_dang", catalog = "")
@@ -53,18 +50,15 @@ public class QuestionTbEntity extends DateEntity{
     @Column(name = "image_url")
     private String imageUrl;
 
-    public void updateQuestion(QuestionDataDto questionDataDto) {
+    public void updateQuestion(QuestionTbEntity questionDataDto) {
         this.order = questionDataDto.getOrder();
-        this.questionType = questionDataDto.getType();
+        this.questionType = questionDataDto.getQuestionType();
         this.title = questionDataDto.getTitle();
-        this.questionPlaceholder = questionDataDto.getPlaceholder();
-        this.questionDetail = questionDataDto.getDetail() != null ?
-                Arrays.stream(questionDataDto.getDetail()).collect(Collectors.joining("|")) : null;
-        this.questionExampleDetail = questionDataDto.getExampleDetail() != null ?
-                Arrays.stream(questionDataDto.getExampleDetail()).collect(Collectors.joining("|")) : null;
+        this.questionPlaceholder = questionDataDto.getQuestionPlaceholder();
+        this.questionDetail = questionDataDto.getQuestionDetail();
+        this.questionExampleDetail = questionDataDto.getQuestionExampleDetail();
         this.count = questionDataDto.getCount();
-        this.quizAnswer = questionDataDto.getAnswer() != null ?
-                Arrays.stream(questionDataDto.getAnswer()).collect(Collectors.joining("|")) : null;
+        this.quizAnswer = questionDataDto.getQuizAnswer();
         this.imageUrl = questionDataDto.getImageUrl();
         super.updateModDt();
     }

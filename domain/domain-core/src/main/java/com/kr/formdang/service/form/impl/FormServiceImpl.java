@@ -7,11 +7,8 @@ import com.kr.formdang.exception.FormException;
 import com.kr.formdang.mapper.FormMapper;
 import com.kr.formdang.exception.ResultCode;
 import com.kr.formdang.dto.SqlFormParam;
-import com.kr.formdang.dto.FormDataDto;
-import com.kr.formdang.dto.QuestionDataDto;
 import com.kr.formdang.repository.*;
 import com.kr.formdang.dto.S3File;
-import com.kr.formdang.service.form.FormDataService;
 import com.kr.formdang.service.form.FormService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -36,57 +33,45 @@ public class FormServiceImpl implements FormService {
     private final FormSubTbRepository formSubTbRepository;
     private final AdminSubTbRepository adminSubTbRepository;
     private final FormMapper formMapper;
-    private final FormDataService formDataService;
-    private final FileUploadFailTbRepository fileUploadFailTbRepository;
     private final GroupFormTbRepository groupFormTbRepository;
     private final GroupMemberTbRepository groupMemberTbRepository;
     private final AnswerTbRepository answerTbRepository;
 
     /**
      * 폼 저장
-     *
      * - 폼 저장
      * - 질문 리스트 저장
      * - 유저 생성 개수 업데이트
-     *
-     * @param formTbEntity
-     * @param questionTbEntities
-     * @return
      */
     @Override
     @Transactional
     public FormTbEntity submitForm(FormTbEntity formTbEntity, List<QuestionTbEntity> questionTbEntities) {
-        try {
-            log.info("■ 2. 폼 테이블 등록 쿼리 시작");
-            FormTbEntity formTb = formTbRepository.save(formTbEntity); // 폼 생성
+        log.info("■ 폼 테이블 등록 쿼리 시작");
+        FormTbEntity formTb = formTbRepository.save(formTbEntity); // 폼 생성
 
-            log.info("■ 2. 질문 리스트 테이블 등록 쿼리 시작");
-            questionTbEntities.stream().forEach(it -> it.setFid(formTb.getFid()));
-            questionTbRepository.saveAll(questionTbEntities); // 질문 리스트 생성
+        log.info("■ 질문 리스트 테이블 등록 쿼리 시작");
+        questionTbEntities.stream().forEach(it -> it.setFid(formTb.getFid()));
+        questionTbRepository.saveAll(questionTbEntities); // 질문 리스트 생성
 
 
-            log.info("■ 3. 폼 서브 테이블 등록 쿼리 시작");
-            String key = UUID.randomUUID().toString().replace("-", "").substring(0, 16);
-            FormSubTbEntity formSubTb = FormSubTbEntity.builder()
-                    .formTb(formTb)
-                    .formUrlKey(key)
-                    .formUrl("https://formdang.com/web/paper.html?type=" + formTb.getFormType() + "&fid=" + formTb.getFid() + "&key=" + key)
-                    .build();
-            formSubTbRepository.save(formSubTb); // 폼 서브 저장 테이블 생성
+        log.info("■ 폼 서브 테이블 등록 쿼리 시작");
+        String key = UUID.randomUUID().toString().replace("-", "").substring(0, 16);
+        FormSubTbEntity formSubTb = FormSubTbEntity.builder()
+                .formTb(formTb)
+                .formUrlKey(key)
+                .formUrl("https://formdang.com/web/paper.html?type=" + formTb.getFormType() + "&fid=" + formTb.getFid() + "&key=" + key)
+                .build();
+        formSubTbRepository.save(formSubTb); // 폼 서브 저장 테이블 생성
 
-            if (formTbEntity.getFormType() == 0) {
-                log.info("■ 4. 어드민 서브 테이블 설문 타입 개수 증가 쿼리 시작");
-                adminSubTbRepository.countUpInspectionCnt(formTbEntity.getAid()); // 설문 타입 생성 개수 증가
-            } else if (formTbEntity.getFormType() == 1) {
-                log.info("■ 4. 어드민 서브 테이블 퀴즈 타입 개수 증가 쿼리 시작");
-                adminSubTbRepository.countUpQuizCnt(formTbEntity.getAid()); // 퀴즈 타입 생성 개수 증가
-            }
-
-            return formTb;
-        } catch (Exception e) {
-            log.error("{}", e);
-            return null;
+        if (formTbEntity.getFormType() == 0) {
+            log.info("■ 어드민 서브 테이블 설문 타입 개수 증가 쿼리 시작");
+            adminSubTbRepository.countUpInspectionCnt(formTbEntity.getAid()); // 설문 타입 생성 개수 증가
+        } else if (formTbEntity.getFormType() == 1) {
+            log.info("■ 어드민 서브 테이블 퀴즈 타입 개수 증가 쿼리 시작");
+            adminSubTbRepository.countUpQuizCnt(formTbEntity.getAid()); // 퀴즈 타입 생성 개수 증가
         }
+
+        return formTb;
     }
 
     /**
@@ -124,7 +109,6 @@ public class FormServiceImpl implements FormService {
 
     @Override
     public List<QuestionTbEntity> findQuestions(Long fid) throws FormException {
-        log.info("■ 3. 폼 질문 리스트 조회 쿼리 시작");
         List<QuestionTbEntity> questionTbEntities = questionTbRepository.findByFid(fid);
         if (questionTbEntities != null && !questionTbEntities.isEmpty()) {
             return questionTbEntities;
@@ -135,8 +119,8 @@ public class FormServiceImpl implements FormService {
 
     @Override
     @Transactional
-    public void updateForm(FormDataDto formDataDto, List<QuestionDataDto> questionDataDtos) throws FormException {
-        log.info("■ 2. 폼 상세 정보 조회 쿼리 시작");
+    public void updateForm(FormTbEntity formDataDto, List<QuestionTbEntity> questionDataDtos) throws FormException {
+        log.info("■ 폼 상세 정보 조회 쿼리 시작");
         Optional<FormTbEntity> formTb = formTbRepository.findByAidAndFid(formDataDto.getAid(), formDataDto.getFid());
         if (!formTb.isPresent()) throw new FormException(ResultCode.NOT_FIND_FORM);
         else if (formTb.get().getAnswerCount() > 0) throw new FormException(ResultCode.REFUSE_ALREADY_START_FORM);
@@ -144,9 +128,9 @@ public class FormServiceImpl implements FormService {
         else if (formTb.get().getEndFlag() == 1) throw new FormException(ResultCode.REFUSE_ALREADY_END_FORM);
 
         List<QuestionTbEntity> questionTbEntities = questionTbRepository.findByFidOrderByOrderAsc(formTb.get().getFid());
-        log.info("■ 3. 폼 수정 데이터 엔티티 적용");
+        log.info("■ 폼 수정 데이터 엔티티 적용");
         formTb.get().updateForm(formDataDto); // 변경감지를 통한 업데이트 기존 정보와 동일하면 업데이트 안함
-        log.info("■ 4. 폼 질문 수정 데이터 엔티티 적용");
+        log.info("■ 폼 질문 수정 데이터 엔티티 적용");
         int question_cnt = 0, over_cnt = 0;
         if (questionDataDtos.size() == questionTbEntities.size()) {
             question_cnt = questionDataDtos.size();
@@ -155,11 +139,10 @@ public class FormServiceImpl implements FormService {
             over_cnt = questionDataDtos.size();
             List<QuestionTbEntity> insertEntities = new ArrayList<>();
             for (int i=question_cnt; i < over_cnt; i++) {
-                QuestionTbEntity questionTb = formDataService.getQuestionData(questionDataDtos.get(i));
-                questionTb.setFid(formTb.get().getFid());
-                insertEntities.add(questionTb);
+                questionDataDtos.get(i).setFid(formTb.get().getFid());
+                insertEntities.add(questionDataDtos.get(i));
             }
-            log.info("■ 5. 폼 추가 질문 등록 쿼리 시작");
+            log.info("■ 폼 추가 질문 등록 쿼리 시작");
             questionTbRepository.saveAll(insertEntities);
         } else if (questionDataDtos.size() < questionTbEntities.size()) {
             question_cnt = questionDataDtos.size();
@@ -168,7 +151,7 @@ public class FormServiceImpl implements FormService {
             for (int i=question_cnt; i< over_cnt; i++) {
                 deleteEntities.add(questionTbEntities.get(i));
             }
-            log.info("■ 5. 폼 등록 질문 삭제 쿼리 시작");
+            log.info("■ 폼 등록 질문 삭제 쿼리 시작");
             questionTbRepository.deleteAll(deleteEntities);
         }
         for(int i=0; i < question_cnt; i++) {
@@ -178,32 +161,19 @@ public class FormServiceImpl implements FormService {
 
     @Override
     @Transactional
-    public void updateImage(Long fid, List<S3File> formFiles) {
-        log.info("■ 5. 이미지 URL 업데이트 쿼리 실행");
-        for (S3File formFile : formFiles) {
-            if (formFile.isUploadSuccess()) {
-                if (formFile.isLogo()) {
-                    formTbRepository.updateLogoUrl(fid, formFile.getPath());
-                } else if (formFile.isQuestion()) {
-                    questionTbRepository.updateImageUrl(fid, formFile.getPath(), formFile.getOrder());
-                }
-            } else {
-                log.error("■ 이미지 업로드 실패 확인 필요");
-                FileUploadFailTbEntity failTbEntity = FileUploadFailTbEntity.builder()
-                        .oriName(formFile.getOriName())
-                        .ext(formFile.getOriName().substring(formFile.getOriName().lastIndexOf(".")))
-                        .size(String.valueOf(formFile.getSize()))
-                        .build();
-                fileUploadFailTbRepository.save(failTbEntity);
-            }
+    public void updateImage(Long fid, S3File file) {
+        if (file.isLogo()) {
+            formTbRepository.updateLogoUrl(fid, file.getPath());
+        } else if (file.isQuestion()) {
+            questionTbRepository.updateImageUrl(fid, file.getPath(), file.getOrder());
         }
     }
 
     @Override
     @Transactional
-    public FormTbEntity findPaper(FormDataDto formDataDto) throws FormException {
-        log.info("■ 2. 폼 상세 정보 조회 쿼리 시작");
-        Optional<FormSubTbEntity> formSubTb = formSubTbRepository.findByFormTbAndFormUrlKey(FormTbEntity.builder().fid(formDataDto.getFid()).build(), formDataDto.getKey());
+    public FormTbEntity findPaper(FormTbEntity formDataDto, String key) throws FormException {
+        log.info("■ 폼 상세 정보 조회 쿼리 시작");
+        Optional<FormSubTbEntity> formSubTb = formSubTbRepository.findByFormTbAndFormUrlKey(FormTbEntity.builder().fid(formDataDto.getFid()).build(), key);
         if (formSubTb.isPresent()) {
 
             FormTbEntity formTb = formSubTb.get().getFormTb();

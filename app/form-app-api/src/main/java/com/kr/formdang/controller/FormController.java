@@ -13,12 +13,11 @@ import com.kr.formdang.exception.ResultCode;
 import com.kr.formdang.dto.req.FormSubmitRequest;
 import com.kr.formdang.dto.req.FormUpdateRequest;
 import com.kr.formdang.service.form.FormService;
-import com.kr.formdang.utils.FormFlagUtils;
+import com.kr.formdang.utils.flag.FormFlagUtils;
 import com.kr.formdang.utils.str.StrUtils;
 import com.kr.formdang.utils.time.TimeUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
@@ -27,8 +26,6 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
-import java.sql.Timestamp;
-import java.text.ParseException;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -47,20 +44,19 @@ public class FormController {
     public ResponseEntity<RootResponse> submitForm(
             @Valid @RequestBody FormSubmitRequest request,
             @RequestHeader("Authorization") String token
-    ) throws ParseException {
-
-        final String pattern = "yyyyMMdd";
+    ) {
 
         log.info("■ 1. 폼 작성하기 요청 성공");
         AuthUser authUser = new JwtTokenAuthUser(token);
 
+        // 폼 엔티티
         FormTbEntity formTbEntity = FormTbEntity.builder()
                 .aid(authUser.getId())
                 .title(request.getTitle())
                 .formType(request.getType())
                 .formDetail(request.getDetail())
-                .beginDt(TimeUtils.getTimeStamp(request.getBeginDt(), pattern))
-                .endDt(TimeUtils.getTimeStamp(request.getEndDt(), pattern))
+                .beginDt(TimeUtils.getTimeStamp(request.getBeginDt()))
+                .endDt(TimeUtils.getTimeStamp(request.getEndDt()))
                 .maxRespondent(request.getMaxRespondent())
                 .questionCount(request.getQuestionCount() == request.getQuestion().size() ? request.getQuestionCount() : request.getQuestion().size())
                 .logoUrl(request.getLogoUrl())
@@ -68,6 +64,7 @@ public class FormController {
                 .status(request.getStatus())
                 .build(); // 폼 엔티티 생성
 
+        // 질문 리스트 엔티티
         List<QuestionTbEntity> questionTbEntities = request.getQuestion().stream()
                 .map(it ->
                         QuestionTbEntity.builder()
@@ -77,23 +74,24 @@ public class FormController {
                                 .questionPlaceholder(it.getPlaceholder())
                                 .imageUrl(it.getImageUrl())
                                 .count(it.getCount())
-                                .questionDetail(StrUtils.joining(it.getDetail(), "|"))
-                                .questionExampleDetail(StrUtils.joining(it.getExampleDetail(), "|"))
-                                .quizAnswer(StrUtils.joining(it.getAnswer(), "|"))
+                                .questionDetail(StrUtils.joining(it.getDetail()))
+                                .questionExampleDetail(StrUtils.joining(it.getExampleDetail()))
+                                .quizAnswer(StrUtils.joining(it.getAnswer()))
                                 .build()
                 )
                 .collect(Collectors.toList()); // 질문 엔티티 리스트 생성
 
-        FormTbEntity formTb = formService.submitForm(formTbEntity, questionTbEntities); // 폼 저장
-
-        boolean isInsert = formTb != null && formTb.getFid() != null; // 폼 성공 여부
-
-        if (isInsert) {
-            log.info("■ 5. 폼 작성하기 성공 응답");
-            return ResponseEntity.ok().body(new SubmitFormResponse(formTb.getFid()));
-        } else {
-            log.info("■ 5. 폼 작성하기 실패 응답");
-            return ResponseEntity.ok().body(new DefaultResponse(ResultCode.FAIL_SUBMIT_FORM));
+        try {
+            log.info("■ 2. 폼 테이블 등록");
+            FormTbEntity formTb = formService.submitForm(formTbEntity, questionTbEntities); // 폼 저장
+            RootResponse response = new SubmitFormResponse(formTb.getFid());
+            log.info("■ 3. 폼 작성하기 응답 성공");
+            return ResponseEntity.ok().body(response);
+        } catch (Exception e) {
+            log.error("■ 폼 테이블 등록 실패: " + e);
+            RootResponse response = new DefaultResponse(ResultCode.FAIL_SUBMIT_FORM);
+            log.info("■ 3. 폼 작성하기 응답 성공");
+            return ResponseEntity.ok().body(response);
         }
     }
 
@@ -117,14 +115,14 @@ public class FormController {
 
         PageRequest pageRequest = PageRequest.of(page, PageEnum.PAGE_12.getNum()); // 페이징 처리 생성
         SqlFormParam sqlFormParam = SqlFormParam.builder() // 조회 파라미터 생성
-                .aid(authUser.getId())
-                .offset(pageRequest.getOffset())
-                .pageSize(pageRequest.getPageSize())
-                .type(FormFlagUtils.type(type))
-                .delFlag(FormFlagUtils.delFlag(status))
-                .endFlag(FormFlagUtils.endFlag(status))
-                .status(FormFlagUtils.status(status))
-                .order(FormFlagUtils.order(order))
+                    .aid(authUser.getId())
+                    .offset(pageRequest.getOffset())
+                    .pageSize(pageRequest.getPageSize())
+                    .type(FormFlagUtils.type(type))
+                    .delFlag(FormFlagUtils.delFlag(status))
+                    .endFlag(FormFlagUtils.endFlag(status))
+                    .status(FormFlagUtils.status(status))
+                    .order(FormFlagUtils.order(order))
                 .build();
 
         log.info("■ 2. 폼 리스트 조회 쿼리 시작");
@@ -133,19 +131,18 @@ public class FormController {
         log.info("■ 3. 종합 분석 정보 조회 쿼리 시작");
         AdminSubTbEntity adminSubTb = formService.analyzeForm(authUser.getId()); // 종합 정보 조회
 
-        DefaultResponse response = FindFormListResponse.builder()
+        log.info("■ 4. 폼리스트 조회 응답 성공");
+        RootResponse response = FindFormListResponse.builder()
                 .totalElements(pages.getTotalElements())
                 .totalPage(pages.getTotalPages())
                 .curPage(pages.getNumber())
-                .analyze(FindFormListResponse.Analyze
-                        .builder()
+                .analyze(FindFormListResponse.Analyze.builder()
                             .inspectionCnt(adminSubTb.getInspectionCnt())
                             .quizCnt(adminSubTb.getQuizCnt())
                             .inspectionRespondentCnt(adminSubTb.getInspectionRespondentCnt())
                             .quizRespondentCnt(adminSubTb.getQuizRespondent_cnt())
                         .build())
-                .list(pages.getContent().stream().map(it -> FindFormListResponse.Forms
-                                .builder()
+                .list(pages.getContent().stream().map(it -> FindFormListResponse.Forms.builder()
                                     .fid(it.getFid())
                                     .type(it.getFormType())
                                     .title(it.getTitle())
@@ -163,206 +160,189 @@ public class FormController {
 
     /**
      * 종합 분석 조회하기 API
-     *
      * 종합 분석 데이터 조회
      * 퀴즈, 설문 생성 개수, 응답 개수
-     *
-     * 2023-01-01 현 버전 사용안함 (해당 정보 find에서 함께 전달 처리 )
-     *
-     * @param token
-     * @return
      */
     @GetMapping(value = "/form/analyze")
     public ResponseEntity<RootResponse> analyzeForm(@RequestHeader("Authorization") String token) {
-        try {
-            log.info("■ 1. 종합 분석 조회 요청 성공");
-            AuthUser authUser = new JwtTokenAuthUser(token);
-            log.info("■ 2. 종합 분석 정보 조회 쿼리 시작");
-            AdminSubTbEntity adminSubTb = formService.analyzeForm(authUser.getId()); // 종합 정보 조회
-            log.info("■ 4. 종합 분석 조회 응답 성공");
-            return ResponseEntity.ok().body(AnalyzeFormResponse
-                    .builder()
-                            .inspectionCnt(adminSubTb.getInspectionCnt())
-                            .quizCnt(adminSubTb.getQuizCnt())
-                            .inspectionRespondentCnt(adminSubTb.getInspectionRespondentCnt())
-                            .quizRespondentCnt(adminSubTb.getQuizRespondent_cnt())
-                    .build());
-        } catch (Exception e) {
-            log.error("■ 종합 분석 조회 응답 오류", e);
-            return ResponseEntity.ok().body(new DefaultResponse(ResultCode.SYSTEM_ERROR));
-        }
+
+        log.info("■ 1. 종합 분석 조회 요청 성공");
+        AuthUser authUser = new JwtTokenAuthUser(token);
+
+        log.info("■ 2. 종합 분석 정보 조회 쿼리 시작");
+        AdminSubTbEntity adminSubTb = formService.analyzeForm(authUser.getId()); // 종합 정보 조회
+
+        log.info("■ 3. 종합 분석 조회 응답 성공");
+        RootResponse response = AnalyzeFormResponse.builder()
+                    .inspectionCnt(adminSubTb.getInspectionCnt())
+                    .quizCnt(adminSubTb.getQuizCnt())
+                    .inspectionRespondentCnt(adminSubTb.getInspectionRespondentCnt())
+                    .quizRespondentCnt(adminSubTb.getQuizRespondent_cnt())
+                .build();
+
+        return ResponseEntity.ok().body(response);
+
     }
 
     /**
      * 폼 상세 정보 조회하기
-     *
-     * @param token
-     * @param fid
-     * @return
      */
     @GetMapping(value = "/form/detail/{fid}/find")
-    public ResponseEntity<RootResponse> findFormDetail(@RequestHeader("Authorization") String token, @PathVariable("fid") Long fid) {
-        try {
+    public ResponseEntity<RootResponse> findFormDetail(
+            @RequestHeader("Authorization") String token,
+            @PathVariable("fid") Long fid) throws FormException
+    {
+
             log.info("■ 1. 폼 상세 정보 조회 요청 성공");
             AuthUser authUser = new JwtTokenAuthUser(token);
 
             log.info("■ 2. 폼 상세 정보 조회 쿼리 시작");
             FormTbEntity formTbEntity = formService.findForm(authUser.getId(), fid); // 폼 상세 조회
+
+            log.info("■ 3. 폼 질문 리스트 조회 쿼리 시작");
             List<QuestionTbEntity> questionTbEntities = formService.findQuestions(fid); // 질문 리스트 조회
-            final String separator = "\\|";
-            List<FindFormDetailResponse.FormDetailQuestionResponse> question = questionTbEntities.stream()
-                    .map(it ->
-                            FindFormDetailResponse.FormDetailQuestionResponse
-                                    .builder()
-                                    .qid(it.getQid())
-                                    .type(it.getQuestionType())
-                                    .order(it.getOrder())
-                                    .title(it.getTitle())
-                                    .placeholder(it.getQuestionPlaceholder())
-                                    .imageUrl(it.getImageUrl())
-                                    .detail(StringUtils.isNotBlank(it.getQuestionDetail()) ? it.getQuestionDetail().split(separator) : null)
-                                    .exampleDetail(StringUtils.isNotBlank(it.getQuestionExampleDetail()) ? it.getQuestionExampleDetail().split(separator) : null)
-                                    .count(it.getCount())
-                                    .answer(StringUtils.isNotBlank(it.getQuizAnswer()) ? it.getQuizAnswer().split(separator) : null)
-                                    .build())
-                    .collect(Collectors.toList());
+
             log.info("■ 4. 폼 상세 정보 조회 응답 성공");
-            return ResponseEntity.ok().body(FindFormDetailResponse.builder()
-                    .fid(formTbEntity.getFid())
-                    .type(formTbEntity.getFormType())
-                    .title(formTbEntity.getTitle())
-                    .detail(formTbEntity.getFormDetail())
-                    .beginDt(formTbEntity.getBeginDt())
-                    .endDt(formTbEntity.getEndDt())
-                    .questionCount(formTbEntity.getQuestionCount())
-                    .status(formTbEntity.getStatus())
-                    .endFlag(formTbEntity.getEndFlag())
-                    .delFlag(formTbEntity.getDelFlag())
-                    .answerCount(formTbEntity.getAnswerCount())
-                    .maxRespondent(formTbEntity.getMaxRespondent())
-                    .logoUrl(formTbEntity.getLogoUrl())
-                    .themeUrl(formTbEntity.getThemeUrl())
-                    .question(question)
-                    .build());
-        } catch (FormException e) {
-            log.error("■ 폼 상세 정보 조회 응답 오류", e);
-            return ResponseEntity.ok().body(new DefaultResponse(e.getCode()));
-        } catch (Exception e) {
-            log.error("■ 폼 상세 정보 조회 응답 오류", e);
-            return ResponseEntity.ok().body(new DefaultResponse(ResultCode.SYSTEM_ERROR));
-        }
+            RootResponse response = FindFormDetailResponse.builder()
+                        .fid(formTbEntity.getFid())
+                        .type(formTbEntity.getFormType())
+                        .title(formTbEntity.getTitle())
+                        .detail(formTbEntity.getFormDetail())
+                        .beginDt(formTbEntity.getBeginDt())
+                        .endDt(formTbEntity.getEndDt())
+                        .questionCount(formTbEntity.getQuestionCount())
+                        .status(formTbEntity.getStatus())
+                        .endFlag(formTbEntity.getEndFlag())
+                        .delFlag(formTbEntity.getDelFlag())
+                        .answerCount(formTbEntity.getAnswerCount())
+                        .maxRespondent(formTbEntity.getMaxRespondent())
+                        .logoUrl(formTbEntity.getLogoUrl())
+                        .themeUrl(formTbEntity.getThemeUrl())
+                        .question(questionTbEntities.stream().map(
+                                it -> FindFormDetailResponse.FormDetailQuestionResponse.builder()
+                                            .qid(it.getQid())
+                                            .type(it.getQuestionType())
+                                            .order(it.getOrder())
+                                            .title(it.getTitle())
+                                            .placeholder(it.getQuestionPlaceholder())
+                                            .imageUrl(it.getImageUrl())
+                                            .count(it.getCount())
+                                            .detail(StrUtils.split(it.getQuestionDetail()))
+                                            .exampleDetail(StrUtils.split(it.getQuestionExampleDetail()))
+                                            .answer(StrUtils.split(it.getQuizAnswer()))
+                                        .build())
+                                .collect(Collectors.toList()))
+                    .build();
+
+            return ResponseEntity.ok().body(response);
     }
 
-
+    /**
+     * 폼 업데이트
+     */
     @PostMapping(value = "/form/{fid}/update")
-    public ResponseEntity<RootResponse> updateForm(@RequestHeader("Authorization") String token, @PathVariable("fid") Long fid,
-                                     @Valid @RequestBody FormUpdateRequest request) {
-        try {
-            final String pattern = "yyyyMMdd";
-            log.info("■ 1. 폼 상세 정보 조회 요청 성공");
+    public ResponseEntity<RootResponse> updateForm(
+            @RequestHeader("Authorization") String token,
+            @PathVariable("fid") Long fid,
+            @Valid @RequestBody FormUpdateRequest request) throws FormException
+    {
+
+            log.info("■ 1. 폼 정보 업데이트 요청 성공");
             AuthUser authUser = new JwtTokenAuthUser(token);
-            final Timestamp beginDt = TimeUtils.getTimeStamp(request.getBeginDt(), pattern);
-            final Timestamp endDt = TimeUtils.getTimeStamp(request.getEndDt(), pattern);
 
-            FormDataDto formDataDto = FormDataDto.builder()
-                    .fid(fid)
-                    .type(request.getType())
-                    .title(request.getTitle())
-                    .detail(request.getDetail())
-                    .beginDt(beginDt)
-                    .endDt(endDt)
-                    .questionCount(request.getQuestionCount() == request.getQuestion().size() ? request.getQuestionCount() : request.getQuestion().size())
-                    .status(request.getStatus())
-                    .maxRespondent(request.getMaxRespondent())
-                    .logoUrl(request.getLogoUrl())
-                    .themeUrl(request.getThemeUrl())
-                    .aid(authUser.getId())
-                    .build(); // 폼 데이터
+            FormTbEntity formTbEntity = FormTbEntity.builder()
+                        .fid(fid)
+                        .formType(request.getType())
+                        .title(request.getTitle())
+                        .formDetail(request.getDetail())
+                        .beginDt(TimeUtils.getTimeStamp(request.getBeginDt()))
+                        .endDt(TimeUtils.getTimeStamp(request.getEndDt()))
+                        .questionCount(request.getQuestionCount() == request.getQuestion().size() ? request.getQuestionCount() : request.getQuestion().size())
+                        .status(request.getStatus())
+                        .maxRespondent(request.getMaxRespondent())
+                        .logoUrl(request.getLogoUrl())
+                        .themeUrl(request.getThemeUrl())
+                        .aid(authUser.getId())
+                    .build();
 
-            List<QuestionDataDto> questionDataDtos = request.getQuestion().stream().map(it -> QuestionDataDto.builder()
-                    .type(it.getType())
-                    .order(it.getOrder())
-                    .title(it.getTitle())
-                    .placeholder(it.getPlaceholder())
-                    .imageUrl(it.getImageUrl())
-                    .detail(it.getDetail())
-                    .exampleDetail(it.getExampleDetail())
-                    .count(it.getCount())
-                    .answer(it.getAnswer())
-                    .build()).sorted(Comparator.comparing(QuestionDataDto::getOrder)).collect(Collectors.toList()); // 질문 데이터 order 순 정렬
-            formService.updateForm(formDataDto, questionDataDtos); // 업데이트 처리
-            return ResponseEntity.ok().body(new DefaultResponse());
-        } catch (FormException e) {
-            log.error("■ 폼 상세 정보 조회 응답 오류", e);
-            return ResponseEntity.ok().body(new DefaultResponse(e.getCode()));
-        } catch (Exception e) {
-            log.error("■ 폼 상세 정보 조회 응답 오류", e);
-            return ResponseEntity.ok().body(new DefaultResponse(ResultCode.SYSTEM_ERROR));
-        }
+
+            List<QuestionTbEntity> questionTbEntities = request.getQuestion().stream()
+                    .map(it -> QuestionTbEntity.builder()
+                            .questionType(it.getType())
+                            .order(it.getOrder())
+                            .title(it.getTitle())
+                            .questionPlaceholder(it.getPlaceholder())
+                            .imageUrl(it.getImageUrl())
+                            .count(it.getCount())
+                            .questionDetail(StrUtils.joining(it.getDetail()))
+                            .questionExampleDetail(StrUtils.joining(it.getExampleDetail()))
+                            .quizAnswer(StrUtils.joining(it.getAnswer()))
+                            .build()
+                    ).sorted(Comparator.comparing(QuestionTbEntity::getOrder)).collect(Collectors.toList()); // 질문 데이터 order 순 정렬
+
+            log.info("■ 2. 폼 정보 업데이트 시작");
+            formService.updateForm(formTbEntity, questionTbEntities); // 업데이트 처리
+
+            log.info("■ 3. 폼 정보 업데이트 응답 성공");
+            RootResponse response = new DefaultResponse();
+
+            return ResponseEntity.ok().body(response);
     }
 
 
     /**
      * 유저 화면 데이터 제공
-     *
-     * @param token
-     * @param fid
-     * @return
      */
     @GetMapping(value = "/form/paper")
-    public ResponseEntity<RootResponse> findPaper(@RequestHeader(value = "Authorization", required = false) String token,
-                                                  @RequestParam @NotBlank @Min(0) Integer type,
-                                                  @RequestParam @NotBlank @Min(0) Long fid,
-                                                  @RequestParam @NotBlank String key) {
-        try {
+    public ResponseEntity<RootResponse> findPaper(
+            @RequestHeader(value = "Authorization", required = false) String token,
+            @RequestParam @NotBlank @Min(0) Integer type,
+            @RequestParam @NotBlank @Min(0) Long fid,
+            @RequestParam @NotBlank String key) throws FormException
+    {
+
             log.info("■ 1. 유저 화면 정보 조회 요청 성공");
             AuthUser authUser = new JwtTokenAuthUser(token);
 
-            FormTbEntity formTbEntity = formService.findPaper(FormDataDto.builder()
-                            .fid(fid)
-                            .type(type)
-                            .key(key)
-                            .aid(authUser.getId())
-                    .build()); // 폼 상세 조회
+            FormTbEntity formTbEntity = FormTbEntity.builder()
+                        .fid(fid)
+                        .formType(type)
+                        .aid(authUser.getId())
+                    .build();
+
+            log.info("■ 2. 폼 상세 정보 조회 시작");
+            formTbEntity = formService.findPaper(formTbEntity, key); // 폼 상세 조회
+
+            log.info("■ 3. 폼 질문 리스트 조회 쿼리 시작");
             List<QuestionTbEntity> questionTbEntities = formService.findQuestions(fid); // 질문 리스트 조회
+
             log.info("■ 4. 유저 화면 정보 조회 응답 성공");
-            final String separator = "\\|";
+            RootResponse response = FindPaperResponse.builder()
+                        .fid(formTbEntity.getFid())
+                        .type(formTbEntity.getFormType())
+                        .title(formTbEntity.getTitle())
+                        .detail(formTbEntity.getFormDetail())
+                        .maxRespondent(formTbEntity.getMaxRespondent())
+                        .logoUrl(formTbEntity.getLogoUrl())
+                        .themeUrl(formTbEntity.getThemeUrl())
+                        .worker(authUser.getId() == formTbEntity.getAid())
+                        .question(questionTbEntities.stream().map(
+                                it -> FindPaperResponse.FormDetailQuestionResponse.builder()
+                                            .qid(it.getQid())
+                                            .type(it.getQuestionType())
+                                            .order(it.getOrder())
+                                            .title(it.getTitle())
+                                            .placeholder(it.getQuestionPlaceholder())
+                                            .imageUrl(it.getImageUrl())
+                                            .count(it.getCount())
+                                            .detail(StrUtils.split(it.getQuestionDetail()))
+                                            .exampleDetail(StrUtils.split(it.getQuestionExampleDetail()))
+                                            .answer(StrUtils.split(it.getQuizAnswer()))
+                                        .build())
+                                .collect(Collectors.toList()))
+                    .build();
 
-            List<FindPaperResponse.FormDetailQuestionResponse> question = questionTbEntities.stream()
-                    .map(it -> FindPaperResponse.FormDetailQuestionResponse
-                            .builder()
-                            .qid(it.getQid())
-                            .type(it.getQuestionType())
-                            .order(it.getOrder())
-                            .title(it.getTitle())
-                            .placeholder(it.getQuestionPlaceholder())
-                            .imageUrl(it.getImageUrl())
-                            .count(it.getCount())
-                            .detail(StringUtils.isNotBlank(it.getQuestionDetail()) ? it.getQuestionDetail().split(separator) : null)
-                            .exampleDetail(StringUtils.isNotBlank(it.getQuestionExampleDetail()) ? it.getQuestionExampleDetail().split(separator) : null)
-                            .answer(StringUtils.isNotBlank(it.getQuizAnswer()) ? it.getQuizAnswer().split(separator) : null)
-                            .build())
-
-                    .collect(Collectors.toList());;
-            return ResponseEntity.ok().body(FindPaperResponse
-                    .builder()
-                            .fid(formTbEntity.getFid())
-                            .type(formTbEntity.getFormType())
-                            .title(formTbEntity.getTitle())
-                            .detail(formTbEntity.getFormDetail())
-                            .maxRespondent(formTbEntity.getMaxRespondent())
-                            .logoUrl(formTbEntity.getLogoUrl())
-                            .themeUrl(formTbEntity.getThemeUrl())
-                            .question(question)
-                            .worker(authUser.getId() == formTbEntity.getAid())
-                    .build());
-        } catch (FormException e) {
-            log.error("■ 유저 화면 정보 조회 응답 오류, {}", e.getCode().getMsg());
-            return ResponseEntity.ok().body(new DefaultResponse(e.getCode()));
-        } catch (Exception e) {
-            log.error("■ 유저 화면 정보 조회 응답 오류", e);
-            return ResponseEntity.ok().body(new DefaultResponse(ResultCode.SYSTEM_ERROR));
-        }
+            return ResponseEntity.ok().body(response);
     }
 
 

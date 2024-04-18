@@ -30,5 +30,11 @@ public class FileUploadFailTbEntity extends DateEntity{
     @Basic
     @Column(name = "size")
     private String size;
+    @Basic
+    @Column(name = "code")
+    private String code;
+    @Basic
+    @Column(name = "msg")
+    private String msg;
 
 }

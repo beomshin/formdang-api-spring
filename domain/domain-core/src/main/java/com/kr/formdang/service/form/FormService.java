@@ -19,7 +19,7 @@ public interface FormService {
     AdminSubTbEntity analyzeForm(Long aid); // 종합분석 조회 서비스
     FormTbEntity findForm(Long aid, Long fid) throws FormException;
     List<QuestionTbEntity> findQuestions(Long fid) throws FormException;
-    void updateForm(FormDataDto formDataDto, List<QuestionDataDto> questionDataDtos) throws FormException;
-    void updateImage(Long fid, List<S3File> formFiles);
-    FormTbEntity findPaper(FormDataDto formDataDto) throws FormException;
+    void updateForm(FormTbEntity formDataDto, List<QuestionTbEntity> questionDataDtos) throws FormException;
+    void updateImage(Long fid, S3File file);
+    FormTbEntity findPaper(FormTbEntity formDataDto, String key) throws FormException;
 }

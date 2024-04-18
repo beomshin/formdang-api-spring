@@ -1,6 +1,5 @@
 package com.kr.formdang.entity;
 
-import com.kr.formdang.dto.FormDataDto;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -69,10 +68,10 @@ public class FormTbEntity extends DateEntity {
     @Column(name = "del_flag")
     private int delFlag;
 
-    public void updateForm(FormDataDto formDataDto) {
-        this.formType = formDataDto.getType();
+    public void updateForm(FormTbEntity formDataDto) {
+        this.formType = formDataDto.getFormType();
         this.title = formDataDto.getTitle();
-        this.formDetail = formDataDto.getDetail();
+        this.formDetail = formDataDto.getFormDetail();
         this.beginDt = formDataDto.getBeginDt();
         this.endDt = formDataDto.getEndDt();
         this.questionCount = formDataDto.getQuestionCount();

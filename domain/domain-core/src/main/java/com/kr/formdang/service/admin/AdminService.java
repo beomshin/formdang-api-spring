@@ -12,6 +12,6 @@ public interface AdminService {
     String successLogin(String accessToken, String refreshToken) ;
     String successPaperLogin(String accessToken, String refreshToken);
     String failLogin(Exception e) ;
-    boolean updateProfile(Long aid, S3File profile, MultipartFile file);
+    void updateProfile(Long aid, S3File profile, MultipartFile file);
 
 }

@@ -15,5 +15,5 @@ public interface AdminTbRepository extends JpaRepository<AdminTbEntity, Long> {
     @Modifying
     @Transactional
     @Query("UPDATE AdminTbEntity SET profile = :profile WHERE aid = :aid")
-    int updateProfile(Long aid, String profile);
+    void updateProfile(Long aid, String profile);
 }

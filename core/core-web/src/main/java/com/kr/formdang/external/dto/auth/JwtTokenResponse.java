@@ -18,4 +18,8 @@ public class JwtTokenResponse implements ResponseClient {
     private String refreshToken;
     private String expiredTime;
 
+    public boolean isFail() {
+        return !resultCode.equals("0");
+    }
+
 }

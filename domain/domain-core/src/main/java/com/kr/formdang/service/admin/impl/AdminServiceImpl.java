@@ -2,12 +2,10 @@ package com.kr.formdang.service.admin.impl;
 
 import com.kr.formdang.entity.AdminSubTbEntity;
 import com.kr.formdang.entity.AdminTbEntity;
-import com.kr.formdang.entity.FileUploadFailTbEntity;
 import com.kr.formdang.exception.FormException;
 import com.kr.formdang.exception.ResultCode;
 import com.kr.formdang.repository.AdminSubTbRepository;
 import com.kr.formdang.repository.AdminTbRepository;
-import com.kr.formdang.repository.FileUploadFailTbRepository;
 import com.kr.formdang.dto.S3File;
 import com.kr.formdang.service.admin.AdminService;
 import lombok.RequiredArgsConstructor;
@@ -40,8 +38,6 @@ public class AdminServiceImpl implements AdminService {
     private final AdminTbRepository adminTbRepository;
 
     private final AdminSubTbRepository adminSubTbRepository;
-
-    private final FileUploadFailTbRepository fileUploadFailTbRepository;
 
     @Override
     @Transactional
@@ -115,20 +111,8 @@ public class AdminServiceImpl implements AdminService {
     }
 
     @Override
-    @Transactional
-    public boolean updateProfile(Long aid, S3File profile, MultipartFile file) {
-        if (profile == null || !profile.isUploadFlag()) {
-            log.error("■ 이미지 업로드 실패 확인 필요");
-            fileUploadFailTbRepository.save(FileUploadFailTbEntity.builder()
-                    .oriName(file.getOriginalFilename())
-                    .ext(file.getOriginalFilename().substring(file.getOriginalFilename().lastIndexOf(".")))
-                    .size(String.valueOf(file.getSize()))
-                    .build());
-            return false;
-        } else {
-            log.info("■ 2. 프로필 업데이트 쿼리 시작");
-            return adminTbRepository.updateProfile(aid, profile.getPath()) > 0;
-        }
+    public void updateProfile(Long aid, S3File profile, MultipartFile file) {
+        adminTbRepository.updateProfile(aid, profile.getPath());
     }
 
 }
