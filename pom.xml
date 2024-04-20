@@ -21,8 +21,8 @@
   <modules>
     <module>app/form-app-api</module>
     <module>core/core-common</module>
-    <module>domain/domain-core</module>
     <module>core/core-web</module>
+    <module>domain/domain-core</module>
   </modules>
 
   <properties>
