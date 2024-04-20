@@ -40,7 +40,7 @@ public class GoogleClient {
 
             return apiObjectMapper.readValue(apiResponseJson.getBody(), new TypeReference<GoogleTokenResponse>() {});
         }  catch (RestClientException e) {
-            log.error("[구글 로그인 토큰 발급 요청 IO Exception 오류 발생]", e);
+            log.error("[구글 로그인 토큰 발급 요청 REST Exception 오류 발생]", e);
             throw e;
         } catch (Exception e) {
             log.error("[구글 로그인 토큰 발급 요청 미지정 오류 발생]", e);
@@ -56,7 +56,7 @@ public class GoogleClient {
             log.info("■ 구글 로그인 유저 정보 응답 : [{}]", resultJson);
             return apiObjectMapper.readValue(resultJson, new TypeReference<GoogleLoginResponse>() {});
         }  catch (RestClientException e) {
-            log.error("[구글 로그인 유저 정보 발급 요청 IO Exception 오류 발생]", e);
+            log.error("[구글 로그인 유저 정보 발급 요청 REST Exception 오류 발생]", e);
             throw e;
         } catch (Exception e) {
             log.error("[구글 로그인 유저 정보 발급 요청 미지정 오류 발생]", e);

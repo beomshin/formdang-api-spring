@@ -9,9 +9,6 @@ import org.springframework.web.multipart.MultipartFile;
 public interface AdminService {
 
     AdminTbEntity saveSnsAdmin(AdminTbEntity adminTbEntity) throws FormException;
-    String successLogin(String accessToken, String refreshToken) ;
-    String successPaperLogin(String accessToken, String refreshToken);
-    String failLogin(Exception e) ;
     void updateProfile(Long aid, S3File profile, MultipartFile file);
 
 }

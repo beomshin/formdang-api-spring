@@ -1,4 +1,4 @@
-package com.kr.formdang.utils.flag;
+package com.kr.formdang.utils;
 
 import com.kr.formdang.enums.*;
 

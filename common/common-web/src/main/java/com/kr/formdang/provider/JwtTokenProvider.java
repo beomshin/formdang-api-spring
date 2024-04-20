@@ -20,6 +20,7 @@ public class JwtTokenProvider {
     }
 
     private static String parseJwt(String headerAuth) {
+        if (headerAuth == null) return null;
         return headerAuth.startsWith("Bearer ") ? headerAuth.substring(7) : headerAuth;
     }
 

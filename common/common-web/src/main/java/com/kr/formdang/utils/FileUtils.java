@@ -1,4 +1,4 @@
-package com.kr.formdang.utils.file;
+package com.kr.formdang.utils;
 
 import lombok.extern.slf4j.Slf4j;
 

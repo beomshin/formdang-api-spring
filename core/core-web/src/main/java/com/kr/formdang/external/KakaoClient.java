@@ -37,7 +37,7 @@ public class KakaoClient {
             log.info("■ 카카오 로그인 토큰 응답 : [{}]", apiResponseJson);
             return apiObjectMapper.readValue(apiResponseJson.getBody(), new TypeReference<KakaoTokenResponse>() {});
         }  catch (RestClientException e) {
-            log.error("[카카오 로그인 토큰 발급 요청 IO Exception 오류 발생]", e);
+            log.error("[카카오 로그인 토큰 발급 요청 REST Exception 오류 발생]", e);
             throw e;
         } catch (Exception e) {
             log.error("[카카오 로그인 토큰 발급 요청 미지정 오류 발생]", e);
@@ -57,7 +57,7 @@ public class KakaoClient {
             log.info("■ 카카오 로그인 유저 정보 응답 : [{}]", response);
             return apiObjectMapper.convertValue(apiObjectMapper.readValue(response.getBody(), Map.class), new TypeReference<KakaoLoginResponse>() {});
         }  catch (RestClientException e) {
-            log.error("[카카오 로그인 유저 정보 발급 요청 IO Exception 오류 발생]", e);
+            log.error("[카카오 로그인 유저 정보 발급 요청 REST Exception 오류 발생]", e);
             throw e;
         } catch (Exception e) {
             log.error("[카카오 로그인 유저 정보 발급 요청 미지정 오류 발생]", e);

@@ -160,7 +160,6 @@ public class FormServiceImpl implements FormService {
     }
 
     @Override
-    @Transactional
     public void updateImage(Long fid, S3File file) {
         if (file.isLogo()) {
             formTbRepository.updateLogoUrl(fid, file.getPath());

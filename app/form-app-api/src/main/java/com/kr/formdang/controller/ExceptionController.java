@@ -1,6 +1,7 @@
 package com.kr.formdang.controller;
 
 import com.kr.formdang.exception.FormException;
+import com.kr.formdang.exception.LoginException;
 import com.kr.formdang.exception.ResultCode;
 import com.kr.formdang.dto.DefaultResponse;
 import lombok.RequiredArgsConstructor;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.servlet.NoHandlerFoundException;
+import org.springframework.web.servlet.view.RedirectView;
 
 import java.io.IOException;
 
@@ -25,6 +27,7 @@ import java.io.IOException;
 @RequiredArgsConstructor
 @Slf4j
 public class ExceptionController {
+
 
     @ExceptionHandler(value = MethodArgumentNotValidException.class)
     public ResponseEntity<DefaultResponse> handle(MethodArgumentNotValidException e) { // 파라미터 오류 글로벌 처리
@@ -88,6 +91,14 @@ public class ExceptionController {
     public ResponseEntity<DefaultResponse> handle(FormException e) { // 커스텀 오류 글로벌 처리
         log.error("■ 응답 오류 [CustomException]: {}", e.getMessage());
         return ResponseEntity.ok().body(new DefaultResponse(e.getCode()));
+    }
+
+    @ExceptionHandler(value = LoginException.class)
+    public RedirectView handle(LoginException e) { // 커스텀 오류 글로벌 처리
+        log.error("■ 로그인 오류 [LoginException]: {}", e.getMessage());
+        RedirectView redirectView = new RedirectView();
+        redirectView.setUrl(e.getUrl()); // 폼당폼당 로그인 실패 페이지 세팅
+        return redirectView;
     }
 
     @ExceptionHandler(value = Exception.class)

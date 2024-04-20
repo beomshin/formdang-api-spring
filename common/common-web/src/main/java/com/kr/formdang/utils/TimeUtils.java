@@ -1,4 +1,4 @@
-package com.kr.formdang.utils.time;
+package com.kr.formdang.utils;
 
 import java.sql.Timestamp;
 import java.text.ParseException;
