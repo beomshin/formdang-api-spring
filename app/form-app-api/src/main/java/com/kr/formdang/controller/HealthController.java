@@ -29,7 +29,7 @@ public class HealthController {
      */
     @GetMapping("/public/health")
     public ResponseEntity<RootResponse> health() {
-        log.debug("[public 헬스 체크]");
+        log.info("헬스 요청");
         return ResponseEntity.ok().body(new DefaultResponse());
     }
 }

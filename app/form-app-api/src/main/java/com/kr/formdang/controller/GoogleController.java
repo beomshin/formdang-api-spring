@@ -80,6 +80,7 @@ public class GoogleController {
             GoogleTokenRequest request = new GoogleTokenRequest(googleProp.getGoogleClientId(), googleProp.getGoogleSecret(), googleProp.getGoogleRedirectUri(), code);
             GoogleLoginResponse googleLoginResponse = googleService.googleOAuth(request); // 구글 로그인 정보 취득
 
+            log.info("■ 2. 구글 로그인 API 요청");
             AdminTbEntity adminTbEntity = AdminTbEntity.builder()
                     .id(id)
                     .subId(googleLoginResponse.getSub())
@@ -88,8 +89,10 @@ public class GoogleController {
                     .type(AdminTypeEnum.GOOGLE_TYPE.getCode())
                     .build();
 
+            log.info("■ 3. 구글 로그인 정보 저장");
             adminTbEntity = adminService.saveSnsAdmin(adminTbEntity); // 폼당폼당 로그인 및 가입
 
+            log.info("■ 4. 구글 로그인 인증서버 토큰 발급 요청");
             JwtTokenResponse jwtTokenResponse = (JwtTokenResponse)
                     authClient.requestToken(new JwtTokenRequest(String.valueOf(adminTbEntity.getAid()), accessKey, adminTbEntity.getName(), adminTbEntity.getProfile())); // 폼당폼당 JWT 토큰 요청
 
@@ -104,7 +107,7 @@ public class GoogleController {
 
             redirectView.setUrl(loginProp.getSuccessUrl() + "?" + ClientUtils.convertMapToParam(params)); // 폼당폼당 로그인 성공 페이지 세팅
 
-            log.info("■ 6. 구글 로그인 콜백 리다이렉트 : {}", redirectView.getUrl());
+            log.info("■ 5. 구글 로그인 콜백 리다이렉트 : {}", redirectView.getUrl());
             return redirectView;
 
         } catch (Throwable e) {
@@ -128,6 +131,7 @@ public class GoogleController {
             log.info("■ 1. 구글 페이퍼 로그인 콜백 요청 성공");
             final String id = "G" + UUID.randomUUID().toString().substring(0, 31);
 
+            log.info("■ 2. 구글 로그인 API 요청");
             GoogleTokenRequest request = new GoogleTokenRequest(googleProp.getGoogleClientId(), googleProp.getGoogleSecret(), googleProp.getGoogleRedirectPaperUri(), code);
             GoogleLoginResponse googleLoginResponse = googleService.googleOAuth(request); // 구글 로그인 정보 취득
 
@@ -139,8 +143,10 @@ public class GoogleController {
                     .type(AdminTypeEnum.GOOGLE_TYPE.getCode())
                     .build();
 
+            log.info("■ 3. 구글 로그인 정보 저장");
             adminTbEntity = adminService.saveSnsAdmin(adminTbEntity); // 폼당폼당 로그인 및 가입
 
+            log.info("■ 4. 구글 로그인 인증서버 토큰 발급 요청");
             JwtTokenResponse jwtTokenResponse = (JwtTokenResponse)
                     authClient.requestToken(new JwtTokenRequest(String.valueOf(adminTbEntity.getAid()), accessKey, adminTbEntity.getName(), adminTbEntity.getProfile())); // 폼당폼당 JWT 토큰 요청
 
@@ -155,7 +161,7 @@ public class GoogleController {
 
             redirectView.setUrl(loginProp.getSuccessPaperUrl() + "?" + ClientUtils.convertMapToParam(params)); // 폼당폼당 로그인 성공 페이지 세팅
 
-            log.info("■ 6. 구글 페이퍼 로그인 콜백 리다이렉트 : {}", redirectView.getUrl());
+            log.info("■ 5. 구글 페이퍼 로그인 콜백 리다이렉트 : {}", redirectView.getUrl());
             return redirectView;
 
         } catch (Throwable e) {
