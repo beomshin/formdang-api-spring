@@ -19,23 +19,27 @@ public class FileUploadServiceImpl implements FileUploadService {
 
     @Override
     public void insertFailUploadFile(MultipartFile file, ResultCode resultCode) {
-        fileUploadFailTbRepository.save(FileUploadFailTbEntity.builder()
-                        .oriName(file.getOriginalFilename())
-                        .ext(file.getOriginalFilename().substring(file.getOriginalFilename().lastIndexOf(".")))
-                        .size(String.valueOf(file.getSize()))
-                        .code(resultCode.getCode())
-                        .msg(resultCode.getMsg())
-                .build());
+        FileUploadFailTbEntity failTbEntity = FileUploadFailTbEntity.builder()
+                .oriName(file.getOriginalFilename())
+                .ext(file.getOriginalFilename().substring(file.getOriginalFilename().lastIndexOf(".")))
+                .size(String.valueOf(file.getSize()))
+                .code(resultCode.getCode())
+                .msg(resultCode.getMsg())
+                .build();
+
+        fileUploadFailTbRepository.save(failTbEntity);
     }
 
     @Override
     public void insertFailUploadFile(S3File file, ResultCode resultCode) {
-        fileUploadFailTbRepository.save(FileUploadFailTbEntity.builder()
+        FileUploadFailTbEntity failTbEntity = FileUploadFailTbEntity.builder()
                 .oriName(file.getOriName())
                 .ext(file.getOriName().substring(file.getOriName().lastIndexOf(".")))
                 .size(String.valueOf(file.getSize()))
                 .code(resultCode.getCode())
                 .msg(resultCode.getMsg())
-                .build());
+                .build();
+
+        fileUploadFailTbRepository.save(failTbEntity);
     }
 }

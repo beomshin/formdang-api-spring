@@ -1,5 +1,4 @@
 package com.kr.formdang.service.client.impl;
-import com.kr.formdang.prop.GoogleProp;
 import com.kr.formdang.service.client.GoogleService;
 import com.kr.formdang.external.GoogleClient;
 import com.kr.formdang.external.dto.google.GoogleLoginResponse;

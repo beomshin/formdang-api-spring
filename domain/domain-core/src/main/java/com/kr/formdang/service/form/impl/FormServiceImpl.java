@@ -7,11 +7,14 @@ import com.kr.formdang.exception.FormException;
 import com.kr.formdang.mapper.FormMapper;
 import com.kr.formdang.exception.ResultCode;
 import com.kr.formdang.dto.SqlFormParam;
+import com.kr.formdang.prop.PaperProp;
 import com.kr.formdang.repository.*;
 import com.kr.formdang.dto.S3File;
 import com.kr.formdang.service.form.FormService;
+import com.kr.formdang.utils.ClientUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -36,6 +39,7 @@ public class FormServiceImpl implements FormService {
     private final GroupFormTbRepository groupFormTbRepository;
     private final GroupMemberTbRepository groupMemberTbRepository;
     private final AnswerTbRepository answerTbRepository;
+    private final PaperProp paperProp;
 
     /**
      * 폼 저장
@@ -50,16 +54,22 @@ public class FormServiceImpl implements FormService {
         FormTbEntity formTb = formTbRepository.save(formTbEntity); // 폼 생성
 
         log.info("■ 질문 리스트 테이블 등록 쿼리 시작");
-        questionTbEntities.stream().forEach(it -> it.setFid(formTb.getFid()));
+        questionTbEntities.forEach(it -> it.setFid(formTb.getFid()));
         questionTbRepository.saveAll(questionTbEntities); // 질문 리스트 생성
 
+        String key = UUID.randomUUID().toString().replace("-", "").substring(0, 16);
+        HashMap<String, Object> params = new HashMap<>();
+        params.put("type", formTb.getFormType());
+        params.put("fid", formTb.getFid());
+        params.put("key", key);
+
+        String url = paperProp.getHost() + paperProp.getPaper() + "?" + ClientUtils.convertMapToParam(params);
 
         log.info("■ 폼 서브 테이블 등록 쿼리 시작");
-        String key = UUID.randomUUID().toString().replace("-", "").substring(0, 16);
         FormSubTbEntity formSubTb = FormSubTbEntity.builder()
                 .formTb(formTb)
                 .formUrlKey(key)
-                .formUrl("https://formdang.com/web/paper.html?type=" + formTb.getFormType() + "&fid=" + formTb.getFid() + "&key=" + key)
+                .formUrl(url)
                 .build();
         formSubTbRepository.save(formSubTb); // 폼 서브 저장 테이블 생성
 

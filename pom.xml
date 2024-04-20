@@ -20,9 +20,9 @@
 
   <modules>
     <module>app/form-app-api</module>
-    <module>core/core-web</module>
+    <module>core/core-common</module>
     <module>domain/domain-core</module>
-    <module>common/common-web</module>
+    <module>core/core-web</module>
   </modules>
 
   <properties>
