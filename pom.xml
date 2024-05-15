@@ -20,8 +20,8 @@
 
   <modules>
     <module>app/web-api</module>
-    <module>core/core-common</module>
-    <module>core/core-web</module>
+    <module>app/web-toolkit</module>
+    <module>core/common-core</module>
     <module>domain/domain-core</module>
   </modules>
 

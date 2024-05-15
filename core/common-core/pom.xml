@@ -10,11 +10,11 @@
         <relativePath>../../pom.xml</relativePath>
     </parent>
 
-    <artifactId>core-common</artifactId>
+    <artifactId>common-core</artifactId>
     <version>0.0.1</version>
 
-    <name>core-web</name>
-    <description>core-web</description>
+    <name>common-core</name>
+    <description>common-core</description>
 
     <properties>
         <java.version>1.8</java.version>

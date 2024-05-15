@@ -11,10 +11,10 @@
         <relativePath>../../pom.xml</relativePath>
     </parent>
 
-    <artifactId>core-web</artifactId>
+    <artifactId>web-toolkit</artifactId>
     <version>0.0.1</version>
-    <name>common-web</name>
-    <description>common-web</description>
+    <name>web-toolkit</name>
+    <description>web-toolkit</description>
 
     <dependencies>
 

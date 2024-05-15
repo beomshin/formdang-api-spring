@@ -55,7 +55,7 @@
 
         <dependency>
             <groupId>com.kr.formdang</groupId>
-            <artifactId>core-web</artifactId>
+            <artifactId>web-toolkit</artifactId>
             <version>0.0.1</version>
         </dependency>
 

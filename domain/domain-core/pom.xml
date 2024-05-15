@@ -44,7 +44,7 @@
 
         <dependency>
             <groupId>com.kr.formdang</groupId>
-            <artifactId>core-common</artifactId>
+            <artifactId>common-core</artifactId>
             <version>0.0.1</version>
         </dependency>
 
