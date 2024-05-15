@@ -1,4 +1,4 @@
-package com.kr.formdang.prop;
+package com.kr.formdang.external.prop;
 
 import lombok.Getter;
 import org.springframework.beans.factory.annotation.Value;

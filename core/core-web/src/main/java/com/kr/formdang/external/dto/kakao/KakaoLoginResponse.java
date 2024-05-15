@@ -3,11 +3,11 @@ package com.kr.formdang.external.dto.kakao;
 import com.kr.formdang.external.dto.ResponseClient;
 
 
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
-@Data
-@NoArgsConstructor
+@Getter
+@ToString
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class KakaoLoginResponse implements ResponseClient {
 
     private String id;
@@ -15,8 +15,9 @@ public class KakaoLoginResponse implements ResponseClient {
     private KakaoProperties properties;
     private KakaoAcount kakaoAccount;
 
-    @Data
-    @NoArgsConstructor
+    @Getter
+    @ToString
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static class KakaoProperties {
 
         private String nickname;
@@ -25,13 +26,14 @@ public class KakaoLoginResponse implements ResponseClient {
 
     }
 
-    @Data
-    @NoArgsConstructor
+    @Getter
+    @ToString
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static class KakaoAcount {
 
         private String profileNicknameNeedsAgreement;
         private String profileImageNeedsAgreement;
-        private KakaoProfile profile;
+        private     KakaoProfile profile;
         private String hasEmail;
         private String emailNeedsAgreement;
         private String isEmailValid;
@@ -39,8 +41,9 @@ public class KakaoLoginResponse implements ResponseClient {
         private String email;
     }
 
-    @Data
-    @NoArgsConstructor
+    @Getter
+    @ToString
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static class KakaoProfile {
 
         private String nickname;

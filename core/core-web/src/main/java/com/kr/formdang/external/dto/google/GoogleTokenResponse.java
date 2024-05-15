@@ -1,11 +1,11 @@
 package com.kr.formdang.external.dto.google;
 
 import com.kr.formdang.external.dto.ResponseClient;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
-@Data
-@NoArgsConstructor
+@Getter
+@ToString
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class GoogleTokenResponse implements ResponseClient {
     private String accessToken; // 애플리케이션이 Google API 요청을 승인하기 위해 보내는 토큰
     private String expiresIn;   // Access Token의 남은 수명

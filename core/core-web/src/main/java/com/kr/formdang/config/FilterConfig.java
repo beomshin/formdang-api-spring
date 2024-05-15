@@ -11,7 +11,10 @@ import javax.servlet.Filter;
 @Configuration
 public class FilterConfig {
 
-
+    /**
+     * MDC request-id logging filter 1순위
+     * @return
+     */
     @Bean
     public FilterRegistrationBean DefaultMDCLoggingFilter() {
         FilterRegistrationBean<Filter> filterFilterRegistrationBean = new FilterRegistrationBean<>();
@@ -21,6 +24,10 @@ public class FilterConfig {
         return filterFilterRegistrationBean;
     }
 
+    /**
+     * http request 정보 logging 2순위
+     * @return
+     */
     @Bean
     public FilterRegistrationBean DefaultHttpLoggingFilter() {
         FilterRegistrationBean<Filter> filterFilterRegistrationBean = new FilterRegistrationBean<>();

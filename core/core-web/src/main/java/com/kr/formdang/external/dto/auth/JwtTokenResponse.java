@@ -4,10 +4,8 @@ import com.kr.formdang.external.dto.ResponseClient;
 import lombok.*;
 
 @Getter
-@Setter
-@AllArgsConstructor
-@NoArgsConstructor
 @ToString
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class JwtTokenResponse implements ResponseClient {
 
     private String time; // 날짜
@@ -19,7 +17,8 @@ public class JwtTokenResponse implements ResponseClient {
     private String expiredTime;
 
     public boolean isFail() {
-        return !resultCode.equals("0");
+        final String SUCCESS = "0";
+        return !resultCode.equals(SUCCESS);
     }
 
 }

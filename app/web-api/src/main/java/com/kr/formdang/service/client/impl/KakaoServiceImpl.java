@@ -1,6 +1,6 @@
 package com.kr.formdang.service.client.impl;
 
-import com.kr.formdang.external.KakaoClient;
+import com.kr.formdang.external.HttpFormClient;
 import com.kr.formdang.external.dto.kakao.KakaoLoginResponse;
 import com.kr.formdang.external.dto.kakao.KakaoTokenRequest;
 import com.kr.formdang.external.dto.kakao.KakaoTokenResponse;
@@ -14,10 +14,10 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class KakaoServiceImpl implements KakaoService {
 
-    private final KakaoClient kakaoClient;
+    private final HttpFormClient kakaoClient;
     @Override
     public KakaoLoginResponse kakaoOAuth(KakaoTokenRequest request) throws Exception {
-        KakaoTokenResponse kakaoTokenResponse = (KakaoTokenResponse) kakaoClient.requestToken(request.build());
-        return (KakaoLoginResponse) kakaoClient.requestUserInfo(kakaoTokenResponse.getAccessToken());
+        KakaoTokenResponse kakaoTokenResponse = kakaoClient.requestToken(request.build(), KakaoTokenResponse.class);
+        return kakaoClient.requestUserInfo(kakaoTokenResponse.getAccessToken(), KakaoLoginResponse.class);
     }
 }

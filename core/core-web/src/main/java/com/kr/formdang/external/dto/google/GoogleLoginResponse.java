@@ -1,11 +1,11 @@
 package com.kr.formdang.external.dto.google;
 
 import com.kr.formdang.external.dto.ResponseClient;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
-@Data
-@NoArgsConstructor
+@Getter
+@ToString
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class GoogleLoginResponse implements ResponseClient {
     private String iss;
     private String azp;

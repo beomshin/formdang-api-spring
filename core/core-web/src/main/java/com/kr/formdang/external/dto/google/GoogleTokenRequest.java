@@ -1,9 +1,11 @@
 package com.kr.formdang.external.dto.google;
 
 import com.kr.formdang.external.dto.RequestClient;
-import lombok.Data;
+import lombok.*;
 
-@Data
+@Getter
+@ToString
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class GoogleTokenRequest implements RequestClient {
 
     private String clientId;    // 애플리케이션의 클라이언트 ID

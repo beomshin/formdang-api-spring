@@ -30,6 +30,7 @@ formdang:
   fail-login: http://localhost:63342/formdang-publishing/admin/login.html
   success-login: http://localhost:63342/formdang-publishing/admin/index.html
   success-paper-login: http://localhost:63342/formdang-publishing/web/paper.html
+  secret-key: ENC(+vT6/Edj0qUG0eVWSFX8KgPhVHcDSMdmsTqv86f55LUa/qD1ZVUIV+cucA2ofkcAtMjixtg5j0v8tgWEs0JQva3G2O33vRYeIPhg08cVsyjlf4Sq0+039RITwiuYgd649IN/CGjJ9LiXVpRtF7hu4Q==)
 
 google:
   redirect:
@@ -55,6 +56,7 @@ formdang:
   fail-login: https://formdang.com/admin/login.html
   success-login: https://formdang.com/admin/index.html
   success-paper-login: https://formdang.com/web/paper.html
+  secret-key: ENC(+vT6/Edj0qUG0eVWSFX8KgPhVHcDSMdmsTqv86f55LUa/qD1ZVUIV+cucA2ofkcAtMjixtg5j0v8tgWEs0JQva3G2O33vRYeIPhg08cVsyjlf4Sq0+039RITwiuYgd649IN/CGjJ9LiXVpRtF7hu4Q==)
 
 google:
   redirect:
@@ -80,6 +82,7 @@ formdang:
   fail-login: https://formdang.com/admin/login.html
   success-login: https://formdang.com/admin/index.html
   success-paper-login: https://formdang.com/web/paper.html
+  secret-key: ENC(+vT6/Edj0qUG0eVWSFX8KgPhVHcDSMdmsTqv86f55LUa/qD1ZVUIV+cucA2ofkcAtMjixtg5j0v8tgWEs0JQva3G2O33vRYeIPhg08cVsyjlf4Sq0+039RITwiuYgd649IN/CGjJ9LiXVpRtF7hu4Q==)
 
 google:
   redirect:

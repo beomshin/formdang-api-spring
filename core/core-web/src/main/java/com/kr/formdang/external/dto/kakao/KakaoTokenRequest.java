@@ -1,11 +1,13 @@
 package com.kr.formdang.external.dto.kakao;
 
 import com.kr.formdang.external.dto.RequestClient;
-import lombok.Data;
+import lombok.*;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
-@Data
+@Getter
+@ToString
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class KakaoTokenRequest implements RequestClient {
 
     private String clientId;    // 애플리케이션의 클라이언트 ID

@@ -1,9 +1,10 @@
 package com.kr.formdang.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.kr.formdang.external.HttpFormClient;
 import com.kr.formdang.service.auth.dto.FormUser;
 import com.kr.formdang.exception.FormException;
 import com.kr.formdang.exception.ResultCode;
-import com.kr.formdang.external.AuthClient;
 import com.kr.formdang.external.dto.auth.JwtTokenRequest;
 import com.kr.formdang.dto.RootResponse;
 import com.kr.formdang.external.dto.auth.JwtTokenResponse;
@@ -20,7 +21,6 @@ import com.kr.formdang.service.form.FormService;
 import com.kr.formdang.dto.S3File;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.StopWatch;
 import org.springframework.web.bind.annotation.*;
@@ -36,9 +36,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class FileController {
 
-    @Value("${token.access-key}")
-    private String accessKey; // 인증 서버 접근 키
-    private final AuthClient authClient; // 인증 서버 http client
+    private final HttpFormClient authClient; // 인증 서버 http client
     private final FileService<S3File> awsS3FileService; // 파일 등록 서비스
     private final FormService formService; // 폼 서비스
     private final AdminService adminService; // 어드민 서비스
@@ -52,7 +50,7 @@ public class FileController {
     public ResponseEntity<RootResponse> uploadFileProfile(
             @ModelAttribute @Valid FileProfileRequest fileRequest,
             @RequestHeader("Authorization") String token
-    ) {
+    ) throws JsonProcessingException {
 
         log.info("■ 1. 프로필 등록 요청 성공");
 
@@ -68,8 +66,7 @@ public class FileController {
         }
 
         log.info("■ 3 프로필 업데이트 성공으로 인한 토큰 재발급 시작"); // 폼당폼당 JWT 토큰 재요청 (토큰 내 프로필 변경 정보 변경을 위해 재요청 후 client 에서 토큰 변경 처리)
-        JwtTokenResponse jwtTokenResponse = (JwtTokenResponse)
-                authClient.requestToken(new JwtTokenRequest(String.valueOf(formUser.getId()), accessKey, formUser.getName(), profile.getPath()));
+        JwtTokenResponse jwtTokenResponse = authClient.requestToken(JwtTokenRequest.valueOf(formUser.getId(), formUser.getName(), profile.getPath()), JwtTokenResponse.class);
         if (jwtTokenResponse == null || jwtTokenResponse.isFail()) {
             log.error("■ 인증 토큰 발급 실패 확인 필요");
             fileUploadService.insertFailUploadFile(fileRequest.getProfile(), ResultCode.FAIL_ISSUED_TOKEN);
