@@ -4,6 +4,8 @@ import com.kr.formdang.exception.ResultCode;
 import com.kr.formdang.exception.FormException;
 import com.kr.formdang.provider.JwtTokenProvider;
 import com.kr.formdang.dto.DefaultResponse;
+import com.kr.formdang.service.auth.AuthService;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -17,10 +19,13 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 
+@Slf4j
 @Aspect
 @Component
-@Slf4j
+@RequiredArgsConstructor
 public class JwtTokenValidateAop {
+
+    private final AuthService authService;
 
     @Pointcut("execution(* com.kr.formdang.controller.FileController.*(..))")
     public void filePointcut() {} // 파일 컨트롤러
@@ -42,7 +47,7 @@ public class JwtTokenValidateAop {
         String token = request.getHeader("Authorization");
         log.info("[AOP] 헤더 토큰 검사 실행 : {}", token);
         try {
-            if (StringUtils.isEmpty(token) || JwtTokenProvider.validateToken(token)) throw new FormException(ResultCode.FAIL_VALIDATE_TOKEN); // 그룹 폼은 로그인 권한 필요
+            if (!authService.validate(token)) throw new FormException(ResultCode.FAIL_VALIDATE_TOKEN); // 그룹 폼은 로그인 권한 필요
             return pjp.proceed();
         } catch (FormException e) {
             log.error("", e);

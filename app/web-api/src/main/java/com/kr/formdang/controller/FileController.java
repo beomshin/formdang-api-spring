@@ -1,7 +1,6 @@
 package com.kr.formdang.controller;
 
-import com.kr.formdang.dto.auth.AuthUser;
-import com.kr.formdang.dto.auth.JwtTokenAuthUser;
+import com.kr.formdang.service.auth.dto.FormUser;
 import com.kr.formdang.exception.FormException;
 import com.kr.formdang.exception.ResultCode;
 import com.kr.formdang.external.AuthClient;
@@ -14,6 +13,7 @@ import com.kr.formdang.dto.req.FileProfileRequest;
 import com.kr.formdang.dto.res.FileProfileResponse;
 import com.kr.formdang.dto.DefaultResponse;
 import com.kr.formdang.service.admin.AdminService;
+import com.kr.formdang.service.auth.AuthService;
 import com.kr.formdang.service.file.FileService;
 import com.kr.formdang.service.form.FileUploadService;
 import com.kr.formdang.service.form.FormService;
@@ -43,6 +43,7 @@ public class FileController {
     private final FormService formService; // 폼 서비스
     private final AdminService adminService; // 어드민 서비스
     private final FileUploadService fileUploadService; // 파일 업로드 서비스
+    private final AuthService authService;
 
     /**
      * 프로필 이미지 변경 API
@@ -55,7 +56,7 @@ public class FileController {
 
         log.info("■ 1. 프로필 등록 요청 성공");
 
-        AuthUser authUser = new JwtTokenAuthUser(token); // 토큰 정보 객체 생성
+        FormUser formUser = authService.generateAuthUser(token); // 토큰 정보 객체 생성
 
         log.info("■ 2. 프로필 AWS S3 등록 요청");
         S3File profile = awsS3FileService.uploadSingle(fileRequest.getProfile()); // AWS S3 파일 등록
@@ -68,7 +69,7 @@ public class FileController {
 
         log.info("■ 3 프로필 업데이트 성공으로 인한 토큰 재발급 시작"); // 폼당폼당 JWT 토큰 재요청 (토큰 내 프로필 변경 정보 변경을 위해 재요청 후 client 에서 토큰 변경 처리)
         JwtTokenResponse jwtTokenResponse = (JwtTokenResponse)
-                authClient.requestToken(new JwtTokenRequest(String.valueOf(authUser.getId()), accessKey, authUser.getName(), profile.getPath()));
+                authClient.requestToken(new JwtTokenRequest(String.valueOf(formUser.getId()), accessKey, formUser.getName(), profile.getPath()));
         if (jwtTokenResponse == null || jwtTokenResponse.isFail()) {
             log.error("■ 인증 토큰 발급 실패 확인 필요");
             fileUploadService.insertFailUploadFile(fileRequest.getProfile(), ResultCode.FAIL_ISSUED_TOKEN);
@@ -77,7 +78,7 @@ public class FileController {
         }
 
         log.info("■ 4. 프로필 업데이트 시작");
-        adminService.updateProfile(authUser.getId(), profile, fileRequest.getProfile()); // 프로필 정보 업데이트 처리
+        adminService.updateProfile(formUser.getId(), profile, fileRequest.getProfile()); // 프로필 정보 업데이트 처리
 
         log.info("■ 5. 프로필 등록 응답 성공");
         RootResponse response = new FileProfileResponse(jwtTokenResponse.getAccessToken(), profile.getPath());
@@ -101,10 +102,10 @@ public class FileController {
     ) throws FormException {
 
         log.info("■ 1. 이미지 리스트 등록 요청 성공");
-        AuthUser authUser = new JwtTokenAuthUser(token); // 토큰 정보 객체 생성
+        FormUser formUser = authService.generateAuthUser(token); // 토큰 정보 객체 생성
 
         log.info("■ 2. 폼 상세 정보 조회 쿼리 시작");
-        formService.findForm(authUser.getId(), fid); // 유효한 폼 유효성 처리
+        formService.findForm(formUser.getId(), fid); // 유효한 폼 유효성 처리
 
         // 파일, 순번, 타입 객체 생성 (요청에서 해당 순서 맞춰서 보내줌 multipart 처리를 위해 개별 처리)
         List<FormFile> formFiles = new ArrayList<>();

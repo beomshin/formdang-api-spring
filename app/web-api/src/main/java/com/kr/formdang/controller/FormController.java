@@ -1,8 +1,7 @@
 package com.kr.formdang.controller;
 
 import com.kr.formdang.dto.*;
-import com.kr.formdang.dto.auth.AuthUser;
-import com.kr.formdang.dto.auth.JwtTokenAuthUser;
+import com.kr.formdang.service.auth.dto.FormUser;
 import com.kr.formdang.dto.res.*;
 import com.kr.formdang.entity.AdminSubTbEntity;
 import com.kr.formdang.entity.FormTbEntity;
@@ -12,6 +11,7 @@ import com.kr.formdang.exception.FormException;
 import com.kr.formdang.exception.ResultCode;
 import com.kr.formdang.dto.req.FormSubmitRequest;
 import com.kr.formdang.dto.req.FormUpdateRequest;
+import com.kr.formdang.service.auth.AuthService;
 import com.kr.formdang.service.form.FormService;
 import com.kr.formdang.utils.FormFlagUtils;
 import com.kr.formdang.utils.StrUtils;
@@ -36,6 +36,7 @@ import java.util.stream.Collectors;
 public class FormController {
 
     private final FormService formService;
+    private final AuthService authService;
 
     /**
      * 폼 등록 API
@@ -47,11 +48,11 @@ public class FormController {
     ) {
 
         log.info("■ 1. 폼 작성하기 요청 성공");
-        AuthUser authUser = new JwtTokenAuthUser(token);
+        FormUser formUser = authService.generateAuthUser(token);
 
         // 폼 엔티티
         FormTbEntity formTbEntity = FormTbEntity.builder()
-                .aid(authUser.getId())
+                .aid(formUser.getId())
                 .title(request.getTitle())
                 .formType(request.getType())
                 .formDetail(request.getDetail())
@@ -111,11 +112,11 @@ public class FormController {
     {
 
         log.info("■ 1. 폼리스트 조회 요청 성공");
-        AuthUser authUser = new JwtTokenAuthUser(token);
+        FormUser formUser = authService.generateAuthUser(token);
 
         PageRequest pageRequest = PageRequest.of(page, PageEnum.PAGE_12.getNum()); // 페이징 처리 생성
         SqlFormParam sqlFormParam = SqlFormParam.builder() // 조회 파라미터 생성
-                    .aid(authUser.getId())
+                    .aid(formUser.getId())
                     .offset(pageRequest.getOffset())
                     .pageSize(pageRequest.getPageSize())
                     .type(FormFlagUtils.type(type))
@@ -129,7 +130,7 @@ public class FormController {
         Page<FormTbDto> pages = formService.findFormList(sqlFormParam, pageRequest); // 폼 리스트 조회
 
         log.info("■ 3. 종합 분석 정보 조회 쿼리 시작");
-        AdminSubTbEntity adminSubTb = formService.analyzeForm(authUser.getId()); // 종합 정보 조회
+        AdminSubTbEntity adminSubTb = formService.analyzeForm(formUser.getId()); // 종합 정보 조회
 
         log.info("■ 4. 폼리스트 조회 응답 성공");
         RootResponse response = FindFormListResponse.builder()
@@ -167,10 +168,10 @@ public class FormController {
     public ResponseEntity<RootResponse> analyzeForm(@RequestHeader("Authorization") String token) {
 
         log.info("■ 1. 종합 분석 조회 요청 성공");
-        AuthUser authUser = new JwtTokenAuthUser(token);
+        FormUser formUser = authService.generateAuthUser(token);
 
         log.info("■ 2. 종합 분석 정보 조회 쿼리 시작");
-        AdminSubTbEntity adminSubTb = formService.analyzeForm(authUser.getId()); // 종합 정보 조회
+        AdminSubTbEntity adminSubTb = formService.analyzeForm(formUser.getId()); // 종합 정보 조회
 
         log.info("■ 3. 종합 분석 조회 응답 성공");
         RootResponse response = AnalyzeFormResponse.builder()
@@ -194,10 +195,10 @@ public class FormController {
     {
 
             log.info("■ 1. 폼 상세 정보 조회 요청 성공");
-            AuthUser authUser = new JwtTokenAuthUser(token);
+            FormUser formUser = authService.generateAuthUser(token);
 
             log.info("■ 2. 폼 상세 정보 조회 쿼리 시작");
-            FormTbEntity formTbEntity = formService.findForm(authUser.getId(), fid); // 폼 상세 조회
+            FormTbEntity formTbEntity = formService.findForm(formUser.getId(), fid); // 폼 상세 조회
 
             log.info("■ 3. 폼 질문 리스트 조회 쿼리 시작");
             List<QuestionTbEntity> questionTbEntities = formService.findQuestions(fid); // 질문 리스트 조회
@@ -248,7 +249,7 @@ public class FormController {
     {
 
             log.info("■ 1. 폼 정보 업데이트 요청 성공");
-            AuthUser authUser = new JwtTokenAuthUser(token);
+            FormUser formUser = authService.generateAuthUser(token);
 
             FormTbEntity formTbEntity = FormTbEntity.builder()
                         .fid(fid)
@@ -262,7 +263,7 @@ public class FormController {
                         .maxRespondent(request.getMaxRespondent())
                         .logoUrl(request.getLogoUrl())
                         .themeUrl(request.getThemeUrl())
-                        .aid(authUser.getId())
+                        .aid(formUser.getId())
                     .build();
 
 
@@ -302,12 +303,12 @@ public class FormController {
     {
 
             log.info("■ 1. 유저 화면 정보 조회 요청 성공");
-            AuthUser authUser = new JwtTokenAuthUser(token);
+            FormUser formUser = authService.generateAuthUser(token);
 
             FormTbEntity formTbEntity = FormTbEntity.builder()
                         .fid(fid)
                         .formType(type)
-                        .aid(authUser.getId())
+                        .aid(formUser.getId())
                     .build();
 
             log.info("■ 2. 폼 상세 정보 조회 시작");
@@ -325,7 +326,7 @@ public class FormController {
                         .maxRespondent(formTbEntity.getMaxRespondent())
                         .logoUrl(formTbEntity.getLogoUrl())
                         .themeUrl(formTbEntity.getThemeUrl())
-                        .worker(authUser.getId() == formTbEntity.getAid())
+                        .worker(formUser.getId() == formTbEntity.getAid())
                         .question(questionTbEntities.stream().map(
                                 it -> FindPaperResponse.FormDetailQuestionResponse.builder()
                                             .qid(it.getQid())
