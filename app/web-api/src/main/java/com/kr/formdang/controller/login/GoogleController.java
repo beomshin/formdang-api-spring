@@ -1,4 +1,4 @@
-package com.kr.formdang.controller;
+package com.kr.formdang.controller.login;
 
 import com.kr.formdang.crypto.HashNMacUtil;
 import com.kr.formdang.entity.AdminTbEntity;

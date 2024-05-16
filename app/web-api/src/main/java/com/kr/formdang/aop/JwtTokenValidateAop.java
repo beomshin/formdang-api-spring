@@ -2,7 +2,7 @@ package com.kr.formdang.aop;
 
 import com.kr.formdang.exception.ResultCode;
 import com.kr.formdang.exception.FormException;
-import com.kr.formdang.model.FailResponse;
+import com.kr.formdang.model.response.FailResponse;
 import com.kr.formdang.service.auth.AuthService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,7 +25,7 @@ public class JwtTokenValidateAop {
 
     private final AuthService authService;
 
-    @Pointcut("execution(* com.kr.formdang.controller.FileController.*(..))")
+    @Pointcut("execution(* com.kr.formdang.controller.form.FileController.*(..))")
     public void filePointcut() {} // 파일 컨트롤러
 
 

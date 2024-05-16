@@ -1,4 +1,4 @@
-package com.kr.formdang.model.request;
+package com.kr.formdang.model.request.file;
 
 import lombok.*;
 import org.springframework.web.multipart.MultipartFile;

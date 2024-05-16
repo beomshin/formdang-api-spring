@@ -1,7 +1,7 @@
-package com.kr.formdang.model;
+package com.kr.formdang.model.response;
 
 import com.kr.formdang.exception.ResultCode;
-import com.kr.formdang.model.AbstractResponse;
+import com.kr.formdang.model.response.AbstractResponse;
 import lombok.*;
 
 @Getter

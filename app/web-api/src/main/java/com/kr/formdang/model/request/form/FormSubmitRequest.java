@@ -1,9 +1,9 @@
-package com.kr.formdang.model.request;
+package com.kr.formdang.model.request.form;
 
 import com.kr.formdang.model.annotation.ArrayLenValid;
 import com.kr.formdang.model.annotation.BeforeDateValid;
 import com.kr.formdang.model.annotation.DateValid;
-import com.kr.formdang.model.AbstractRequest;
+import com.kr.formdang.model.request.AbstractRequest;
 import lombok.*;
 
 import javax.validation.Valid;

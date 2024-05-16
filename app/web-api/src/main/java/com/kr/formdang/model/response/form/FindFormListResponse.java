@@ -1,7 +1,7 @@
-package com.kr.formdang.model.response;
+package com.kr.formdang.model.response.form;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.kr.formdang.model.AbstractResponse;
+import com.kr.formdang.model.response.AbstractResponse;
 import lombok.*;
 import java.sql.Timestamp;
 import java.util.List;

@@ -1,16 +1,19 @@
-package com.kr.formdang.controller;
+package com.kr.formdang.controller.form;
 
 import com.kr.formdang.model.*;
+import com.kr.formdang.model.response.RootResponse;
+import com.kr.formdang.model.response.FailResponse;
+import com.kr.formdang.model.response.SuccessResponse;
+import com.kr.formdang.model.response.form.*;
 import com.kr.formdang.model.user.FormUser;
-import com.kr.formdang.model.response.*;
 import com.kr.formdang.entity.AdminSubTbEntity;
 import com.kr.formdang.entity.FormTbEntity;
 import com.kr.formdang.entity.QuestionTbEntity;
 import com.kr.formdang.enums.PageEnum;
 import com.kr.formdang.exception.FormException;
 import com.kr.formdang.exception.ResultCode;
-import com.kr.formdang.model.request.FormSubmitRequest;
-import com.kr.formdang.model.request.FormUpdateRequest;
+import com.kr.formdang.model.request.form.FormSubmitRequest;
+import com.kr.formdang.model.request.form.FormUpdateRequest;
 import com.kr.formdang.service.auth.AuthService;
 import com.kr.formdang.service.form.FormService;
 import com.kr.formdang.utils.FormFlagUtils;
@@ -285,7 +288,7 @@ public class FormController {
             formService.updateForm(formTbEntity, questionTbEntities); // 업데이트 처리
 
             log.info("■ 3. 폼 정보 업데이트 응답 성공");
-            RootResponse response = new DefaultResponse();
+            RootResponse response = new SuccessResponse();
 
             return ResponseEntity.ok().body(response);
     }

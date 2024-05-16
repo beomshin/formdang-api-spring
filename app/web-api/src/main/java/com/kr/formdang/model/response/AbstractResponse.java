@@ -1,4 +1,4 @@
-package com.kr.formdang.model;
+package com.kr.formdang.model.response;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.kr.formdang.exception.ResultCode;

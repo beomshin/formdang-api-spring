@@ -1,20 +1,20 @@
-package com.kr.formdang.controller;
+package com.kr.formdang.controller.form;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.kr.formdang.exception.FormHttpException;
 import com.kr.formdang.external.HttpFormClient;
-import com.kr.formdang.model.DefaultResponse;
-import com.kr.formdang.model.FailResponse;
+import com.kr.formdang.model.response.SuccessResponse;
+import com.kr.formdang.model.response.FailResponse;
 import com.kr.formdang.model.user.FormUser;
 import com.kr.formdang.exception.FormException;
 import com.kr.formdang.exception.ResultCode;
 import com.kr.formdang.external.dto.auth.JwtTokenRequest;
-import com.kr.formdang.model.RootResponse;
+import com.kr.formdang.model.response.RootResponse;
 import com.kr.formdang.external.dto.auth.JwtTokenResponse;
 import com.kr.formdang.model.FormFile;
-import com.kr.formdang.model.request.FileListRequest;
-import com.kr.formdang.model.request.FileProfileRequest;
-import com.kr.formdang.model.response.FileProfileResponse;
+import com.kr.formdang.model.request.file.FileListRequest;
+import com.kr.formdang.model.request.file.FileProfileRequest;
+import com.kr.formdang.model.response.file.FileProfileResponse;
 import com.kr.formdang.service.admin.AdminService;
 import com.kr.formdang.service.auth.AuthService;
 import com.kr.formdang.service.file.FileService;
@@ -130,7 +130,7 @@ public class FileController {
         }); // 등록된 S3 파일 폼 정보 업데이트 (로고 또는 문항 순번을 식별로 업데이트)
 
         log.info("■ 6. 이미지 리스트 등록 요청 응답 성공");
-        RootResponse response = new DefaultResponse();
+        RootResponse response = new SuccessResponse();
 
         return ResponseEntity.ok().body(response); // 파일 등록 성공 응답
     }
