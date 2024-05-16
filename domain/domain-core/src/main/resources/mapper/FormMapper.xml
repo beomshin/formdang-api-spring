@@ -5,7 +5,7 @@
 
 <mapper namespace="com.kr.formdang.mapper.FormMapper">
 
-    <select id="findForms" parameterType="com.kr.formdang.dto.SqlFormParam" resultType="com.kr.formdang.dto.FormTbDto">
+    <select id="findForms" parameterType="com.kr.formdang.model.SqlFormParam" resultType="com.kr.formdang.model.FormTbDto">
         SELECT fid as 'fid', form_type as 'formType', title as 'title', logo_url as 'logoUrl', status as 'status', end_flag as 'endFlag', del_flag as 'delFlag', reg_dt as 'regDt'
         FROM form_tb
         WHERE 1=1
@@ -40,7 +40,7 @@
         LIMIT ${pageSize} OFFSET ${offset}
     </select>
 
-    <select id="findFormsCnt" parameterType="com.kr.formdang.dto.SqlFormParam" resultType="long">
+    <select id="findFormsCnt" parameterType="com.kr.formdang.model.SqlFormParam" resultType="long">
         SELECT COUNT(*)
         FROM form_tb
         WHERE 1=1

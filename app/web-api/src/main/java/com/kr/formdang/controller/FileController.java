@@ -1,24 +1,26 @@
 package com.kr.formdang.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.kr.formdang.exception.FormHttpException;
 import com.kr.formdang.external.HttpFormClient;
-import com.kr.formdang.service.auth.dto.FormUser;
+import com.kr.formdang.model.DefaultResponse;
+import com.kr.formdang.model.FailResponse;
+import com.kr.formdang.model.user.FormUser;
 import com.kr.formdang.exception.FormException;
 import com.kr.formdang.exception.ResultCode;
 import com.kr.formdang.external.dto.auth.JwtTokenRequest;
-import com.kr.formdang.dto.RootResponse;
+import com.kr.formdang.model.RootResponse;
 import com.kr.formdang.external.dto.auth.JwtTokenResponse;
-import com.kr.formdang.dto.FormFile;
-import com.kr.formdang.dto.req.FileListRequest;
-import com.kr.formdang.dto.req.FileProfileRequest;
-import com.kr.formdang.dto.res.FileProfileResponse;
-import com.kr.formdang.dto.DefaultResponse;
+import com.kr.formdang.model.FormFile;
+import com.kr.formdang.model.request.FileListRequest;
+import com.kr.formdang.model.request.FileProfileRequest;
+import com.kr.formdang.model.response.FileProfileResponse;
 import com.kr.formdang.service.admin.AdminService;
 import com.kr.formdang.service.auth.AuthService;
 import com.kr.formdang.service.file.FileService;
 import com.kr.formdang.service.form.FileUploadService;
 import com.kr.formdang.service.form.FormService;
-import com.kr.formdang.dto.S3File;
+import com.kr.formdang.model.S3File;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -50,7 +52,7 @@ public class FileController {
     public ResponseEntity<RootResponse> uploadFileProfile(
             @ModelAttribute @Valid FileProfileRequest fileRequest,
             @RequestHeader("Authorization") String token
-    ) throws JsonProcessingException {
+    ) throws JsonProcessingException, FormHttpException {
 
         log.info("■ 1. 프로필 등록 요청 성공");
 
@@ -62,7 +64,7 @@ public class FileController {
             log.error("■ 이미지 업로드 실패 확인 필요");
             fileUploadService.insertFailUploadFile(fileRequest.getProfile(), ResultCode.FAIL_UPLOAD_FILE);
             log.info("■ 4. 프로필 등록 응답 실패");
-            return ResponseEntity.ok().body(new DefaultResponse(ResultCode.FAIL_UPLOAD_FILE)); // 프로필 등록 실패
+            return ResponseEntity.ok().body(new FailResponse(ResultCode.FAIL_UPLOAD_FILE)); // 프로필 등록 실패
         }
 
         log.info("■ 3 프로필 업데이트 성공으로 인한 토큰 재발급 시작"); // 폼당폼당 JWT 토큰 재요청 (토큰 내 프로필 변경 정보 변경을 위해 재요청 후 client 에서 토큰 변경 처리)
@@ -71,7 +73,7 @@ public class FileController {
             log.error("■ 인증 토큰 발급 실패 확인 필요");
             fileUploadService.insertFailUploadFile(fileRequest.getProfile(), ResultCode.FAIL_ISSUED_TOKEN);
             log.info("■ 4. 프로필 등록 응답 실패");
-            return ResponseEntity.ok().body(new DefaultResponse(ResultCode.FAIL_ISSUED_TOKEN)); // 프로필 등록 실패
+            return ResponseEntity.ok().body(new FailResponse(ResultCode.FAIL_ISSUED_TOKEN)); // 프로필 등록 실패
         }
 
         log.info("■ 4. 프로필 업데이트 시작");

@@ -1,6 +1,6 @@
 package com.kr.formdang.service.form.impl;
 
-import com.kr.formdang.dto.S3File;
+import com.kr.formdang.model.S3File;
 import com.kr.formdang.entity.FileUploadFailTbEntity;
 import com.kr.formdang.exception.ResultCode;
 import com.kr.formdang.repository.FileUploadFailTbRepository;

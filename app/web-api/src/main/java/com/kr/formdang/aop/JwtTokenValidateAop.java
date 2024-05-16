@@ -2,12 +2,10 @@ package com.kr.formdang.aop;
 
 import com.kr.formdang.exception.ResultCode;
 import com.kr.formdang.exception.FormException;
-import com.kr.formdang.provider.JwtTokenProvider;
-import com.kr.formdang.dto.DefaultResponse;
+import com.kr.formdang.model.FailResponse;
 import com.kr.formdang.service.auth.AuthService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
@@ -51,7 +49,7 @@ public class JwtTokenValidateAop {
             return pjp.proceed();
         } catch (FormException e) {
             log.error("", e);
-            return ResponseEntity.ok().body(new DefaultResponse(e.getCode()));
+            return ResponseEntity.ok().body(new FailResponse(e.getCode()));
         }
     }
 }

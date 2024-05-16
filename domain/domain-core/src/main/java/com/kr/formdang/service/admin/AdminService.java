@@ -3,7 +3,7 @@ package com.kr.formdang.service.admin;
 
 import com.kr.formdang.entity.AdminTbEntity;
 import com.kr.formdang.exception.FormException;
-import com.kr.formdang.dto.S3File;
+import com.kr.formdang.model.S3File;
 import org.springframework.web.multipart.MultipartFile;
 
 public interface AdminService {

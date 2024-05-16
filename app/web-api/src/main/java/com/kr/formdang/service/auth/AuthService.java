@@ -1,6 +1,6 @@
 package com.kr.formdang.service.auth;
 
-import com.kr.formdang.service.auth.dto.FormUser;
+import com.kr.formdang.model.user.FormUser;
 
 public interface AuthService {
 

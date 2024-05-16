@@ -1,16 +1,16 @@
 package com.kr.formdang.controller;
 
-import com.kr.formdang.dto.*;
-import com.kr.formdang.service.auth.dto.FormUser;
-import com.kr.formdang.dto.res.*;
+import com.kr.formdang.model.*;
+import com.kr.formdang.model.user.FormUser;
+import com.kr.formdang.model.response.*;
 import com.kr.formdang.entity.AdminSubTbEntity;
 import com.kr.formdang.entity.FormTbEntity;
 import com.kr.formdang.entity.QuestionTbEntity;
 import com.kr.formdang.enums.PageEnum;
 import com.kr.formdang.exception.FormException;
 import com.kr.formdang.exception.ResultCode;
-import com.kr.formdang.dto.req.FormSubmitRequest;
-import com.kr.formdang.dto.req.FormUpdateRequest;
+import com.kr.formdang.model.request.FormSubmitRequest;
+import com.kr.formdang.model.request.FormUpdateRequest;
 import com.kr.formdang.service.auth.AuthService;
 import com.kr.formdang.service.form.FormService;
 import com.kr.formdang.utils.FormFlagUtils;
@@ -30,8 +30,8 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@RestController
 @Slf4j
+@RestController
 @RequiredArgsConstructor
 public class FormController {
 
@@ -90,7 +90,7 @@ public class FormController {
             return ResponseEntity.ok().body(response);
         } catch (Exception e) {
             log.error("■ 폼 테이블 등록 실패: " + e);
-            RootResponse response = new DefaultResponse(ResultCode.FAIL_SUBMIT_FORM);
+            RootResponse response = new FailResponse(ResultCode.FAIL_SUBMIT_FORM);
             log.info("■ 3. 폼 작성하기 응답 성공");
             return ResponseEntity.ok().body(response);
         }

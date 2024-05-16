@@ -2,7 +2,7 @@ package com.kr.formdang.controller;
 
 import com.kr.formdang.crypto.HashNMacUtil;
 import com.kr.formdang.entity.AdminTbEntity;
-import com.kr.formdang.exception.LoginException;
+import com.kr.formdang.exception.FormLoginException;
 import com.kr.formdang.exception.ResultCode;
 import com.kr.formdang.external.HttpFormClient;
 import com.kr.formdang.external.dto.auth.JwtTokenRequest;
@@ -28,9 +28,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
+@Slf4j
 @RestController
 @RequiredArgsConstructor
-@Slf4j
 public class GoogleController {
 
     private final FormProp formProp;
@@ -68,7 +68,7 @@ public class GoogleController {
      * 구글 코드로 토큰, 유저 정보 조회 후, 폼당 서버 가입 및 토큰 발급 진행 후 완료 페이지 이동
      */
     @GetMapping(value = "/public/google/login/callback")
-    public RedirectView redirectGoogleLogin(@RequestParam(value = "code") String code, RedirectView redirectView) throws LoginException {
+    public RedirectView redirectGoogleLogin(@RequestParam(value = "code") String code, RedirectView redirectView) throws FormLoginException {
 
         try {
             log.info("■ 1. 구글 로그인 콜백 요청 성공");
@@ -93,7 +93,7 @@ public class GoogleController {
 
             if (jwtTokenResponse == null || jwtTokenResponse.isFail()) {
                 log.error("■ 인증 토큰 발급 실패 확인 필요");
-                throw new LoginException(ResultCode.FAIL_GOOGLE_LOGIN, formProp.getFailUrl() + "?fail=true");
+                throw new FormLoginException(ResultCode.FAIL_GOOGLE_LOGIN, formProp.getFailUrl() + "?fail=true");
             }
 
             Map<String, Object> params = new HashMap<>();
@@ -107,7 +107,7 @@ public class GoogleController {
 
         } catch (Throwable e) {
             log.error("■ 메인 페이지 구글 로그인 오류", e);
-            throw new LoginException(ResultCode.FAIL_GOOGLE_LOGIN, formProp.getFailUrl() + "?fail=true");
+            throw new FormLoginException(ResultCode.FAIL_GOOGLE_LOGIN, formProp.getFailUrl() + "?fail=true");
         }
     }
 
@@ -119,7 +119,7 @@ public class GoogleController {
      * 구글 코드로 토큰, 유저 정보 조회 후, 폼당 서버 가입 및 토큰 발급 진행 후 완료 페이지 이동
      */
     @GetMapping(value = "/public/google/login/paper/callback")
-    public RedirectView redirectGooglePaperLogin(@RequestParam(value = "code") String code, RedirectView redirectView) throws LoginException {
+    public RedirectView redirectGooglePaperLogin(@RequestParam(value = "code") String code, RedirectView redirectView) throws FormLoginException {
 
         try {
 
@@ -146,7 +146,7 @@ public class GoogleController {
 
             if (jwtTokenResponse == null || jwtTokenResponse.isFail()) {
                 log.error("■ 인증 토큰 발급 실패 확인 필요");
-                throw new LoginException(ResultCode.FAIL_GOOGLE_LOGIN, formProp.getFailUrl() + "?fail=true");
+                throw new FormLoginException(ResultCode.FAIL_GOOGLE_LOGIN, formProp.getFailUrl() + "?fail=true");
             }
 
             Map<String, Object> params = new HashMap<>();
@@ -160,7 +160,7 @@ public class GoogleController {
 
         } catch (Throwable e) {
             log.error("■ 구글 유저 설문 페이지 로그인 오류", e);
-            throw new LoginException(ResultCode.FAIL_GOOGLE_LOGIN, formProp.getFailUrl() + "?fail=true");
+            throw new FormLoginException(ResultCode.FAIL_GOOGLE_LOGIN, formProp.getFailUrl() + "?fail=true");
         }
     }
 

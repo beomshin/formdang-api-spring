@@ -1,7 +1,7 @@
 package com.kr.formdang.service.auth.impl;
 
-import com.kr.formdang.service.auth.dto.FormUser;
-import com.kr.formdang.service.auth.dto.JwtTokenAuthUser;
+import com.kr.formdang.model.user.FormUser;
+import com.kr.formdang.model.user.JwtTokenAuthUser;
 import com.kr.formdang.provider.JwtTokenProvider;
 import com.kr.formdang.service.auth.AuthService;
 import lombok.RequiredArgsConstructor;

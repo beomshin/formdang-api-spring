@@ -2,6 +2,8 @@ package com.kr.formdang.external.impl;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.kr.formdang.exception.FormHttpException;
+import com.kr.formdang.exception.ResultCode;
 import com.kr.formdang.external.HttpFormClient;
 import com.kr.formdang.external.dto.google.GoogleTokenRequest;
 import com.kr.formdang.external.prop.KakaoProp;
@@ -28,7 +30,7 @@ public class KakaoClient implements HttpFormClient {
     private final ObjectMapper apiObjectMapper;
 
     @Override
-    public <T> T requestToken(Object content, Class<T> tClass) throws JsonProcessingException {
+    public <T> T requestToken(Object content, Class<T> tClass) throws JsonProcessingException, FormHttpException {
         try {
             if (!(content instanceof MultiValueMap)) throw new ClassCastException("요청 컨텐츠 class cast exception");
             log.info("■ 카카오 로그인 토큰 요청 : [{}]", content);
@@ -37,7 +39,7 @@ public class KakaoClient implements HttpFormClient {
             return apiObjectMapper.readValue(apiResponseJson.getBody(), tClass);
         }  catch (RestClientException e) {
             log.error("[카카오 로그인 토큰 발급 요청 REST Exception 오류 발생]", e);
-            throw e;
+            throw new FormHttpException(ResultCode.NETWORK_ERROR);
         } catch (Exception e) {
             log.error("[카카오 로그인 토큰 발급 요청 미지정 오류 발생]", e);
             throw e;
@@ -45,7 +47,7 @@ public class KakaoClient implements HttpFormClient {
     }
 
     @Override
-    public <T> T requestUserInfo(String token, Class<T> tClass) throws IllegalAccessException, JsonProcessingException {
+    public <T> T requestUserInfo(String token, Class<T> tClass) throws IllegalAccessException, JsonProcessingException, FormHttpException {
         try {
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_JSON);
@@ -58,7 +60,7 @@ public class KakaoClient implements HttpFormClient {
             return apiObjectMapper.convertValue(apiObjectMapper.readValue(response.getBody(), Map.class), tClass);
         }  catch (RestClientException e) {
             log.error("[카카오 로그인 유저 정보 발급 요청 REST Exception 오류 발생]", e);
-            throw e;
+            throw new FormHttpException(ResultCode.NETWORK_ERROR);
         } catch (Exception e) {
             log.error("[카카오 로그인 유저 정보 발급 요청 미지정 오류 발생]", e);
             throw e;

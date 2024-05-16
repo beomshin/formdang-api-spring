@@ -1,20 +1,19 @@
 package com.kr.formdang.service.form.impl;
 
-import com.kr.formdang.dto.FormTbDto;
+import com.kr.formdang.model.FormTbDto;
 import com.kr.formdang.entity.*;
 
 import com.kr.formdang.exception.FormException;
 import com.kr.formdang.mapper.FormMapper;
 import com.kr.formdang.exception.ResultCode;
-import com.kr.formdang.dto.SqlFormParam;
+import com.kr.formdang.model.SqlFormParam;
 import com.kr.formdang.prop.PaperProp;
 import com.kr.formdang.repository.*;
-import com.kr.formdang.dto.S3File;
+import com.kr.formdang.model.S3File;
 import com.kr.formdang.service.form.FormService;
 import com.kr.formdang.utils.ClientUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;

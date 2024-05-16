@@ -2,7 +2,7 @@ package com.kr.formdang.controller;
 
 import com.kr.formdang.crypto.HashNMacUtil;
 import com.kr.formdang.entity.AdminTbEntity;
-import com.kr.formdang.exception.LoginException;
+import com.kr.formdang.exception.FormLoginException;
 import com.kr.formdang.exception.ResultCode;
 import com.kr.formdang.external.HttpFormClient;
 import com.kr.formdang.external.dto.auth.JwtTokenRequest;
@@ -28,9 +28,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
+@Slf4j
 @RestController
 @RequiredArgsConstructor
-@Slf4j
 public class KakaoController {
 
     private final FormProp formProp;
@@ -68,7 +68,7 @@ public class KakaoController {
      * 카카오 코드로 토큰, 유저 정보 조회 후, 폼당 서버 가입 및 토큰 발급 진행 후 완료 페이지 이동
      */
     @GetMapping(value = "/public/kakao/login/callback")
-    public RedirectView redirectKakaoLogin(@RequestParam(value = "code") String code, RedirectView redirectView) throws LoginException {
+    public RedirectView redirectKakaoLogin(@RequestParam(value = "code") String code, RedirectView redirectView) throws FormLoginException {
 
         try {
             log.info("■ 1. 카카오 로그인 콜백 요청 성공");
@@ -94,7 +94,7 @@ public class KakaoController {
 
             if (jwtTokenResponse == null || jwtTokenResponse.isFail()) {
                 log.error("■ 인증 토큰 발급 실패 확인 필요");
-                throw new LoginException(ResultCode.FAIL_KAKAO_LOGIN, formProp.getFailUrl() + "?fail=true");
+                throw new FormLoginException(ResultCode.FAIL_KAKAO_LOGIN, formProp.getFailUrl() + "?fail=true");
             }
 
             Map<String, Object> params = new HashMap<>();
@@ -108,7 +108,7 @@ public class KakaoController {
 
         } catch (Exception e) {
             log.error("■ 메인 페이지 카카오 로그인 오류  ", e);
-            throw new LoginException(ResultCode.FAIL_KAKAO_LOGIN, formProp.getFailUrl() + "?fail=true");
+            throw new FormLoginException(ResultCode.FAIL_KAKAO_LOGIN, formProp.getFailUrl() + "?fail=true");
         }
     }
 
@@ -120,7 +120,7 @@ public class KakaoController {
      * 카카오 코드로 토큰, 유저 정보 조회 후, 폼당 서버 가입 및 토큰 발급 진행 후 완료 페이지 이동
      */
     @GetMapping(value = "/public/kakao/login/paper/callback")
-    public RedirectView redirectKakaoLoginPaper(@RequestParam(value = "code") String code, RedirectView redirectView) throws LoginException {
+    public RedirectView redirectKakaoLoginPaper(@RequestParam(value = "code") String code, RedirectView redirectView) throws FormLoginException {
 
         try {
 
@@ -147,7 +147,7 @@ public class KakaoController {
 
             if (jwtTokenResponse == null || jwtTokenResponse.isFail()) {
                 log.error("■ 인증 토큰 발급 실패 확인 필요");
-                throw new LoginException(ResultCode.FAIL_KAKAO_LOGIN, formProp.getFailUrl() + "?fail=true");
+                throw new FormLoginException(ResultCode.FAIL_KAKAO_LOGIN, formProp.getFailUrl() + "?fail=true");
             }
 
             Map<String, Object> params = new HashMap<>();
@@ -161,7 +161,7 @@ public class KakaoController {
 
         } catch (Exception e) {
             log.error("■ 카카오 유저 설문 페이지 로그인 오류 ", e);
-            throw new LoginException(ResultCode.FAIL_KAKAO_LOGIN, formProp.getFailUrl() + "?fail=true");
+            throw new FormLoginException(ResultCode.FAIL_KAKAO_LOGIN, formProp.getFailUrl() + "?fail=true");
         }
     }
 
