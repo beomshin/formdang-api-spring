@@ -13,7 +13,7 @@ import com.kr.formdang.external.dto.google.GoogleTokenRequest;
 import com.kr.formdang.external.prop.GoogleProp;
 import com.kr.formdang.external.prop.FormProp;
 import com.kr.formdang.service.admin.AdminService;
-import com.kr.formdang.service.client.GoogleService;
+import com.kr.formdang.service.login.GoogleLoginService;
 import com.kr.formdang.utils.ClientUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -35,7 +35,7 @@ public class GoogleController {
 
     private final FormProp formProp;
     private final GoogleProp googleProp;
-    private final GoogleService googleService;
+    private final GoogleLoginService googleLoginService;
     private final AdminService adminService;
     private final HttpFormClient authClient;
 
@@ -74,7 +74,7 @@ public class GoogleController {
             log.info("■ 1. 구글 로그인 콜백 요청 성공");
             final String id = "G" + UUID.randomUUID().toString().substring(0, 31);
             GoogleTokenRequest request = new GoogleTokenRequest(googleProp.getGoogleClientId(), googleProp.getGoogleSecret(), googleProp.getGoogleRedirectUri(), code);
-            GoogleLoginResponse googleLoginResponse = googleService.googleOAuth(request); // 구글 로그인 정보 취득
+            GoogleLoginResponse googleLoginResponse = googleLoginService.googleOAuth(request); // 구글 로그인 정보 취득
 
             log.info("■ 2. 구글 로그인 API 요청");
             AdminTbEntity adminTbEntity = AdminTbEntity.builder()
@@ -128,7 +128,7 @@ public class GoogleController {
 
             log.info("■ 2. 구글 로그인 API 요청");
             GoogleTokenRequest request = new GoogleTokenRequest(googleProp.getGoogleClientId(), googleProp.getGoogleSecret(), googleProp.getGoogleRedirectPaperUri(), code);
-            GoogleLoginResponse googleLoginResponse = googleService.googleOAuth(request); // 구글 로그인 정보 취득
+            GoogleLoginResponse googleLoginResponse = googleLoginService.googleOAuth(request); // 구글 로그인 정보 취득
 
             AdminTbEntity adminTbEntity = AdminTbEntity.builder()
                     .id(id)

@@ -13,7 +13,7 @@ import com.kr.formdang.external.dto.kakao.KakaoTokenRequest;
 import com.kr.formdang.external.prop.KakaoProp;
 import com.kr.formdang.external.prop.FormProp;
 import com.kr.formdang.service.admin.AdminService;
-import com.kr.formdang.service.client.KakaoService;
+import com.kr.formdang.service.login.KakaoLoginService;
 import com.kr.formdang.utils.ClientUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -35,7 +35,7 @@ public class KakaoController {
 
     private final FormProp formProp;
     private final KakaoProp kakaoProp;
-    private final KakaoService kakaoService;
+    private final KakaoLoginService kakaoLoginService;
     private final AdminService adminService;
     private final HttpFormClient authClient;
 
@@ -76,7 +76,7 @@ public class KakaoController {
 
             log.info("■ 2. 카카오 로그인 API 요청");
             KakaoTokenRequest request = new KakaoTokenRequest(kakaoProp.getKakaoClientId(), kakaoProp.getKakaoSecret(), kakaoProp.getKakaoRedirectLoginUri(), code);
-            KakaoLoginResponse kakaoLoginResponse = kakaoService.kakaoOAuth(request); // 카카오 로그인 정보 취득
+            KakaoLoginResponse kakaoLoginResponse = kakaoLoginService.kakaoOAuth(request); // 카카오 로그인 정보 취득
 
             AdminTbEntity adminTbEntity = AdminTbEntity.builder()
                     .id(id)
@@ -129,7 +129,7 @@ public class KakaoController {
 
             log.info("■ 2. 카카오 로그인 API 요청");
             KakaoTokenRequest request = new KakaoTokenRequest(kakaoProp.getKakaoClientId(), kakaoProp.getKakaoSecret(), kakaoProp.getKakaoRedirectLoginPaperUri(), code);
-            KakaoLoginResponse kakaoLoginResponse = kakaoService.kakaoOAuth(request); // 카카오 로그인 정보 취득
+            KakaoLoginResponse kakaoLoginResponse = kakaoLoginService.kakaoOAuth(request); // 카카오 로그인 정보 취득
 
             AdminTbEntity adminTbEntity = AdminTbEntity.builder()
                     .id(id)

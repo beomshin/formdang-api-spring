@@ -25,9 +25,9 @@ import java.util.Map;
 
 @Configuration
 @RequiredArgsConstructor
-@EnableJpaRepositories(basePackages = DBConfig.REPOSITORY_PACKAGE)
+@EnableJpaRepositories(basePackages = DataBaseConfig.REPOSITORY_PACKAGE)
 @Slf4j
-public class DBConfig {
+public class DataBaseConfig {
 
 
     public static final String REPOSITORY_PACKAGE = "com.kr.formdang.repository";

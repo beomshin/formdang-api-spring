@@ -1,6 +1,6 @@
-package com.kr.formdang.service.client.impl;
+package com.kr.formdang.service.login.impl;
 import com.kr.formdang.external.HttpFormClient;
-import com.kr.formdang.service.client.GoogleService;
+import com.kr.formdang.service.login.GoogleLoginService;
 import com.kr.formdang.external.dto.google.GoogleLoginResponse;
 import com.kr.formdang.external.dto.google.GoogleTokenRequest;
 import com.kr.formdang.external.dto.google.GoogleTokenResponse;
@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class GoogleServiceImpl implements GoogleService {
+public class GoogleLoginServiceImpl implements GoogleLoginService {
 
     private final HttpFormClient googleClient;
 

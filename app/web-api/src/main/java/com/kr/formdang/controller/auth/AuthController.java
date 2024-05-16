@@ -1,4 +1,4 @@
-package com.kr.formdang.controller;
+package com.kr.formdang.controller.auth;
 
 import com.kr.formdang.model.response.SuccessResponse;
 import lombok.RequiredArgsConstructor;
