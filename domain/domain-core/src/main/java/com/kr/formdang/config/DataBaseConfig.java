@@ -1,11 +1,10 @@
 package com.kr.formdang.config;
 
+import com.kr.formdang.prop.DataSourceProp;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.hibernate.cfg.AvailableSettings;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.boot.autoconfigure.orm.jpa.HibernateProperties;
 import org.springframework.boot.autoconfigure.orm.jpa.HibernateSettings;
@@ -25,39 +24,20 @@ import java.util.Map;
 
 @Configuration
 @RequiredArgsConstructor
-@EnableJpaRepositories(basePackages = DataBaseConfig.REPOSITORY_PACKAGE)
-@Slf4j
+@EnableJpaRepositories(basePackages = "com.kr.formdang.repository")
 public class DataBaseConfig {
-
-
-    public static final String REPOSITORY_PACKAGE = "com.kr.formdang.repository";
-    private final String ENTITY_PACKAGE = "com.kr.formdang.entity";
-    private final String PERSISTENCE_UNIT = "entityManager";
 
     private final JpaProperties jpaProperties;
     private final HibernateProperties hibernateProperties;
-
-    @Value("${spring.datasource.driver-class-name}")
-    private String className;
-
-    @Value("${spring.datasource.url}")
-    private String url;
-
-    @Value("${spring.datasource.username}")
-    private String username;
-
-    @Value("${spring.datasource.password}")
-    private String password;
+    private final DataSourceProp dataSourceProp;
 
     @Bean
     public DataSource dataSource() {
-        log.info("[데이터베이스] ClassName: [{}]", className);
-        log.info("[데이터베이스] Url: [{}]", url);
         HikariConfig hikariConfig = new HikariConfig();
-        hikariConfig.setDriverClassName(className);
-        hikariConfig.setJdbcUrl(url);
-        hikariConfig.setUsername(username);
-        hikariConfig.setPassword(password);
+        hikariConfig.setDriverClassName(dataSourceProp.getClassName());
+        hikariConfig.setJdbcUrl(dataSourceProp.getUrl());
+        hikariConfig.setUsername(dataSourceProp.getUsername());
+        hikariConfig.setPassword(dataSourceProp.getPassword());
         hikariConfig.setPoolName("hikari-lg");
         hikariConfig.setConnectionTestQuery("SELECT 1 FROM DUAL");
         hikariConfig.setConnectionInitSql("SELECT NOW() FROM DUAL");
@@ -67,12 +47,11 @@ public class DataBaseConfig {
 
     @Bean
     public LocalContainerEntityManagerFactoryBean entityManagerFactory(DataSource dataSource, EntityManagerFactoryBuilder builder, ConfigurableListableBeanFactory beanFactory) {
-        log.info("[JPA] 엔티티 패키지 경로: [{}] ", ENTITY_PACKAGE);
         Map<String, Object> properties = hibernateProperties.determineHibernateProperties(jpaProperties.getProperties(), new HibernateSettings());
         LocalContainerEntityManagerFactoryBean bean = builder
                 .dataSource(dataSource)
-                .packages(ENTITY_PACKAGE)
-                .persistenceUnit(PERSISTENCE_UNIT)
+                .packages("com.kr.formdang.entity")
+                .persistenceUnit("entityManager")
                 .properties(properties)
                 .build();
         bean.getJpaPropertyMap().put(AvailableSettings.BEAN_CONTAINER, new SpringBeanContainer(beanFactory)); // convert bean 등록 허용
@@ -81,7 +60,6 @@ public class DataBaseConfig {
 
     @Bean
     public PlatformTransactionManager transactionManager(EntityManagerFactory entityManagerFactory){
-        log.info("[transactionManager] 트랜잭션 매니저 생성");
         JpaTransactionManager transactionManager = new JpaTransactionManager();
         transactionManager.setEntityManagerFactory(entityManagerFactory);
         return transactionManager;
