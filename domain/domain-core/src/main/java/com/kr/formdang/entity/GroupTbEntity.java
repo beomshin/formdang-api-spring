@@ -41,7 +41,4 @@ public class GroupTbEntity extends DateEntity {
     @Column(name = "group_form_count")
     private Long group_form_count;
 
-    public GroupTbEntity(Long gid) {
-        this.gid = gid;
-    }
 }

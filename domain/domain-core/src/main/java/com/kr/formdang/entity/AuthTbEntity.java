@@ -17,7 +17,7 @@ import java.sql.Timestamp;
 @ToString(callSuper = true)
 @SuperBuilder
 @NoArgsConstructor
-public class AuthTbEntity {
+public class AuthTbEntity extends DateEntity{
 
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
@@ -26,15 +26,5 @@ public class AuthTbEntity {
     @Basic
     @Column(name = "secret")
     private String secret;
-
-    @CreatedDate
-    @Column(name = "regDt")
-    @JsonFormat(shape= JsonFormat.Shape.STRING, pattern="yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
-    private Timestamp regDt;
-
-    @LastModifiedDate
-    @Column(name = "modDt")
-    @JsonFormat(shape= JsonFormat.Shape.STRING, pattern="yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
-    private Timestamp modDt;
 
 }

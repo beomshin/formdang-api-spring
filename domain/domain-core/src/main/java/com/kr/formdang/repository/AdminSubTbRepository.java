@@ -13,11 +13,11 @@ public interface AdminSubTbRepository extends JpaRepository<AdminSubTbEntity, Lo
     @Modifying
     @Transactional
     @Query("UPDATE AdminSubTbEntity SET inspectionCnt = inspectionCnt + 1 WHERE aid = :aid")
-    int countUpInspectionCnt(Long aid);
+    void countUpInspectionCnt(Long aid);
 
     @Modifying
     @Transactional
     @Query("UPDATE AdminSubTbEntity SET quizCnt = quizCnt + 1 WHERE aid = :aid")
-    int countUpQuizCnt(Long aid);
+    void countUpQuizCnt(Long aid);
 
 }

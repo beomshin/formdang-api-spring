@@ -1,8 +1,8 @@
 package com.kr.formdang.service.file.impl;
 
 import com.kr.formdang.service.file.FileService;
-import com.kr.formdang.model.FormFile;
-import com.kr.formdang.model.S3File;
+import com.kr.formdang.model.file.FormFile;
+import com.kr.formdang.model.file.S3File;
 import com.kr.formdang.utils.AwsS3Utils;
 import com.kr.formdang.exception.FormException;
 import com.kr.formdang.exception.ResultCode;

@@ -5,6 +5,7 @@ import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.DynamicInsert;
 
 import javax.persistence.*;
+import java.sql.Timestamp;
 
 @Entity
 @Table(name = "question_tb", schema = "form_dang", catalog = "")
@@ -50,7 +51,8 @@ public class QuestionTbEntity extends DateEntity{
     @Column(name = "image_url")
     private String imageUrl;
 
-    public void updateQuestion(QuestionTbEntity questionDataDto) {
+    public void modify(QuestionTbEntity questionDataDto) {
+        super.modDt = new Timestamp(System.currentTimeMillis());
         this.order = questionDataDto.getOrder();
         this.questionType = questionDataDto.getQuestionType();
         this.title = questionDataDto.getTitle();
@@ -60,6 +62,5 @@ public class QuestionTbEntity extends DateEntity{
         this.count = questionDataDto.getCount();
         this.quizAnswer = questionDataDto.getQuizAnswer();
         this.imageUrl = questionDataDto.getImageUrl();
-        super.updateModDt();
     }
 }

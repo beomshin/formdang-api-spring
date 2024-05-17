@@ -1,6 +1,5 @@
 package com.kr.formdang.service.form.impl;
 
-import com.kr.formdang.model.FormTbDto;
 import com.kr.formdang.entity.*;
 
 import com.kr.formdang.exception.FormException;
@@ -9,7 +8,7 @@ import com.kr.formdang.exception.ResultCode;
 import com.kr.formdang.model.SqlFormParam;
 import com.kr.formdang.prop.PaperProp;
 import com.kr.formdang.repository.*;
-import com.kr.formdang.model.S3File;
+import com.kr.formdang.model.file.S3File;
 import com.kr.formdang.service.form.FormService;
 import com.kr.formdang.utils.ClientUtils;
 import lombok.RequiredArgsConstructor;
@@ -92,7 +91,7 @@ public class FormServiceImpl implements FormService {
      * 정렬 처리 - 최순, 답변, 마감
      */
     @Override
-    public Page<FormTbDto> findFormList(SqlFormParam sqlFormParam, PageRequest pageRequest) {
+    public Page<FormTbEntity> findFormList(SqlFormParam sqlFormParam, PageRequest pageRequest) {
         return new PageImpl<>(formMapper.findForms(sqlFormParam), pageRequest, formMapper.findFormsCnt(sqlFormParam));
     }
 
@@ -128,44 +127,62 @@ public class FormServiceImpl implements FormService {
 
     @Override
     @Transactional
-    public void updateForm(FormTbEntity formDataDto, List<QuestionTbEntity> questionDataDtos) throws FormException {
-        log.info("■ 폼 상세 정보 조회 쿼리 시작");
-        Optional<FormTbEntity> formTb = formTbRepository.findByAidAndFid(formDataDto.getAid(), formDataDto.getFid());
-        if (!formTb.isPresent()) throw new FormException(ResultCode.NOT_FIND_FORM);
-        else if (formTb.get().getAnswerCount() > 0) throw new FormException(ResultCode.REFUSE_ALREADY_START_FORM);
-        else if (formTb.get().getDelFlag() == 1) throw new FormException(ResultCode.REFUSE_ALREADY_DELETE_FORM);
-        else if (formTb.get().getEndFlag() == 1) throw new FormException(ResultCode.REFUSE_ALREADY_END_FORM);
+    public void modifyForm(FormTbEntity modifyForm, List<QuestionTbEntity> modifyQuestions) throws FormException {
 
-        List<QuestionTbEntity> questionTbEntities = questionTbRepository.findByFidOrderByOrderAsc(formTb.get().getFid());
+        log.info("■ 폼 상세 정보 조회 쿼리 시작");
+        FormTbEntity formTb = formTbRepository.findByAidAndFid(modifyForm.getAid(), modifyForm.getFid())
+                .orElseThrow(() -> new FormException(ResultCode.NOT_FIND_FORM));
+
+        if (formTb.isStartForm()) throw new FormException(ResultCode.REFUSE_ALREADY_START_FORM);
+        else if (formTb.isDeleteForm()) throw new FormException(ResultCode.REFUSE_ALREADY_DELETE_FORM);
+        else if (formTb.isEndForm()) throw new FormException(ResultCode.REFUSE_ALREADY_END_FORM);
+
+        List<QuestionTbEntity> questionTbs = questionTbRepository.findByFidOrderByOrderAsc(formTb.getFid());
+
         log.info("■ 폼 수정 데이터 엔티티 적용");
-        formTb.get().updateForm(formDataDto); // 변경감지를 통한 업데이트 기존 정보와 동일하면 업데이트 안함
+        formTb.modify(modifyForm); // 변경감지를 통한 업데이트 기존 정보와 동일하면 업데이트 안함
+
         log.info("■ 폼 질문 수정 데이터 엔티티 적용");
-        int question_cnt = 0, over_cnt = 0;
-        if (questionDataDtos.size() == questionTbEntities.size()) {
-            question_cnt = questionDataDtos.size();
-        } else if (questionDataDtos.size() > questionTbEntities.size()) {
-            question_cnt = questionTbEntities.size();
-            over_cnt = questionDataDtos.size();
+        int question_cnt, modify_cnt; // 변경 질문 개수, 가변 질문 개수
+
+        boolean isIncrease = modifyQuestions.size() > questionTbs.size(); // 질문의 개수가 증가된 케이스
+        boolean isDecrease = modifyQuestions.size() < questionTbs.size(); // 질문의 개수가 감소된 케이스
+
+        if (isIncrease) {
+
+            question_cnt = questionTbs.size();
+            modify_cnt = modifyQuestions.size();
+
             List<QuestionTbEntity> insertEntities = new ArrayList<>();
-            for (int i=question_cnt; i < over_cnt; i++) {
-                questionDataDtos.get(i).setFid(formTb.get().getFid());
-                insertEntities.add(questionDataDtos.get(i));
+            for (int i=question_cnt; i < modify_cnt; i++) {
+                modifyQuestions.get(i).setFid(formTb.getFid());
+                insertEntities.add(modifyQuestions.get(i));
             }
+
             log.info("■ 폼 추가 질문 등록 쿼리 시작");
             questionTbRepository.saveAll(insertEntities);
-        } else if (questionDataDtos.size() < questionTbEntities.size()) {
-            question_cnt = questionDataDtos.size();
-            over_cnt = questionTbEntities.size();
+
+        } else if (isDecrease) {
+
+            question_cnt = modifyQuestions.size();
+            modify_cnt = questionTbs.size();
+
             List<QuestionTbEntity> deleteEntities = new ArrayList<>();
-            for (int i=question_cnt; i< over_cnt; i++) {
-                deleteEntities.add(questionTbEntities.get(i));
+            for (int i=question_cnt; i< modify_cnt; i++) {
+                deleteEntities.add(questionTbs.get(i));
             }
+
             log.info("■ 폼 등록 질문 삭제 쿼리 시작");
             questionTbRepository.deleteAll(deleteEntities);
+
+        } else { // 질문 개수 동일 케이스
+            question_cnt = modifyQuestions.size();
         }
+
         for(int i=0; i < question_cnt; i++) {
-            questionTbEntities.get(i).updateQuestion(questionDataDtos.get(i));
+            questionTbs.get(i).modify(modifyQuestions.get(i));
         }
+
     }
 
     @Override
@@ -214,7 +231,10 @@ public class FormServiceImpl implements FormService {
             if (!groupFormTbEntity.isEmpty()) {
 
                 log.info("■ 그룹 권한 유저 조회 쿼리 시작");
-                List<GroupMemberTbEntity> groupMemberTbEntity = groupMemberTbRepository.findByAidAndGroupTbIn(formDataDto.getAid(), groupFormTbEntity.stream().map(it -> new GroupTbEntity(it.getGid())).collect(Collectors.toList()));
+                List<GroupMemberTbEntity> groupMemberTbEntity =
+                        groupMemberTbRepository
+                                .findByAidAndGroupTbIn(formDataDto.getAid(), groupFormTbEntity.stream()
+                        .map(it -> GroupTbEntity.builder().gid(it.getGid()).build()).collect(Collectors.toList()));
                 if (groupMemberTbEntity.isEmpty()) {
                     throw new FormException(ResultCode.IS_NOT_GROUP_FORM_USER); // 그룹 폼 권한 미유저
                 }

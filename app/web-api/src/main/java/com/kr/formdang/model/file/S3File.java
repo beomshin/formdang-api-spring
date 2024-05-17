@@ -1,4 +1,4 @@
-package com.kr.formdang.model;
+package com.kr.formdang.model.file;
 
 import lombok.*;
 

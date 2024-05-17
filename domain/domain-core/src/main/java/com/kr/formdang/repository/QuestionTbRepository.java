@@ -16,5 +16,5 @@ public interface QuestionTbRepository extends JpaRepository<QuestionTbEntity, Lo
     @Modifying
     @Transactional
     @Query("UPDATE QuestionTbEntity SET imageUrl = :imageUrl WHERE fid = :fid AND order = :order")
-    int updateImageUrl(Long fid, String imageUrl, Integer order);
+    void updateImageUrl(Long fid, String imageUrl, Integer order);
 }

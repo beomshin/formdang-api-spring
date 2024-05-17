@@ -1,6 +1,6 @@
 package com.kr.formdang.service.form;
 
-import com.kr.formdang.model.S3File;
+import com.kr.formdang.model.file.S3File;
 import com.kr.formdang.exception.ResultCode;
 import org.springframework.web.multipart.MultipartFile;
 

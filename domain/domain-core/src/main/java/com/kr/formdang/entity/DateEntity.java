@@ -24,14 +24,11 @@ public class DateEntity {
     @CreatedDate
     @Column(name = "reg_dt")
     @JsonFormat(shape= JsonFormat.Shape.STRING, pattern="yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
-    private Timestamp regDt;
+    protected Timestamp regDt;
 
     @LastModifiedDate
     @Column(name = "mod_dt")
     @JsonFormat(shape= JsonFormat.Shape.STRING, pattern="yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
-    private Timestamp modDt;
+    protected Timestamp modDt;
 
-    public void updateModDt() {
-        this.modDt = new Timestamp(System.currentTimeMillis());
-    }
 }

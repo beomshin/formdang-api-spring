@@ -68,17 +68,29 @@ public class FormTbEntity extends DateEntity {
     @Column(name = "del_flag")
     private int delFlag;
 
-    public void updateForm(FormTbEntity formDataDto) {
-        this.formType = formDataDto.getFormType();
-        this.title = formDataDto.getTitle();
-        this.formDetail = formDataDto.getFormDetail();
-        this.beginDt = formDataDto.getBeginDt();
-        this.endDt = formDataDto.getEndDt();
-        this.questionCount = formDataDto.getQuestionCount();
-        this.status = formDataDto.getStatus();
-        this.maxRespondent = formDataDto.getMaxRespondent();
-        this.logoUrl = formDataDto.getLogoUrl();
-        this.themeUrl = formDataDto.getThemeUrl();
-        super.updateModDt();
+    public boolean isStartForm() { // 작성자가 있는 경우 시작 폼
+        return this.answerCount > 0;
+    }
+
+    public boolean isDeleteForm() { // 삭제 플래그(1) 경우 삭제
+        return this.delFlag == 1;
+    }
+
+    public boolean isEndForm() { // 설문 종료 플래그(1) 경우 종료
+        return this.endFlag == 1;
+    }
+
+    public void modify(FormTbEntity modifyData) {
+        super.modDt = new Timestamp(System.currentTimeMillis());
+        this.formType = modifyData.getFormType();
+        this.title = modifyData.getTitle();
+        this.formDetail = modifyData.getFormDetail();
+        this.beginDt = modifyData.getBeginDt();
+        this.endDt = modifyData.getEndDt();
+        this.questionCount = modifyData.getQuestionCount();
+        this.status = modifyData.getStatus();
+        this.maxRespondent = modifyData.getMaxRespondent();
+        this.logoUrl = modifyData.getLogoUrl();
+        this.themeUrl = modifyData.getThemeUrl();
     }
 }

@@ -130,7 +130,7 @@ public class FormController {
                 .build();
 
         log.info("■ 2. 폼 리스트 조회 쿼리 시작");
-        Page<FormTbDto> pages = formService.findFormList(sqlFormParam, pageRequest); // 폼 리스트 조회
+        Page<FormTbEntity> pages = formService.findFormList(sqlFormParam, pageRequest); // 폼 리스트 조회
 
         log.info("■ 3. 종합 분석 정보 조회 쿼리 시작");
         AdminSubTbEntity adminSubTb = formService.analyzeForm(formUser.getId()); // 종합 정보 조회
@@ -285,7 +285,7 @@ public class FormController {
                     ).sorted(Comparator.comparing(QuestionTbEntity::getOrder)).collect(Collectors.toList()); // 질문 데이터 order 순 정렬
 
             log.info("■ 2. 폼 정보 업데이트 시작");
-            formService.updateForm(formTbEntity, questionTbEntities); // 업데이트 처리
+            formService.modifyForm(formTbEntity, questionTbEntities); // 업데이트 처리
 
             log.info("■ 3. 폼 정보 업데이트 응답 성공");
             FormResponse response = new SuccessResponse();

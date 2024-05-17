@@ -14,6 +14,7 @@ import javax.persistence.*;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @DynamicInsert
 public class FormSubTbEntity extends DateEntity{
+
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     @Column(name = "fsid")

@@ -6,7 +6,7 @@ import com.kr.formdang.exception.FormException;
 import com.kr.formdang.exception.ResultCode;
 import com.kr.formdang.repository.AdminSubTbRepository;
 import com.kr.formdang.repository.AdminTbRepository;
-import com.kr.formdang.model.S3File;
+import com.kr.formdang.model.file.S3File;
 import com.kr.formdang.service.admin.AdminService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
