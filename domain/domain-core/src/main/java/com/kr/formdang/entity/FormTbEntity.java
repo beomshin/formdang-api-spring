@@ -89,6 +89,10 @@ public class FormTbEntity extends DateEntity {
         return maxRespondent != 0 && answerCount > maxRespondent;
     }
 
+    public boolean isQuiz() {
+        return this.formType == 1;
+    }
+
     public boolean isSubmitRangeDt() {
         Timestamp now = Timestamp.valueOf(LocalDateTime.now());
         return now.compareTo(beginDt) >= 0 && now.compareTo(endDt) <= 0;

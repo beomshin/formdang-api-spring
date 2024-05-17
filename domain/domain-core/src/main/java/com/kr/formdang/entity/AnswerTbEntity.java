@@ -18,16 +18,16 @@ public class AnswerTbEntity extends DateEntity{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     @Column(name = "awid")
-    private long awid;
+    private Long awid;
     @Basic
     @Column(name = "sid")
-    private long sid;
+    private Long sid;
     @Basic
     @Column(name = "fid")
-    private long fid;
+    private Long fid;
     @Basic
     @Column(name = "qid")
-    private long qid;
+    private Long qid;
     @Basic
     @Column(name = "aid")
     private Long aid;
@@ -42,6 +42,6 @@ public class AnswerTbEntity extends DateEntity{
     private String mAnswer;
     @Basic
     @Column(name = "ok_flag")
-    private byte okFlag;
+    private int okFlag;
 
 }

@@ -219,10 +219,6 @@ public class FormServiceImpl implements FormService {
             throw new FormException(ResultCode.IS_NOT_RIGHT_DATE);
         }
 
-        log.info("■ 제출 여부 확인 조회 쿼리 시작");
-        int isSubmit = answerTbRepository.countByFidAndAid(formTb.getFid(), formDataDto.getAid());
-        if (isSubmit > 0) throw new FormException(ResultCode.IS_SUBMIT);
-
         log.info("■ 그룹 폼 조회 쿼리 시작");
         List<GroupFormTbEntity> groupFormTbEntity = groupFormTbRepository.findByFid(formTb.getFid()); // 해당 폼 그룹 리스트 조회
 
@@ -241,6 +237,25 @@ public class FormServiceImpl implements FormService {
         }
 
         return formTb;
+    }
+
+    @Override
+    public List<AnswerTbEntity> findAnswer(FormTbEntity formTb) throws FormException {
+
+        log.info("{}", formTb);
+
+        log.info("■ 제출 여부 확인 조회 쿼리 시작");
+        int totalCnt = answerTbRepository.countByFidAndAid(formTb.getFid(), formTb.getAid());
+        if (totalCnt > 0) {
+            if (formTb.isQuiz()) {
+                log.info("■ 퀴즈 문제 제출 유저");
+                return answerTbRepository.findByFidAndAid(formTb.getFid(), formTb.getAid());
+            } else {
+                throw new FormException(ResultCode.IS_SUBMIT);
+            }
+        }
+
+        return null;
     }
 
 }

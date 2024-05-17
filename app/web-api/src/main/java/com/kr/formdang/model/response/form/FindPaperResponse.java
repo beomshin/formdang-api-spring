@@ -27,6 +27,7 @@ public class FindPaperResponse extends AbstractResponse {
     private String logoUrl; // 로그 url
     private String themeUrl; // 테마 url
     private List<FindPaperResponse.FormDetailQuestionResponse> question;
+    private List<FindPaperResponse.FormAnswerResponse> answers;
     private boolean worker;
 
 
@@ -50,4 +51,19 @@ public class FindPaperResponse extends AbstractResponse {
 
     }
 
+    @Getter
+    @Setter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @Builder
+    public static class FormAnswerResponse {
+
+        private long awid;
+        private long fid;
+        private long aid;
+        private String sAnswer;
+        private String mAnswer;
+        private int okFlag;
+
+    }
 }

@@ -1,5 +1,6 @@
 package com.kr.formdang.service.form;
 
+import com.kr.formdang.entity.AnswerTbEntity;
 import com.kr.formdang.model.*;
 import com.kr.formdang.entity.AdminSubTbEntity;
 import com.kr.formdang.entity.FormTbEntity;
@@ -23,4 +24,5 @@ public interface FormService {
     void modifyForm(FormTbEntity modifyForm, List<QuestionTbEntity> modifyQuestions) throws FormException;
     void updateImage(Long fid, S3File file);
     FormTbEntity findPaper(FormTbEntity formDataDto, String key) throws FormException;
+    List<AnswerTbEntity> findAnswer(FormTbEntity formTb) throws FormException;
 }
