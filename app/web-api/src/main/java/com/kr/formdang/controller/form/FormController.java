@@ -1,7 +1,7 @@
 package com.kr.formdang.controller.form;
 
 import com.kr.formdang.model.*;
-import com.kr.formdang.model.response.RootResponse;
+import com.kr.formdang.model.response.FormResponse;
 import com.kr.formdang.model.response.FailResponse;
 import com.kr.formdang.model.response.SuccessResponse;
 import com.kr.formdang.model.response.form.*;
@@ -45,7 +45,7 @@ public class FormController {
      * 폼 등록 API
      */
     @PostMapping(value = "/form/submit")
-    public ResponseEntity<RootResponse> submitForm(
+    public ResponseEntity<FormResponse> submitForm(
             @Valid @RequestBody FormSubmitRequest request,
             @RequestHeader("Authorization") String token
     ) {
@@ -88,12 +88,12 @@ public class FormController {
         try {
             log.info("■ 2. 폼 테이블 등록");
             FormTbEntity formTb = formService.submitForm(formTbEntity, questionTbEntities); // 폼 저장
-            RootResponse response = new SubmitFormResponse(formTb.getFid());
+            FormResponse response = new SubmitFormResponse(formTb.getFid());
             log.info("■ 3. 폼 작성하기 응답 성공");
             return ResponseEntity.ok().body(response);
         } catch (Exception e) {
             log.error("■ 폼 테이블 등록 실패: " + e);
-            RootResponse response = new FailResponse(ResultCode.FAIL_SUBMIT_FORM);
+            FormResponse response = new FailResponse(ResultCode.FAIL_SUBMIT_FORM);
             log.info("■ 3. 폼 작성하기 응답 성공");
             return ResponseEntity.ok().body(response);
         }
@@ -106,7 +106,7 @@ public class FormController {
      * 상태 처리 ( 진행, 종료, 임시 )
      */
     @GetMapping(value = "/form/list/find")
-    public ResponseEntity<RootResponse> findFormList(
+    public ResponseEntity<FormResponse> findFormList(
             @RequestParam @NotBlank @Min(value = 0, message = "페이지 개수는 0이상입니다.") Integer page,
             @RequestParam @NotBlank @Min(0) Integer type,
             @RequestParam @NotBlank @Min(0) Integer status,
@@ -136,7 +136,7 @@ public class FormController {
         AdminSubTbEntity adminSubTb = formService.analyzeForm(formUser.getId()); // 종합 정보 조회
 
         log.info("■ 4. 폼리스트 조회 응답 성공");
-        RootResponse response = FindFormListResponse.builder()
+        FormResponse response = FindFormListResponse.builder()
                 .totalElements(pages.getTotalElements())
                 .totalPage(pages.getTotalPages())
                 .curPage(pages.getNumber())
@@ -168,7 +168,7 @@ public class FormController {
      * 퀴즈, 설문 생성 개수, 응답 개수
      */
     @GetMapping(value = "/form/analyze")
-    public ResponseEntity<RootResponse> analyzeForm(@RequestHeader("Authorization") String token) {
+    public ResponseEntity<FormResponse> analyzeForm(@RequestHeader("Authorization") String token) {
 
         log.info("■ 1. 종합 분석 조회 요청 성공");
         FormUser formUser = authService.generateAuthUser(token);
@@ -177,7 +177,7 @@ public class FormController {
         AdminSubTbEntity adminSubTb = formService.analyzeForm(formUser.getId()); // 종합 정보 조회
 
         log.info("■ 3. 종합 분석 조회 응답 성공");
-        RootResponse response = AnalyzeFormResponse.builder()
+        FormResponse response = AnalyzeFormResponse.builder()
                     .inspectionCnt(adminSubTb.getInspectionCnt())
                     .quizCnt(adminSubTb.getQuizCnt())
                     .inspectionRespondentCnt(adminSubTb.getInspectionRespondentCnt())
@@ -192,7 +192,7 @@ public class FormController {
      * 폼 상세 정보 조회하기
      */
     @GetMapping(value = "/form/detail/{fid}/find")
-    public ResponseEntity<RootResponse> findFormDetail(
+    public ResponseEntity<FormResponse> findFormDetail(
             @RequestHeader("Authorization") String token,
             @PathVariable("fid") Long fid) throws FormException
     {
@@ -207,7 +207,7 @@ public class FormController {
             List<QuestionTbEntity> questionTbEntities = formService.findQuestions(fid); // 질문 리스트 조회
 
             log.info("■ 4. 폼 상세 정보 조회 응답 성공");
-            RootResponse response = FindFormDetailResponse.builder()
+            FormResponse response = FindFormDetailResponse.builder()
                         .fid(formTbEntity.getFid())
                         .type(formTbEntity.getFormType())
                         .title(formTbEntity.getTitle())
@@ -245,7 +245,7 @@ public class FormController {
      * 폼 업데이트
      */
     @PostMapping(value = "/form/{fid}/update")
-    public ResponseEntity<RootResponse> updateForm(
+    public ResponseEntity<FormResponse> updateForm(
             @RequestHeader("Authorization") String token,
             @PathVariable("fid") Long fid,
             @Valid @RequestBody FormUpdateRequest request) throws FormException
@@ -288,7 +288,7 @@ public class FormController {
             formService.updateForm(formTbEntity, questionTbEntities); // 업데이트 처리
 
             log.info("■ 3. 폼 정보 업데이트 응답 성공");
-            RootResponse response = new SuccessResponse();
+            FormResponse response = new SuccessResponse();
 
             return ResponseEntity.ok().body(response);
     }
@@ -298,7 +298,7 @@ public class FormController {
      * 유저 화면 데이터 제공
      */
     @GetMapping(value = "/form/paper")
-    public ResponseEntity<RootResponse> findPaper(
+    public ResponseEntity<FormResponse> findPaper(
             @RequestHeader(value = "Authorization", required = false) String token,
             @RequestParam @NotBlank @Min(0) Integer type,
             @RequestParam @NotBlank @Min(0) Long fid,
@@ -321,7 +321,7 @@ public class FormController {
             List<QuestionTbEntity> questionTbEntities = formService.findQuestions(fid); // 질문 리스트 조회
 
             log.info("■ 4. 유저 화면 정보 조회 응답 성공");
-            RootResponse response = FindPaperResponse.builder()
+            FormResponse response = FindPaperResponse.builder()
                         .fid(formTbEntity.getFid())
                         .type(formTbEntity.getFormType())
                         .title(formTbEntity.getTitle())

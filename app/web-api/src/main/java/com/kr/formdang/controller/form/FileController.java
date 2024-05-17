@@ -9,7 +9,7 @@ import com.kr.formdang.model.user.FormUser;
 import com.kr.formdang.exception.FormException;
 import com.kr.formdang.exception.ResultCode;
 import com.kr.formdang.external.dto.auth.JwtTokenRequest;
-import com.kr.formdang.model.response.RootResponse;
+import com.kr.formdang.model.response.FormResponse;
 import com.kr.formdang.external.dto.auth.JwtTokenResponse;
 import com.kr.formdang.model.FormFile;
 import com.kr.formdang.model.request.file.FileListRequest;
@@ -49,7 +49,7 @@ public class FileController {
      * 프로필 이미지 변경 API
      */
     @PostMapping("/public/file/upload/profile")
-    public ResponseEntity<RootResponse> uploadFileProfile(
+    public ResponseEntity<FormResponse> uploadFileProfile(
             @ModelAttribute @Valid FileProfileRequest fileRequest,
             @RequestHeader("Authorization") String token
     ) throws JsonProcessingException, FormHttpException {
@@ -80,7 +80,7 @@ public class FileController {
         adminService.updateProfile(formUser.getId(), profile, fileRequest.getProfile()); // 프로필 정보 업데이트 처리
 
         log.info("■ 5. 프로필 등록 응답 성공");
-        RootResponse response = new FileProfileResponse(jwtTokenResponse.getAccessToken(), profile.getPath());
+        FormResponse response = new FileProfileResponse(jwtTokenResponse.getAccessToken(), profile.getPath());
 
         return ResponseEntity.ok().body(response); // 파일 등록 성공 응답
     }
@@ -94,7 +94,7 @@ public class FileController {
      */
     @PostMapping("/public/file/list/upload/{fid}")
     @Transactional
-    public ResponseEntity<RootResponse> uploadFileList(
+    public ResponseEntity<FormResponse> uploadFileList(
             @ModelAttribute @Valid FileListRequest request,
             @RequestHeader("Authorization") String token,
             @PathVariable("fid") Long fid
@@ -130,7 +130,7 @@ public class FileController {
         }); // 등록된 S3 파일 폼 정보 업데이트 (로고 또는 문항 순번을 식별로 업데이트)
 
         log.info("■ 6. 이미지 리스트 등록 요청 응답 성공");
-        RootResponse response = new SuccessResponse();
+        FormResponse response = new SuccessResponse();
 
         return ResponseEntity.ok().body(response); // 파일 등록 성공 응답
     }

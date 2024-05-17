@@ -8,7 +8,7 @@ import lombok.Setter;
 import java.util.Date;
 
 @NoArgsConstructor
-public abstract class AbstractResponse implements RootResponse {
+public abstract class AbstractResponse implements FormResponse {
 
     @JsonFormat(shape= JsonFormat.Shape.STRING, pattern="yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
     private final Date time = new Date(); // 날짜
