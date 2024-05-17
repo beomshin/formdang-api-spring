@@ -41,7 +41,7 @@ public class DataBaseConfig {
         hikariConfig.setPoolName("hikari-lg");
         hikariConfig.setConnectionTestQuery("SELECT 1 FROM DUAL");
         hikariConfig.setConnectionInitSql("SELECT NOW() FROM DUAL");
-        hikariConfig.setMaximumPoolSize(20);
+        hikariConfig.setMaximumPoolSize(5);
         return new HikariDataSource(hikariConfig);
     }
 
