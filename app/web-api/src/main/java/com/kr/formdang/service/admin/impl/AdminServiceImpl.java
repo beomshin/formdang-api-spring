@@ -29,6 +29,8 @@ public class AdminServiceImpl implements AdminService {
     @Override
     @Transactional
     public AdminTbEntity saveSnsAdmin(AdminTbEntity adminTbEntity) throws FormException {
+        if (adminTbEntity == null) throw new FormException(ResultCode.FAIL_SAVE_ADMIN);
+
         log.info("■ 폼당폼당 어드민 테이블 조회");
         Optional<AdminTbEntity> adminTb = adminTbRepository.findBySubId(adminTbEntity.getSubId());
         if (adminTb.isPresent()) {
@@ -37,15 +39,11 @@ public class AdminServiceImpl implements AdminService {
         }
 
         try {
-            if (adminTbEntity == null) throw new FormException(ResultCode.FAIL_SAVE_ADMIN);
             log.info("■ 폼당폼당 어드민 테이블 둥록");
             AdminTbEntity admin = adminTbRepository.save(adminTbEntity);
             log.info("■ 폼당폼당 어드민 서브 테이블 둥록");
             adminSubTbRepository.save(AdminSubTbEntity.builder().aid(admin.getAid()).build());
             return admin;
-        } catch (FormException e) {
-            log.error("■ 어드민 계정 정보 누락 오류 [{}]", e.getCode());
-            throw e;
         } catch (DataIntegrityViolationException e) {
             log.error("■ 어드민 계정 유니크 오류");
             throw new FormException(ResultCode.NOT_UNIQUE_ADMIN);
@@ -57,7 +55,7 @@ public class AdminServiceImpl implements AdminService {
 
 
     @Override
-    public void updateProfile(Long aid, S3File profile, MultipartFile file) {
+    public void updateProfile(Long aid, S3File profile) {
         adminTbRepository.updateProfile(aid, profile.getPath());
     }
 

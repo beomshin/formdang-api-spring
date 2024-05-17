@@ -77,7 +77,7 @@ public class FileController {
         }
 
         log.info("■ 4. 프로필 업데이트 시작");
-        adminService.updateProfile(formUser.getId(), profile, fileRequest.getProfile()); // 프로필 정보 업데이트 처리
+        adminService.updateProfile(formUser.getId(), profile); // 프로필 정보 업데이트 처리
 
         log.info("■ 5. 프로필 등록 응답 성공");
         FormResponse response = new FileProfileResponse(jwtTokenResponse.getAccessToken(), profile.getPath());

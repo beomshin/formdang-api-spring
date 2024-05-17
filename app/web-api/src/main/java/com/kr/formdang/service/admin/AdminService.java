@@ -9,6 +9,6 @@ import org.springframework.web.multipart.MultipartFile;
 public interface AdminService {
 
     AdminTbEntity saveSnsAdmin(AdminTbEntity adminTbEntity) throws FormException;
-    void updateProfile(Long aid, S3File profile, MultipartFile file);
+    void updateProfile(Long aid, S3File profile);
 
 }

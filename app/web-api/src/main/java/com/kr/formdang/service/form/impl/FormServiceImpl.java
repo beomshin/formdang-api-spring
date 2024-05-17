@@ -133,7 +133,7 @@ public class FormServiceImpl implements FormService {
         FormTbEntity formTb = formTbRepository.findByAidAndFid(modifyForm.getAid(), modifyForm.getFid())
                 .orElseThrow(() -> new FormException(ResultCode.NOT_FIND_FORM));
 
-        if (formTb.isStartForm()) throw new FormException(ResultCode.REFUSE_ALREADY_START_FORM);
+        if (formTb.isUserSubmitForm()) throw new FormException(ResultCode.REFUSE_ALREADY_START_FORM);
         else if (formTb.isDeleteForm()) throw new FormException(ResultCode.REFUSE_ALREADY_DELETE_FORM);
         else if (formTb.isEndForm()) throw new FormException(ResultCode.REFUSE_ALREADY_END_FORM);
 
@@ -198,53 +198,49 @@ public class FormServiceImpl implements FormService {
     @Transactional
     public FormTbEntity findPaper(FormTbEntity formDataDto, String key) throws FormException {
         log.info("■ 폼 상세 정보 조회 쿼리 시작");
-        Optional<FormSubTbEntity> formSubTb = formSubTbRepository.findByFormTbAndFormUrlKey(FormTbEntity.builder().fid(formDataDto.getFid()).build(), key);
-        if (formSubTb.isPresent()) {
+        FormTbEntity queryParam = FormTbEntity.builder().fid(formDataDto.getFid()).build();
+        Optional<FormSubTbEntity> formSubTb = formSubTbRepository.findByFormTbAndFormUrlKey(queryParam, key);
+        if (!formSubTb.isPresent()) throw new FormException(ResultCode.NOT_FIND_FORM);
 
-            FormTbEntity formTb = formSubTb.get().getFormTb();
-            Timestamp now = Timestamp.valueOf(LocalDateTime.now());
+        FormTbEntity formTb = formSubTb.get().getFormTb();
 
-            if (Objects.equals(formTb.getAid(), formDataDto.getAid())) {
-                log.info("■ 작성자 페이지 접근");
-                return formTb;
-            } else if (formTb.getDelFlag() == 1) {
-                throw new FormException(ResultCode.DELETE_FORM);
-            } else if (formTb.getEndFlag() == 1) {
-                throw new FormException(ResultCode.END_FORM);
-            } else if (formTb.getStatus() != 1) {
-                throw new FormException(ResultCode.NOT_START_FORM);
-            } else if (formTb.getMaxRespondent() !=  0 && formTb.getAnswerCount() >= formTb.getMaxRespondent()) {
-                throw new FormException(ResultCode.IS_MAX_RESPONSE);
-            } else if (!(now.compareTo(formTb.getBeginDt()) >= 0 && now.compareTo(formTb.getEndDt()) <= 0)) {
-                throw new FormException(ResultCode.IS_NOT_RIGHT_DATE);
-            }
-
-            log.info("■ 제출 여부 확인 조회 쿼리 시작");
-            int isSubmit = answerTbRepository.countByFidAndAid(formTb.getFid(), formDataDto.getAid());
-            if (isSubmit > 0) {
-                throw new FormException(ResultCode.IS_SUBMIT);
-            }
-
-            log.info("■ 그룹 폼 조회 쿼리 시작");
-            List<GroupFormTbEntity> groupFormTbEntity = groupFormTbRepository.findByFid(formTb.getFid());
-
-            if (!groupFormTbEntity.isEmpty()) {
-
-                log.info("■ 그룹 권한 유저 조회 쿼리 시작");
-                List<GroupMemberTbEntity> groupMemberTbEntity =
-                        groupMemberTbRepository
-                                .findByAidAndGroupTbIn(formDataDto.getAid(), groupFormTbEntity.stream()
-                        .map(it -> GroupTbEntity.builder().gid(it.getGid()).build()).collect(Collectors.toList()));
-                if (groupMemberTbEntity.isEmpty()) {
-                    throw new FormException(ResultCode.IS_NOT_GROUP_FORM_USER); // 그룹 폼 권한 미유저
-                }
-                log.info("■ 그룹 폼 권한 검사 통과");
-            }
-
+        if (formTb.getAid() == formDataDto.getAid()) {
+            log.debug("■ 폼 작성자 접근");
             return formTb;
-        } else {
-            throw new FormException(ResultCode.NOT_FIND_FORM);
+        } else if (formTb.isDeleteForm()) {
+            throw new FormException(ResultCode.DELETE_FORM);
+        } else if (formTb.isEndForm()) {
+            throw new FormException(ResultCode.END_FORM);
+        } else if (!formTb.isStartForm()) {
+            throw new FormException(ResultCode.NOT_START_FORM);
+        } else if (formTb.isExceedSubject()) {
+            throw new FormException(ResultCode.IS_MAX_RESPONSE);
+        } else if (!(formTb.isSubmitRangeDt())) {
+            throw new FormException(ResultCode.IS_NOT_RIGHT_DATE);
         }
+
+        log.info("■ 제출 여부 확인 조회 쿼리 시작");
+        int isSubmit = answerTbRepository.countByFidAndAid(formTb.getFid(), formDataDto.getAid());
+        if (isSubmit > 0) throw new FormException(ResultCode.IS_SUBMIT);
+
+        log.info("■ 그룹 폼 조회 쿼리 시작");
+        List<GroupFormTbEntity> groupFormTbEntity = groupFormTbRepository.findByFid(formTb.getFid()); // 해당 폼 그룹 리스트 조회
+
+        if (!groupFormTbEntity.isEmpty()) {
+
+            List<GroupTbEntity> groups =  groupFormTbEntity.stream().map(it -> GroupTbEntity.builder().gid(it.getGid()).build()).collect(Collectors.toList());
+
+            log.info("■ 그룹 권한 유저 조회 쿼리 시작");
+            List<GroupMemberTbEntity> groupMemberTbEntity = groupMemberTbRepository.findByAidAndGroupTbIn(formDataDto.getAid(), groups); // 그룹 리스트 중 포함된 유저 여부 확인
+
+            if (groupMemberTbEntity.isEmpty()) {
+                throw new FormException(ResultCode.IS_NOT_GROUP_FORM_USER); // 그룹 폼 권한 미유저
+            }
+
+            log.info("■ 그룹 폼 권한 검사 통과");
+        }
+
+        return formTb;
     }
 
 }

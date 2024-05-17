@@ -9,6 +9,7 @@ import org.hibernate.annotations.DynamicInsert;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "form_tb", schema = "form_dang", catalog = "")
@@ -68,7 +69,7 @@ public class FormTbEntity extends DateEntity {
     @Column(name = "del_flag")
     private int delFlag;
 
-    public boolean isStartForm() { // 작성자가 있는 경우 시작 폼
+    public boolean isUserSubmitForm() { // 작성자가 있는 경우 시작 폼
         return this.answerCount > 0;
     }
 
@@ -78,6 +79,19 @@ public class FormTbEntity extends DateEntity {
 
     public boolean isEndForm() { // 설문 종료 플래그(1) 경우 종료
         return this.endFlag == 1;
+    }
+
+    public boolean isStartForm() {
+        return this.status == 1;
+    }
+
+    public boolean isExceedSubject() {
+        return maxRespondent != 0 && answerCount > maxRespondent;
+    }
+
+    public boolean isSubmitRangeDt() {
+        Timestamp now = Timestamp.valueOf(LocalDateTime.now());
+        return now.compareTo(beginDt) >= 0 && now.compareTo(endDt) <= 0;
     }
 
     public void modify(FormTbEntity modifyData) {
