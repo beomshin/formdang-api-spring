@@ -6,6 +6,7 @@ import com.kr.formdang.model.response.FormResponse;
 import com.kr.formdang.model.response.FailResponse;
 import com.kr.formdang.model.response.SuccessResponse;
 import com.kr.formdang.model.response.form.*;
+import com.kr.formdang.model.user.AnonymousUser;
 import com.kr.formdang.model.user.FormUser;
 import com.kr.formdang.entity.AdminSubTbEntity;
 import com.kr.formdang.entity.FormTbEntity;
@@ -305,64 +306,40 @@ public class FormController {
             @RequestParam @NotBlank @Min(0) Long fid,
             @RequestParam @NotBlank String key) throws FormException
     {
-
+        
+        FormUser formUser = null;
+        try {
+            formUser = authService.generateAuthUser(token);
             log.info("■ 1. 유저 화면 정보 조회 요청 성공");
-            FormUser formUser = authService.generateAuthUser(token);
+        } catch (Exception e) {
+            formUser = new AnonymousUser();
+            log.info("■ 1. 비유저 화면 정보 조회 요청 성공");
+        }
 
-            FormTbEntity formTbEntity = FormTbEntity.builder()
-                        .fid(fid)
-                        .formType(type)
-                        .aid(formUser.getId())
-                    .build();
+        FormTbEntity formTbEntity = FormTbEntity.builder()
+                    .fid(fid)
+                    .formType(type)
+                    .aid(formUser.getId())
+                .build();
 
-            log.info("■ 2. 폼 상세 정보 조회 시작");
-            FormTbEntity formTb = formService.findPaper(formTbEntity, key); // 폼 상세 조회
+        log.info("■ 2. 폼 상세 정보 조회 시작");
+        FormTbEntity form = formService.findPaper(formTbEntity, key); // 폼 상세 조회
 
-            log.info("■ 3. 폼 제출 여부 조회");
-            List<AnswerTbEntity> answers = formService.findAnswer(formTbEntity); // 폼 제출 여부 조회
+        log.info("■ 3. 폼 제출 여부 조회");
+        List<AnswerTbEntity> answers = formService.findAnswers(formTbEntity); // 폼 제출 여부 조회
 
-            log.info("■ 4. 폼 질문 리스트 조회 쿼리 시작");
-            List<QuestionTbEntity> questionTbEntities = formService.findQuestions(fid); // 질문 리스트 조회
+        log.info("■ 4. 폼 질문 리스트 조회 쿼리 시작");
+        List<QuestionTbEntity> questions = formService.findQuestions(fid); // 질문 리스트 조회
 
-            log.info("■ 5. 유저 화면 정보 조회 응답 성공");
-            FormResponse response = FindPaperResponse.builder()
-                        .fid(formTb.getFid())
-                        .type(formTb.getFormType())
-                        .title(formTb.getTitle())
-                        .detail(formTb.getFormDetail())
-                        .maxRespondent(formTb.getMaxRespondent())
-                        .logoUrl(formTb.getLogoUrl())
-                        .themeUrl(formTb.getThemeUrl())
-                        .worker(formUser.getId() == formTb.getAid())
-                        .question(questionTbEntities.stream().map(
-                                it -> FindPaperResponse.FormDetailQuestionResponse.builder()
-                                            .qid(it.getQid())
-                                            .type(it.getQuestionType())
-                                            .order(it.getOrder())
-                                            .title(it.getTitle())
-                                            .placeholder(it.getQuestionPlaceholder())
-                                            .imageUrl(it.getImageUrl())
-                                            .count(it.getCount())
-                                            .detail(StrUtils.split(it.getQuestionDetail()))
-                                            .exampleDetail(StrUtils.split(it.getQuestionExampleDetail()))
-                                            .answer(StrUtils.split(it.getQuizAnswer()))
-                                        .build())
-                                .collect(Collectors.toList()))
-                        .answers(answers == null ? null : answers.stream()
-                                .map(
-                                        it -> FindPaperResponse.FormAnswerResponse.builder()
-                                                .awid(it.getAwid())
-                                                .fid(it.getFid())
-                                                .aid(it.getAid())
-                                                .sAnswer(it.getSAnswer())
-                                                .mAnswer(it.getMAnswer())
-                                                .okFlag(it.getOkFlag())
-                                                .build()
-                                )
-                                .collect(Collectors.toList()))
-                    .build();
+        log.info("■ 5. 유저 화면 정보 조회 응답 성공");
+        FindPaperResponse response = new FindPaperResponse(form, questions, answers);
+        response.setWorker(formUser.getId() == form.getAid());
 
-            return ResponseEntity.ok().body(response);
+        if (formUser instanceof AnonymousUser) {
+            response.setError(ResultCode.NOT_LOGIN_GROUP_FORM);
+        }
+
+        return ResponseEntity.ok().body(response);
     }
 
 

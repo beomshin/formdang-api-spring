@@ -1,14 +1,20 @@
 package com.kr.formdang.model.response.form;
 
+import com.kr.formdang.entity.AnswerTbEntity;
+import com.kr.formdang.entity.FormTbEntity;
+import com.kr.formdang.entity.QuestionTbEntity;
+import com.kr.formdang.exception.ResultCode;
 import com.kr.formdang.model.response.AbstractResponse;
 import lombok.*;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Getter
 @Setter
 @ToString(callSuper = true)
-@Builder
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class FindPaperResponse extends AbstractResponse {
@@ -17,25 +23,37 @@ public class FindPaperResponse extends AbstractResponse {
     private Integer type; // 폼 타입 ( 0: 설문, 1: 퀴즈, 2: 쪽지시험 )
     private String title; // 폼 제목
     private String detail; // 폼 설명
-//    @JsonFormat(shape= JsonFormat.Shape.STRING, pattern="yyyy-MM-dd", timezone = "Asia/Seoul")
-//    private Timestamp beginDt; // 시작일 (yyyyMMdd)
-//    @JsonFormat(shape= JsonFormat.Shape.STRING, pattern="yyyy-MM-dd", timezone = "Asia/Seoul")
-//    private Timestamp endDt; // 종료일 (yyyyMMdd)
-//    private Integer questionCount; // 질문 개수
-//    private Integer answerCount; // 질문 응답자 수
     private Integer maxRespondent; // 인원 제한수 ( 0: 제한 없음, 1~ 제한인원)
     private String logoUrl; // 로그 url
     private String themeUrl; // 테마 url
     private List<FindPaperResponse.FormDetailQuestionResponse> question;
-    private List<FindPaperResponse.FormAnswerResponse> answers;
     private boolean worker;
+    private boolean submit;
 
+    public FindPaperResponse(FormTbEntity form, List<QuestionTbEntity> questions, List<AnswerTbEntity> answers) {
+        this.fid = form.getFid();
+        this.type = form.getFormType();
+        this.title = form.getTitle();
+        this.detail = form.getFormDetail();
+        this.maxRespondent = form.getMaxRespondent();
+        this.logoUrl = form.getLogoUrl();
+        this.themeUrl = form.getThemeUrl();
+        this.question = questions.stream().map(FormDetailQuestionResponse::new).collect(Collectors.toList());
+        if (answers != null) {
+            Map<Long, AnswerTbEntity> answerMap = answers.stream().collect(Collectors.toMap(AnswerTbEntity::getQid, it -> it));
+            for (int i=0; i < questions.size(); i++) {
+                if (answerMap.containsKey(question.get(i).getQid())) {
+                    question.get(i).putAnswer(answerMap.get(questions.get(i).getQid()));
+                }
+            }
+            this.submit = true;
+        }
+    }
 
     @Getter
     @Setter
     @NoArgsConstructor
     @AllArgsConstructor
-    @Builder
     public static class FormDetailQuestionResponse {
 
         private Long qid;
@@ -48,22 +66,33 @@ public class FindPaperResponse extends AbstractResponse {
         private String[] exampleDetail; // 질문 보기 상세 내용
         private Integer count; // 질문 개수
         private String[] answer; // 질문 정답
-
-    }
-
-    @Getter
-    @Setter
-    @NoArgsConstructor
-    @AllArgsConstructor
-    @Builder
-    public static class FormAnswerResponse {
-
-        private long awid;
-        private long fid;
-        private long aid;
         private String sAnswer;
         private String mAnswer;
         private int okFlag;
 
+        public FormDetailQuestionResponse(QuestionTbEntity questionTb) {
+            this.qid = questionTb.getQid();
+            this.type = questionTb.getQuestionType();
+            this.order = questionTb.getOrder();
+            this.title = questionTb.getTitle();
+            this.placeholder = questionTb.getQuestionPlaceholder();
+            this.imageUrl = questionTb.getImageUrl();
+            this.count = questionTb.getCount();
+            this.detail = StringUtils.split(questionTb.getQuestionDetail());
+            this.exampleDetail = StringUtils.split(questionTb.getQuestionExampleDetail());
+            this.answer = StringUtils.split(questionTb.getQuizAnswer());
+        }
+
+        public void putAnswer(AnswerTbEntity answer) {
+            this.sAnswer = answer.getSAnswer();
+            this.mAnswer = answer.getMAnswer();
+            this.okFlag = answer.getOkFlag();
+        }
     }
+
+    public void setError(ResultCode resultCode) {
+        super.resultCode = resultCode.getCode();
+        super.resultMsg = resultCode.getMsg();
+    }
+
 }

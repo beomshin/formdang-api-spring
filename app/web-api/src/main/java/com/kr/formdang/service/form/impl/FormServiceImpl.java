@@ -240,7 +240,7 @@ public class FormServiceImpl implements FormService {
     }
 
     @Override
-    public List<AnswerTbEntity> findAnswer(FormTbEntity formTb) throws FormException {
+    public List<AnswerTbEntity> findAnswers(FormTbEntity formTb) throws FormException {
 
         log.info("{}", formTb);
 

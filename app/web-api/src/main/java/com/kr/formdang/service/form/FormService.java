@@ -24,5 +24,5 @@ public interface FormService {
     void modifyForm(FormTbEntity modifyForm, List<QuestionTbEntity> modifyQuestions) throws FormException;
     void updateImage(Long fid, S3File file);
     FormTbEntity findPaper(FormTbEntity formDataDto, String key) throws FormException;
-    List<AnswerTbEntity> findAnswer(FormTbEntity formTb) throws FormException;
+    List<AnswerTbEntity> findAnswers(FormTbEntity formTb) throws FormException;
 }
