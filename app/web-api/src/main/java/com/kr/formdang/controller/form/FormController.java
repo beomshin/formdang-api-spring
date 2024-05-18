@@ -299,7 +299,7 @@ public class FormController {
     /**
      * 유저 화면 데이터 제공
      */
-    @GetMapping(value = "/form/paper")
+    @GetMapping(value = "/public/form/paper")
     public ResponseEntity<FormResponse> findPaper(
             @RequestHeader(value = "Authorization", required = false) String token,
             @RequestParam @NotBlank @Min(0) Integer type,
