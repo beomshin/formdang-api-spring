@@ -219,31 +219,12 @@ public class FormServiceImpl implements FormService {
             throw new FormException(ResultCode.IS_NOT_RIGHT_DATE);
         }
 
-        log.info("■ 그룹 폼 조회 쿼리 시작");
-        List<GroupFormTbEntity> groupFormTbEntity = groupFormTbRepository.findByFid(formTb.getFid()); // 해당 폼 그룹 리스트 조회
-
-        if (!groupFormTbEntity.isEmpty()) {
-
-            List<GroupTbEntity> groups =  groupFormTbEntity.stream().map(it -> GroupTbEntity.builder().gid(it.getGid()).build()).collect(Collectors.toList());
-
-            log.info("■ 그룹 권한 유저 조회 쿼리 시작");
-            List<GroupMemberTbEntity> groupMemberTbEntity = groupMemberTbRepository.findByAidAndGroupTbIn(formDataDto.getAid(), groups); // 그룹 리스트 중 포함된 유저 여부 확인
-
-            if (groupMemberTbEntity.isEmpty()) {
-                throw new FormException(ResultCode.IS_NOT_GROUP_FORM_USER); // 그룹 폼 권한 미유저
-            }
-
-            log.info("■ 그룹 폼 권한 검사 통과");
-        }
 
         return formTb;
     }
 
     @Override
     public List<AnswerTbEntity> findAnswers(FormTbEntity formTb) throws FormException {
-
-        log.info("{}", formTb);
-
         log.info("■ 제출 여부 확인 조회 쿼리 시작");
         int totalCnt = answerTbRepository.countByFidAndAid(formTb.getFid(), formTb.getAid());
         if (totalCnt > 0) {
@@ -256,6 +237,29 @@ public class FormServiceImpl implements FormService {
         }
 
         return null;
+    }
+
+    @Override
+    public boolean checkGroupForm(FormTbEntity formTb) throws FormException {
+
+        log.info("■ 그룹 폼 조회 쿼리 시작");
+        List<GroupFormTbEntity> groupFormTbEntity = groupFormTbRepository.findByFid(formTb.getFid()); // 해당 폼 그룹 리스트 조회
+
+        if (!groupFormTbEntity.isEmpty()) {
+
+            List<GroupTbEntity> groups =  groupFormTbEntity.stream().map(it -> GroupTbEntity.builder().gid(it.getGid()).build()).collect(Collectors.toList());
+
+            log.info("■ 그룹 권한 유저 조회 쿼리 시작");
+            List<GroupMemberTbEntity> groupMemberTbEntity = groupMemberTbRepository.findByAidAndGroupTbIn(formTb.getAid(), groups); // 그룹 리스트 중 포함된 유저 여부 확인
+
+            if (groupMemberTbEntity.isEmpty()) {
+                throw new FormException(ResultCode.IS_NOT_GROUP_FORM_USER); // 그룹 폼 권한 미유저
+            }
+
+            log.info("■ 그룹 폼 권한 검사 통과");
+        }
+
+        return true;
     }
 
 }

@@ -1,5 +1,6 @@
 package com.kr.formdang.model.response.form;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.kr.formdang.entity.AnswerTbEntity;
 import com.kr.formdang.entity.FormTbEntity;
 import com.kr.formdang.entity.QuestionTbEntity;
@@ -8,6 +9,7 @@ import com.kr.formdang.model.response.AbstractResponse;
 import lombok.*;
 import org.apache.commons.lang3.StringUtils;
 
+import java.sql.Timestamp;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -29,6 +31,10 @@ public class FindPaperResponse extends AbstractResponse {
     private List<FindPaperResponse.FormDetailQuestionResponse> question;
     private boolean worker;
     private boolean submit;
+    @JsonFormat(shape= JsonFormat.Shape.STRING, pattern="yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
+    private Timestamp beginDt;
+    @JsonFormat(shape= JsonFormat.Shape.STRING, pattern="yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
+    private Timestamp endDt;
 
     public FindPaperResponse(FormTbEntity form, List<QuestionTbEntity> questions, List<AnswerTbEntity> answers) {
         this.fid = form.getFid();
@@ -38,9 +44,11 @@ public class FindPaperResponse extends AbstractResponse {
         this.maxRespondent = form.getMaxRespondent();
         this.logoUrl = form.getLogoUrl();
         this.themeUrl = form.getThemeUrl();
+        this.beginDt = form.getBeginDt();
+        this.endDt = form.getEndDt();
         this.question = questions.stream().map(FormDetailQuestionResponse::new).collect(Collectors.toList());
         if (answers != null) {
-            Map<Long, AnswerTbEntity> answerMap = answers.stream().collect(Collectors.toMap(AnswerTbEntity::getQid, it -> it));
+            Map<Long, AnswerTbEntity> answerMap = answers.stream().collect(Collectors.toMap(AnswerTbEntity::getQid, (it) -> it, (v1, v2) -> v1));
             for (int i=0; i < questions.size(); i++) {
                 if (answerMap.containsKey(question.get(i).getQid())) {
                     question.get(i).putAnswer(answerMap.get(questions.get(i).getQid()));
@@ -48,6 +56,15 @@ public class FindPaperResponse extends AbstractResponse {
             }
             this.submit = true;
         }
+    }
+
+    public FindPaperResponse ss(FormTbEntity formTb) {
+        FindPaperResponse response = new FindPaperResponse();
+        response.setBeginDt(formTb.getBeginDt());
+        response.setEndDt(formTb.getEndDt());
+        super.resultCode = ResultCode.IS_NOT_RIGHT_DATE.getCode();
+        super.resultMsg = ResultCode.IS_NOT_RIGHT_DATE.getMsg();
+        return response;
     }
 
     @Getter

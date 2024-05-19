@@ -331,6 +331,9 @@ public class FormController {
         log.info("■ 4. 폼 질문 리스트 조회 쿼리 시작");
         List<QuestionTbEntity> questions = formService.findQuestions(fid); // 질문 리스트 조회
 
+        log.info("■ 5. 폼 그룹 권한 조회 쿼리 시작");
+        formService.checkGroupForm(formTbEntity);
+
         log.info("■ 5. 유저 화면 정보 조회 응답 성공");
         FindPaperResponse response = new FindPaperResponse(form, questions, answers);
         response.setWorker(formUser.getId() == form.getAid());
