@@ -6,8 +6,8 @@ import com.kr.formdang.entity.FormTbEntity;
 import com.kr.formdang.entity.QuestionTbEntity;
 import com.kr.formdang.exception.ResultCode;
 import com.kr.formdang.model.response.AbstractResponse;
+import com.kr.formdang.utils.StrUtils;
 import lombok.*;
-import org.apache.commons.lang3.StringUtils;
 
 import java.sql.Timestamp;
 import java.util.List;
@@ -84,8 +84,9 @@ public class FindPaperResponse extends AbstractResponse {
         private Integer count; // 질문 개수
         private String[] answer; // 질문 정답
         private String sAnswer;
-        private String mAnswer;
+        private String[] mAnswer;
         private int okFlag;
+        private boolean submit;
 
         public FormDetailQuestionResponse(QuestionTbEntity questionTb) {
             this.qid = questionTb.getQid();
@@ -95,15 +96,16 @@ public class FindPaperResponse extends AbstractResponse {
             this.placeholder = questionTb.getQuestionPlaceholder();
             this.imageUrl = questionTb.getImageUrl();
             this.count = questionTb.getCount();
-            this.detail = StringUtils.split(questionTb.getQuestionDetail());
-            this.exampleDetail = StringUtils.split(questionTb.getQuestionExampleDetail());
-            this.answer = StringUtils.split(questionTb.getQuizAnswer());
+            this.detail = StrUtils.split(questionTb.getQuestionDetail());
+            this.exampleDetail = StrUtils.split(questionTb.getQuestionExampleDetail());
+            this.answer = StrUtils.split(questionTb.getQuizAnswer());
         }
 
         public void putAnswer(AnswerTbEntity answer) {
             this.sAnswer = answer.getSAnswer();
-            this.mAnswer = answer.getMAnswer();
+            this.mAnswer = StrUtils.split(answer.getMAnswer());
             this.okFlag = answer.getOkFlag();
+            this.submit = true;
         }
     }
 
