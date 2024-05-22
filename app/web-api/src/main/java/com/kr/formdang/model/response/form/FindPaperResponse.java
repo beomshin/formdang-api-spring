@@ -35,10 +35,12 @@ public class FindPaperResponse extends AbstractResponse {
     private Timestamp beginDt;
     @JsonFormat(shape= JsonFormat.Shape.STRING, pattern="yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
     private Timestamp endDt;
+    private Integer loginFlag;
 
     public FindPaperResponse(FormTbEntity form, List<QuestionTbEntity> questions, List<AnswerTbEntity> answers) {
         this.fid = form.getFid();
         this.type = form.getFormType();
+        this.loginFlag = form.getLoginFlag();
         this.title = form.getTitle();
         this.detail = form.getFormDetail();
         this.maxRespondent = form.getMaxRespondent();
