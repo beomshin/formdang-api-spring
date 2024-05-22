@@ -68,6 +68,7 @@ public class FormController {
                 .logoUrl(request.getLogoUrl())
                 .themeUrl(request.getThemeUrl())
                 .status(request.getStatus())
+                .loginFlag(request.getLoginFlag())
                 .build(); // 폼 엔티티 생성
 
         // 질문 리스트 엔티티
@@ -220,6 +221,7 @@ public class FormController {
                         .status(formTbEntity.getStatus())
                         .endFlag(formTbEntity.getEndFlag())
                         .delFlag(formTbEntity.getDelFlag())
+                        .loginFlag(formTbEntity.getLoginFlag())
                         .answerCount(formTbEntity.getAnswerCount())
                         .maxRespondent(formTbEntity.getMaxRespondent())
                         .logoUrl(formTbEntity.getLogoUrl())
@@ -268,6 +270,7 @@ public class FormController {
                         .maxRespondent(request.getMaxRespondent())
                         .logoUrl(request.getLogoUrl())
                         .themeUrl(request.getThemeUrl())
+                        .loginFlag(request.getLoginFlag())
                         .aid(formUser.getId())
                     .build();
 

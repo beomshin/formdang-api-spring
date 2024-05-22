@@ -33,6 +33,7 @@ public class FindFormDetailResponse extends AbstractResponse {
     private Integer status; // 폼 상태 (0: 임시저장, 1: 등록)
     private Integer endFlag; // 종료 플래그 ( 0: 미종료, 1: 종료)
     private Integer delFlag; // 삭제 플래그 ( 0: 미삭제, 1: 삭제)
+    private Integer loginFlag; // 로그인 플래그 (0: 로그인, 1: 비로그인)
     private Integer answerCount; // 질문 응답자 수
 
     private Integer maxRespondent; // 인원 제한수 ( 0: 제한 없음, 1~ 제한인원)
@@ -40,6 +41,7 @@ public class FindFormDetailResponse extends AbstractResponse {
     private String logoUrl; // 로그 url
 
     private String themeUrl; // 테마 url
+
     private List<FindFormDetailResponse.FormDetailQuestionResponse> question;
 
 

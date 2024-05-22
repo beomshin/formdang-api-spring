@@ -70,6 +70,9 @@ public class FormTbEntity extends DateEntity {
     @Basic
     @Column(name = "del_flag")
     private int delFlag;
+    @Basic
+    @Column(name = "login_flag")
+    private int loginFlag;
 
     public boolean isUserSubmitForm() { // 작성자가 있는 경우 시작 폼
         return this.answerCount > 0;
@@ -112,5 +115,6 @@ public class FormTbEntity extends DateEntity {
         this.maxRespondent = modifyData.getMaxRespondent();
         this.logoUrl = modifyData.getLogoUrl();
         this.themeUrl = modifyData.getThemeUrl();
+        this.loginFlag = modifyData.getLoginFlag();
     }
 }

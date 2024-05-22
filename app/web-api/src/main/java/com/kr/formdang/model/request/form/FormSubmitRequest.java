@@ -19,6 +19,9 @@ public class FormSubmitRequest extends AbstractRequest {
     @NotNull(message = "폼 타입이 누락되었습니다.")
     private Integer type; // 폼 타입 ( 0: 설문, 1: 퀴즈, 2: 쪽지시험 )
 
+    @NotNull(message = "로그인 타입이 누락되었습니다.")
+    private Integer loginFlag; // 폼 타입 ( 0: 로그인, 1: 비로그인 )
+
     @NotBlank(message = "폼 제목이 누락되었습니다.")
     @Size(min = 1, max = 256, message = "폼 제목 길이가 초과되었습니다.")
     private String title; // 폼 제목

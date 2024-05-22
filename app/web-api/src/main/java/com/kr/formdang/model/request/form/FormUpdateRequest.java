@@ -19,6 +19,9 @@ import java.util.List;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class FormUpdateRequest extends AbstractRequest {
 
+    @NotNull(message = "로그인 타입이 누락되었습니다.")
+    private Integer loginFlag; // 폼 타입 ( 0: 로그인, 1: 비로그인 )
+
     @NotNull(message = "폼 타입이 누락되었습니다.")
     private Integer type; // 폼 타입 ( 0: 설문, 1: 퀴즈, 2: 쪽지시험 )
 
