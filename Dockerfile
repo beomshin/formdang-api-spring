@@ -1,8 +1,8 @@
 FROM openjdk:8-alpine
 
-WORKDIR /app
+WORKDIR /
 
-ARG JAR_FILE_PATH=/web-api/target/*.jar
+ARG JAR_FILE_PATH=/app/web-api/target/*.jar
 ARG DATASOURCE_KEY
 ARG DATASOURCE_URL
 ARG DATASOURCE_USERNAME
