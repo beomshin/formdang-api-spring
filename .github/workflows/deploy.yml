@@ -1,61 +1,61 @@
-name: CI-CD
-
-on:
-  push:
-    branches:
-      - master
-  workflow_dispatch:
-
-jobs:
-  build:
-    runs-on: ubuntu-latest
-    env:
-      DATASOURCE_KEY: ${{ secrets.DATASOURCE_KEY }}
-      DATASOURCE_URL: ${{ secrets.DATASOURCE_URL }}
-      DATASOURCE_USERNAME: ${{ secrets.DATASOURCE_USERNAME }}
-      DATASOURCE_PASSWORD: ${{ secrets.DATASOURCE_PASSWORD }}
-      DOCKER_HUB_REPO: ${{ secrets.DOCKER_HUB_REPO }}
-      DOCKER_HUB_NAME: ${{ secrets.DOCKER_HUB_NAME }}
-      DOCKER_HUB_USER: ${{ secrets.DOCKER_HUB_USER }}
-      DOCKER_HUB_PASSWORD: ${{ secrets.DOCKER_HUB_PASSWORD }}
-
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-
-      # Cache Maven
-      - name: Cache Maven packages
-        uses: actions/cache@v2
-        with:
-          path: ~/.m2
-          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
-          restore-keys: ${{ runner.os }}-m2
-
-      # Maven Package
-      - name: Build with Maven
-        run: mvn -Dmaven.test.skip=true -B package --file ./pom.xml
-
-      # Docker Image Build
-      - name: Docker Build Image
-        run: | 
-          docker build -t ${{ env.DOCKER_HUB_REPO }} \
-          --build-arg DATASOURCE_KEY="${{ env.DATASOURCE_KEY }}" \
-          --build-arg DATASOURCE_URL="${{ env.DATASOURCE_URL }}" \
-          --build-arg DATASOURCE_USERNAME="${{ env.DATASOURCE_USERNAME }}" \
-          --build-arg DATASOURCE_PASSWORD="${{ env.DATASOURCE_PASSWORD }}" .
-
-      # Docker Hub Login
-      - name: Login to DockerHub
-        uses: docker/login-action@v1
-        with:
-          username: ${{ env.DOCKER_HUB_USER }}
-          password: ${{ env.DOCKER_HUB_PASSWORD }}
-
-      # Docker Hub 이미지 push
-      - name: Build and Release to DockerHub
-        env:
-          NAME: ${{ env.DOCKER_HUB_NAME }}
-          REPO: ${{ env.DOCKER_HUB_REPO }}
-        run : |
-          docker tag $REPO:latest $NAME/$REPO:latest
-          docker push $NAME/$REPO:latest
+#name: CI-CD
+#
+#on:
+#  push:
+#    branches:
+#      - master
+#  workflow_dispatch:
+#
+#jobs:
+#  build:
+#    runs-on: ubuntu-latest
+#    env:
+#      DATASOURCE_KEY: ${{ secrets.DATASOURCE_KEY }}
+#      DATASOURCE_URL: ${{ secrets.DATASOURCE_URL }}
+#      DATASOURCE_USERNAME: ${{ secrets.DATASOURCE_USERNAME }}
+#      DATASOURCE_PASSWORD: ${{ secrets.DATASOURCE_PASSWORD }}
+#      DOCKER_HUB_REPO: ${{ secrets.DOCKER_HUB_REPO }}
+#      DOCKER_HUB_NAME: ${{ secrets.DOCKER_HUB_NAME }}
+#      DOCKER_HUB_USER: ${{ secrets.DOCKER_HUB_USER }}
+#      DOCKER_HUB_PASSWORD: ${{ secrets.DOCKER_HUB_PASSWORD }}
+#
+#    steps:
+#      - name: Checkout
+#        uses: actions/checkout@v2
+#
+#      # Cache Maven
+#      - name: Cache Maven packages
+#        uses: actions/cache@v2
+#        with:
+#          path: ~/.m2
+#          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
+#          restore-keys: ${{ runner.os }}-m2
+#
+#      # Maven Package
+#      - name: Build with Maven
+#        run: mvn -Dmaven.test.skip=true -B package --file ./pom.xml
+#
+#      # Docker Image Build
+#      - name: Docker Build Image
+#        run: |
+#          docker build -t ${{ env.DOCKER_HUB_REPO }} \
+#          --build-arg DATASOURCE_KEY="${{ env.DATASOURCE_KEY }}" \
+#          --build-arg DATASOURCE_URL="${{ env.DATASOURCE_URL }}" \
+#          --build-arg DATASOURCE_USERNAME="${{ env.DATASOURCE_USERNAME }}" \
+#          --build-arg DATASOURCE_PASSWORD="${{ env.DATASOURCE_PASSWORD }}" .
+#
+#      # Docker Hub Login
+#      - name: Login to DockerHub
+#        uses: docker/login-action@v1
+#        with:
+#          username: ${{ env.DOCKER_HUB_USER }}
+#          password: ${{ env.DOCKER_HUB_PASSWORD }}
+#
+#      # Docker Hub 이미지 push
+#      - name: Build and Release to DockerHub
+#        env:
+#          NAME: ${{ env.DOCKER_HUB_NAME }}
+#          REPO: ${{ env.DOCKER_HUB_REPO }}
+#        run : |
+#          docker tag $REPO:latest $NAME/$REPO:latest
+#          docker push $NAME/$REPO:latest
