@@ -26,8 +26,7 @@
 
     <springProfile name="file-logging">
         <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
-<!--            <file>${LOGS_ABSOLUTE_PATH}/web-api.log</file>-->
-            <file>web-api.log</file>
+            <file>${LOGS_ABSOLUTE_PATH}/web-api.log</file>
             <encoder>
                 <pattern>${FILE_LOG_PATTERN}</pattern>
             </encoder>
