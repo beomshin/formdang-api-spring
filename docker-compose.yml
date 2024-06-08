@@ -1,0 +1,19 @@
+version: '3'
+
+services:
+  formdang-sp-api:
+    image: ${DOCKER_IMAGE_NAME}
+    container_name: ${DOCKER_CONTAINER_NAME}
+    ports:
+      - "${PORT}:${PORT}"
+    networks:
+      - server_connection
+    volumes:
+      - ${DOCKER_WAS_VOLUME}:/logs
+    environment:
+      - ACTIVE_PROFILE=${PROFILE}
+    restart: unless-stopped
+
+networks:
+  server_connection:
+    external: true
