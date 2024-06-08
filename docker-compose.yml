@@ -9,11 +9,15 @@ services:
     networks:
       - server_connection
     volumes:
-      - ${DOCKER_WAS_VOLUME}:/logs
+      -  logs:/formdang-spring-api
     environment:
       - ACTIVE_PROFILE=${PROFILE}
     restart: unless-stopped
 
 networks:
   server_connection:
+    external: true
+
+volumes:
+  logs:
     external: true
