@@ -9,7 +9,7 @@ services:
     networks:
       - server_connection
     volumes:
-      -  logs:/formdang-spring-api
+      -  logs:/logs
     environment:
       - ACTIVE_PROFILE=${PROFILE}
     restart: unless-stopped
