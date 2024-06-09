@@ -18,5 +18,5 @@ COPY /${JAR_FILE_PATH} ROOT.jar
 
 EXPOSE 12001
 
-ENTRYPOINT ["java", "-jar", "-Xincgc", "-Xmx512m", "-Dspring.profiles.active=${ACTIVE_PROFILE}", "-Dencryptor.key=${DATASOURCE_KEY}", "-Dspring.datasource.url=${DATASOURCE_URL}", "-Dspring.datasource.username=${DATASOURCE_USERNAME}", "-Dspring.datasource.password=${DATASOURCE_PASSWORD}", "-Duser.timezone=Asia/Seoul", "ROOT.jar"]
+ENTRYPOINT ["java", "-jar", "-Xincgc", "-Xmx256m", "-Dspring.profiles.active=${ACTIVE_PROFILE}", "-Dencryptor.key=${DATASOURCE_KEY}", "-Dspring.datasource.url=${DATASOURCE_URL}", "-Dspring.datasource.username=${DATASOURCE_USERNAME}", "-Dspring.datasource.password=${DATASOURCE_PASSWORD}", "-Duser.timezone=Asia/Seoul", "ROOT.jar"]
 
