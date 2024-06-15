@@ -7,7 +7,7 @@ services:
     ports:
       - "${PORT}:${PORT}"
     networks:
-      - server_connection
+      - formdang-network
     volumes:
       -  logs:/logs
     environment:
@@ -15,7 +15,7 @@ services:
     restart: unless-stopped
 
 networks:
-  server_connection:
+  formdang-network:
     external: true
 
 volumes:
