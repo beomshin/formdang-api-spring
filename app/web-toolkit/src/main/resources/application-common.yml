@@ -53,9 +53,9 @@ spring:
 formdang:
   auth-issue:
     url: http://formdang-sp-auth:22081/auth/sp/issue # app 인증 서버 토큰 발급 요청 URL (docker network)
-  fail-login: https://formdang.com/admin/login.html
-  success-login: https://formdang.com/admin/index.html
-  success-paper-login: https://formdang.com/web/paper.html
+  fail-login: https://cground.store/admin/login.html
+  success-login: https://cground.store/admin/index.html
+  success-paper-login: https://cground.store/web/paper.html
   secret-key: ENC(+vT6/Edj0qUG0eVWSFX8KgPhVHcDSMdmsTqv86f55LUa/qD1ZVUIV+cucA2ofkcAtMjixtg5j0v8tgWEs0JQva3G2O33vRYeIPhg08cVsyjlf4Sq0+039RITwiuYgd649IN/CGjJ9LiXVpRtF7hu4Q==)
 
 google:
@@ -79,9 +79,9 @@ spring:
 formdang:
   auth-issue:
     url: http://formdang-sp-auth:22081/auth/sp/issue # app 인증 서버 토큰 발급 요청 URL (docker network)
-  fail-login: https://formdang.com/admin/login.html
-  success-login: https://formdang.com/admin/index.html
-  success-paper-login: https://formdang.com/web/paper.html
+  fail-login: https://cground.store/admin/login.html
+  success-login: https://cground.store/admin/index.html
+  success-paper-login: https://cground.store/web/paper.html
   secret-key: ENC(+vT6/Edj0qUG0eVWSFX8KgPhVHcDSMdmsTqv86f55LUa/qD1ZVUIV+cucA2ofkcAtMjixtg5j0v8tgWEs0JQva3G2O33vRYeIPhg08cVsyjlf4Sq0+039RITwiuYgd649IN/CGjJ9LiXVpRtF7hu4Q==)
 
 google:
