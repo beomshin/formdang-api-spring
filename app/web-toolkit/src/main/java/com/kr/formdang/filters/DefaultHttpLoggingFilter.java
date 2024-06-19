@@ -203,9 +203,9 @@ public class DefaultHttpLoggingFilter extends OncePerRequestFilter {
    * @return {@code true} 로깅을 하지 않음
    */
   private boolean isIgnore(HttpServletRequest request) {
-    if (request.getRequestURI().startsWith("/api/sp/admin/validate")
-    || request.getRequestURI().startsWith("/api/sp/public/kakao/login")
-    || request.getRequestURI().startsWith("/api/sp/public/google/login")) return true;
+    if (request.getRequestURI().startsWith("/formdang-spring/admin/validate")
+    || request.getRequestURI().startsWith("/formdang-spring/public/kakao/login")
+    || request.getRequestURI().startsWith("/formdang-spring/public/google/login")) return true;
     return false;
   }
 }
