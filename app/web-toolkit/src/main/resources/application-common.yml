@@ -52,7 +52,7 @@ spring:
 
 formdang:
   auth-issue:
-    url: http://formdang-sp-auth:22081/formdang-spring-auth/issue # app 인증 서버 토큰 발급 요청 URL (docker network)
+    url: http://formdang-spring-auth:22081/formdang-spring-auth/issue # app 인증 서버 토큰 발급 요청 URL (docker network)
   fail-login: https://formdang.com/admin/login.html
   success-login: https://formdang.com/admin/index.html
   success-paper-login: https://formdang.com/web/paper.html
@@ -78,7 +78,7 @@ spring:
 
 formdang:
   auth-issue:
-    url: http://formdang-sp-auth:22081/formdang-spring-auth/issue # app 인증 서버 토큰 발급 요청 URL (docker network)
+    url: http://formdang-spring-auth:22081/formdang-spring-auth/issue # app 인증 서버 토큰 발급 요청 URL (docker network)
   fail-login: https://cground.store/admin/login.html
   success-login: https://cground.store/admin/index.html
   success-paper-login: https://cground.store/web/paper.html
