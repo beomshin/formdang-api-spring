@@ -6,8 +6,10 @@ services:
     container_name: ${DOCKER_CONTAINER_NAME}
     ports:
       - "${PORT}:${PORT}"
+      - "35010:35010"
     networks:
       - formdang-network
+      - zabbix-net
     volumes:
       -  logs:/logs
     environment:
@@ -16,6 +18,8 @@ services:
 
 networks:
   formdang-network:
+    external: true
+  zabbix-net:
     external: true
 
 volumes:
