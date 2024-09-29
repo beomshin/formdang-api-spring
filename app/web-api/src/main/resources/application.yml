@@ -5,12 +5,12 @@ server:
     context-path: /formdang-spring # nginx prefix location으로 잡혀있음
 
 spring:
+  application:
+    name: formdang-api
+  config:
+    import: optional:configserver:http://localhost:8888/ # spring cloud config 정보 조회 (서버 종료 option 처리)
   profiles:
     active: local
-    include: # 다른 모듈 yml 사용을 위해 적용
-      - common # common-web
-      - dao # core-web
-      - core # domain-core
     group: # active 레벨에 따른 로깅 레벨 설정
       local:
         - console-logging # 콘솔 로깅만 사용
@@ -20,8 +20,16 @@ spring:
       prod:
         - console-logging
         - file-logging # 파일 로깅 사용
-  application:
-    name: web-api
+  jpa:
+    generate-ddl: false # 자동으로 DDL 생성 해주는 기능 OFF
+    hibernate:
+      ddl-auto: none # 엔티티만 등록해놓으면 DDL(Data Definition Language)을 자동으로 작성하여 테이블을 생성하거나 수정해주는 기능 OFF
+    open-in-view: false # 영속성 컨테이너의 트랜잭션 범위를 넘어 레이어까지 유지 (api: 클라이어언트에 응답 될떄까지, view: view 페이지 랜더링까지 커넥션이 살아있음, off 시 lazy loading 트랜잭션 범위 밖에서 시도시 exception 발생)
+    show-sql: false  # 콘솔 로그 출력
+  data:
+    redis:
+      repositories:
+        enabled: false # redisRepository 사용하지 않을 경우  off
   jackson:
     time-zone: Asia/Seoul
   mvc:
@@ -34,6 +42,6 @@ spring:
       max-file-size: 30MB
       max-request-size:  30MB
 
-file:
-  size:
-    image: 3145728 # 3 * 1024 * 1024
+mybatis:
+  type-aliases-package: com.kr.formdang.mapper
+  mapper-locations: classpath:mapper/*.xml
