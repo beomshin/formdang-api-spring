@@ -8,7 +8,7 @@ spring:
   application:
     name: formdang-api
   config:
-    import: optional:configserver:http://localhost:8888/ # spring cloud config 정보 조회 (서버 종료 option 처리)
+    import: optional:configserver:http://spring-cloud-config:8888/ # spring cloud config 정보 조회 (서버 종료 option 처리)
   profiles:
     active: local
     group: # active 레벨에 따른 로깅 레벨 설정
