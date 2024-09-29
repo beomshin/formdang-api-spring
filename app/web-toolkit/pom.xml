@@ -6,7 +6,7 @@
 
     <parent>
         <groupId>com.kr.formdang</groupId>
-        <artifactId>formdang-sp-was</artifactId>
+        <artifactId>formdang-api-spring</artifactId>
         <version>0.0.1</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
