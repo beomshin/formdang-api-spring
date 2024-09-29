@@ -1,8 +1,5 @@
 server:
   port: 12001
-  shutdown: graceful
-  servlet:
-    context-path: /formdang-spring # nginx prefix location으로 잡혀있음
 
 spring:
   application:
