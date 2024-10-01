@@ -1,14 +1,12 @@
 server:
   port: 12001
-  shutdown: graceful
-  servlet:
-    context-path: /formdang-spring # nginx prefix location으로 잡혀있음
 
 spring:
   application:
     name: formdang-api
   config:
     import: optional:configserver:http://spring-cloud-config:8888/ # spring cloud config 정보 조회 (서버 종료 option 처리)
+#    import: optional:configserver:http://localhost:8888/ # spring cloud config 정보 조회 (서버 종료 option 처리)
   profiles:
     active: local
     group: # active 레벨에 따른 로깅 레벨 설정
@@ -30,13 +28,6 @@ spring:
     redis:
       repositories:
         enabled: false # redisRepository 사용하지 않을 경우  off
-  jackson:
-    time-zone: Asia/Seoul
-  mvc:
-    throw-exception-if-no-handler-found: true
-  web:
-    resources:
-      add-mappings: false
   servlet:
     multipart:
       max-file-size: 30MB
