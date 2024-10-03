@@ -28,13 +28,13 @@ public class FilterConfig {
      * http request 정보 logging 2순위
      * @return
      */
-    @Bean
-    public FilterRegistrationBean DefaultHttpLoggingFilter() {
-        FilterRegistrationBean<Filter> filterFilterRegistrationBean = new FilterRegistrationBean<>();
-        filterFilterRegistrationBean.setFilter(new DefaultHttpLoggingFilter());
-        filterFilterRegistrationBean.setOrder(Integer.MIN_VALUE + 1);
-        filterFilterRegistrationBean.addUrlPatterns("/*");
-        return filterFilterRegistrationBean;
-    }
+//    @Bean
+//    public FilterRegistrationBean DefaultHttpLoggingFilter() {
+//        FilterRegistrationBean<Filter> filterFilterRegistrationBean = new FilterRegistrationBean<>();
+//        filterFilterRegistrationBean.setFilter(new DefaultHttpLoggingFilter());
+//        filterFilterRegistrationBean.setOrder(Integer.MIN_VALUE + 1);
+//        filterFilterRegistrationBean.addUrlPatterns("/*");
+//        return filterFilterRegistrationBean;
+//    }
 
 }
